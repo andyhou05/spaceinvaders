@@ -6,23 +6,10 @@ package edu.vanier.controllers;
 
 import edu.vanier.models.Spaceship;
 import edu.vanier.models.Sprite;
-import java.util.ArrayList;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import static javafx.scene.input.KeyCode.A;
-import static javafx.scene.input.KeyCode.D;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 /**
  *
@@ -31,7 +18,7 @@ import javafx.util.Duration;
 public class LevelOneController {
 
     @FXML
-    Rectangle spaceship;
+    StackPane spaceship;
     
     @FXML
     Rectangle enemy;

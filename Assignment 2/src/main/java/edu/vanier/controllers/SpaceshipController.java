@@ -16,6 +16,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.image.ImageView;
 import static javafx.scene.input.KeyCode.A;
 import static javafx.scene.input.KeyCode.D;
 import static javafx.scene.input.KeyCode.SPACE;
@@ -48,15 +49,15 @@ public class SpaceshipController {
     public void setSpaceshipAnimation() {
         // Border detection, if we reach a border, set the left/right speed to 0.
         double leftWall = 0;
-        double rightWall = ((Pane) spaceship.getSpaceshipBody().getParent()).getPrefWidth() - spaceship.getSpaceshipBody().getWidth();
+        double rightWall = ((Pane) spaceship.getSpaceship().getParent()).getPrefWidth() - spaceship.getSpaceship().getWidth();
 
         // spaceship hits the left wall
-        if (spaceship.getSpaceshipBody().getLayoutX() <= leftWall) {
-            spaceship.getSpaceshipBody().setLayoutX(leftWall);
+        if (spaceship.getSpaceship().getLayoutX() <= leftWall) {
+            spaceship.getSpaceship().setLayoutX(leftWall);
             setSpaceshipMechanics(speed, 0, spaceship.isCanShoot());
         } // spaceship hits the right wall
-        else if (spaceship.getSpaceshipBody().getLayoutX() >= rightWall) {
-            spaceship.getSpaceshipBody().setLayoutX(rightWall);
+        else if (spaceship.getSpaceship().getLayoutX() >= rightWall) {
+            spaceship.getSpaceship().setLayoutX(rightWall);
             setSpaceshipMechanics(0, -speed, spaceship.isCanShoot());
         } // no walls hit
         else {
@@ -64,7 +65,7 @@ public class SpaceshipController {
         }
 
         // move the spaceship
-        spaceship.getSpaceshipBody().setLayoutX(spaceship.getSpaceshipBody().getLayoutX() + spaceship.getVelocity());
+        spaceship.getSpaceship().setLayoutX(spaceship.getSpaceship().getLayoutX() + spaceship.getVelocity());
 
         // move the bullets
         for (Rectangle b : spaceship.getBullet()) {
@@ -79,7 +80,7 @@ public class SpaceshipController {
     }
 
     public void setSpaceshipMechanics(int right, int left, boolean canShoot) {
-        spaceship.getSpaceshipBody().getScene().setOnKeyPressed((e) -> {
+        spaceship.getSpaceship().getScene().setOnKeyPressed((e) -> {
             switch (e.getCode()) {
                 case D:
                     spaceship.setVelocity(right);
@@ -89,7 +90,7 @@ public class SpaceshipController {
                     break;
                 case SPACE:
                     if (canShoot) {
-                        Rectangle newBullet = Sprite.shoot(spaceship.getSpaceshipBody(), spaceship.getSpaceshipBody().getLayoutX(), spaceship.getSpaceshipBody().getLayoutY());
+                        Rectangle newBullet = Sprite.shoot(spaceship.getSpaceshipBody(), spaceship.getSpaceship().getLayoutX(), spaceship.getSpaceship().getLayoutY());
                         spaceship.getBullet().add(newBullet);
                         EnemiesController.spaceshipBullets.add(newBullet);
                     }

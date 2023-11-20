@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
@@ -35,8 +36,10 @@ public class EnemiesController {
         this.pane = pane;
         this.enemiesPane = enemiesPane;
         this.movementDuration = movementDuration;
-        for (Node currentEnemyBody : enemiesPane.getChildren()) {
-            enemies.add(new Enemy((Rectangle) currentEnemyBody));
+        for (Node current : enemiesPane.getChildren()) {
+            StackPane currentStack = (StackPane)current;
+            Rectangle currentEnemyBody = (Rectangle)currentStack.getChildren().get(0);
+            enemies.add(new Enemy( currentEnemyBody));
         }
     }
 

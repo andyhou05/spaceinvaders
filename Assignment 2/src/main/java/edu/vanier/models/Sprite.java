@@ -14,6 +14,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class Sprite extends Rectangle{
     static Pane pane;
+    
 
     public Sprite(Rectangle sprite) {
         sprite.localToScene(sprite.getLayoutX(), sprite.getLayoutY());

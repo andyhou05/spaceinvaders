@@ -5,22 +5,25 @@
 package edu.vanier.models;
 
 import java.util.ArrayList;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
 /**
  *
  * @author andyhou
  */
-public class Spaceship {
+public class Spaceship{
     int velocity;
     static int speed = 5;
+    StackPane spaceship;
     Rectangle spaceshipBody;
     ArrayList<Rectangle> bullet = new ArrayList<>();
     boolean invincible = false;
     boolean canShoot = true;
 
-    public Spaceship(Rectangle spaceshipBody) {
-        this.spaceshipBody = spaceshipBody;
+    public Spaceship(StackPane spaceship) {
+        this.spaceship = spaceship;
+        spaceshipBody = (Rectangle)spaceship.getChildren().get(0);
     }
 
     public int getVelocity() {
@@ -53,6 +56,10 @@ public class Spaceship {
 
     public void setBullet(ArrayList<Rectangle> bullet) {
         this.bullet = bullet;
+    }
+
+    public StackPane getSpaceship() {
+        return spaceship;
     }
 
     public boolean isInvincible() {
