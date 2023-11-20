@@ -4,91 +4,68 @@
  */
 package edu.vanier.models;
 
-import edu.vanier.controllers.LevelOneController;
 import java.util.ArrayList;
-import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
-import static javafx.scene.input.KeyCode.A;
-import static javafx.scene.input.KeyCode.D;
-import static javafx.scene.input.KeyCode.SPACE;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
 /**
  *
  * @author andyhou
  */
 public class Spaceship {
+    int velocity;
+    static int speed = 5;
+    Rectangle spaceshipBody;
+    ArrayList<Rectangle> bullet = new ArrayList<>();
+    boolean invincible = false;
+    boolean canShoot = true;
 
-    static int x = 0;
-    static Rectangle spaceship;
-    static ArrayList<Rectangle> bullet = new ArrayList<>();
-    static AnimationTimer animation = new AnimationTimer() {
-        @Override
-        public void handle(long n) {
-            setSpaceshipSpeed();
-        }
-    };
-
-    public static void setSpaceship(Rectangle spaceship) {
-        Spaceship.spaceship = spaceship;
+    public Spaceship(Rectangle spaceshipBody) {
+        this.spaceshipBody = spaceshipBody;
     }
 
-    public static void setSpaceshipSpeed() {
-        // Border detection, if we reach a border, set the left/right speed to 0.
-        double leftWall = 0;
-        double rightWall = ((Pane) spaceship.getParent()).getPrefWidth() - spaceship.getWidth();
-
-        // spaceship hits the left wall
-        if (spaceship.getLayoutX() <= leftWall) {
-            spaceship.setLayoutX(leftWall);
-            setSpaceshipMechanics(5, 0);
-        } // spaceship hits the right wall
-        else if (spaceship.getLayoutX() >= rightWall) {
-            spaceship.setLayoutX(rightWall);
-            setSpaceshipMechanics(0, -5);
-        } // no walls hit
-        else {
-            setSpaceshipMechanics(5, -5);
-        }
-        Enemies.checkBulletCollision();
-
-        // move the spaceship
-        spaceship.setLayoutX(spaceship.getLayoutX() + x);
-
-        for (Rectangle b : bullet) {
-            b.setLayoutY(b.getLayoutY() - 3);
-
-        }
-
+    public int getVelocity() {
+        return velocity;
     }
 
-    public static void setSpaceshipMechanics(int right, int left) {
-        spaceship.getScene().setOnKeyPressed((e) -> {
-            switch (e.getCode()) {
-                case D:
-                    x = right;
-                    break;
-                case A:
-                    x = left;
-                    break;
-                case SPACE:
-                    bullet.add(Sprite.shoot(spaceship));
-                    break;
-            }
-        });
-        spaceship.getScene().setOnKeyReleased((e) -> {
-            x = 0;
-        });
+    public void setVelocity(int velocity) {
+        this.velocity = velocity;
     }
 
-    public static void move() {
-        animation.start();
+    public static int getSpeed() {
+        return speed;
+    }
+
+    public static void setSpeed(int speed) {
+        Spaceship.speed = speed;
+    }
+
+    public Rectangle getSpaceshipBody() {
+        return spaceshipBody;
+    }
+
+    public void setSpaceshipBody(Rectangle spaceshipBody) {
+        this.spaceshipBody = spaceshipBody;
+    }
+
+    public ArrayList<Rectangle> getBullet() {
+        return bullet;
+    }
+
+    public void setBullet(ArrayList<Rectangle> bullet) {
+        this.bullet = bullet;
+    }
+
+    public boolean isInvincible() {
+        return invincible;
+    }
+
+    public void setInvincible(boolean invincible) {
+        this.invincible = invincible;
+        this.canShoot = !invincible;
+    }
+
+    public boolean isCanShoot() {
+        return canShoot;
     }
 
 }

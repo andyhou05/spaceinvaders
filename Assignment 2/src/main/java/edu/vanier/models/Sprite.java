@@ -14,8 +14,16 @@ import javafx.scene.shape.Rectangle;
  */
 public class Sprite extends Rectangle{
     static Pane pane;
-    public static Rectangle shoot(Rectangle shooter){
-        Rectangle bullet = new Rectangle(shooter.getLayoutX() + shooter.getWidth()/2, shooter.getLayoutY(), 4, 20);
+
+    public Sprite(Rectangle sprite) {
+        sprite.localToScene(sprite.getLayoutX(), sprite.getLayoutY());
+        this.setWidth(sprite.getWidth());
+        this.setHeight(sprite.getHeight());
+        this.setLayoutX(sprite.getLayoutX());
+        this.setLayoutY(sprite.getLayoutY());
+    }
+    public static Rectangle shoot(Rectangle shooter, double layoutX, double layoutY){
+        Rectangle bullet = new Rectangle(layoutX + shooter.getWidth()/2, layoutY, 4, 20);
         pane.getChildren().add(bullet);
         return bullet;
     }

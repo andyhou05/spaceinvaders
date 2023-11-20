@@ -4,14 +4,15 @@
  */
 package edu.vanier.controllers;
 
-import edu.vanier.models.Enemies;
 import edu.vanier.models.Spaceship;
 import edu.vanier.models.Sprite;
+import java.util.ArrayList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import static javafx.scene.input.KeyCode.A;
 import static javafx.scene.input.KeyCode.D;
@@ -46,13 +47,14 @@ public class LevelOneController {
         
     }
     
-    public void startLevelOne(){
+    public void startLevelOne() throws InterruptedException{
         Sprite.setPane(pane);
-        Spaceship.setSpaceship(spaceship);
-        Spaceship.move();
         
-        Enemies.setComponents(enemy, pane, enemiesPane);
-        Enemies.moveEnemies();
+        SpaceshipController spaceship_Level_One = new SpaceshipController(new Spaceship(spaceship));
+        spaceship_Level_One.move();
+        
+        EnemiesController enemies_Level_One = new EnemiesController(enemy, pane, enemiesPane, 0.2);
+        enemies_Level_One.moveEnemies();
         
     }
 
