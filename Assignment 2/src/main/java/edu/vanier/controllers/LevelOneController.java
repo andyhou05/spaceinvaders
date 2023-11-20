@@ -6,7 +6,10 @@ package edu.vanier.controllers;
 
 import edu.vanier.models.Spaceship;
 import edu.vanier.models.Sprite;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -34,13 +37,14 @@ public class LevelOneController {
         
     }
     
-    public void startLevelOne() throws InterruptedException{
+    public void startLevelOne() throws InterruptedException, FileNotFoundException{
         Sprite.setPane(pane);
         
-        SpaceshipController spaceship_Level_One = new SpaceshipController(new Spaceship(spaceship));
+        SpaceshipController spaceship_Level_One = new SpaceshipController(new Spaceship(spaceship, 
+                new Image("/images/spaceships/playerShip2_blue.png")), new Image("/images/bullets/laserBlue13.png"));
         spaceship_Level_One.move();
         
-        EnemiesController enemies_Level_One = new EnemiesController(enemy, pane, enemiesPane, 0.2);
+        EnemiesController enemies_Level_One = new EnemiesController(enemy, pane, enemiesPane, 0.2, new Image("/images/bullets/laserRed13.png"));
         enemies_Level_One.moveEnemies();
         
     }

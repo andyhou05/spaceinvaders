@@ -5,26 +5,24 @@
 package edu.vanier.models;
 
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
 /**
  *
  * @author andyhou
  */
-public class Sprite extends Rectangle{
+public class Sprite extends StackPane{
     static Pane pane;
     
 
-    public Sprite(Rectangle sprite) {
-        sprite.localToScene(sprite.getLayoutX(), sprite.getLayoutY());
-        this.setWidth(sprite.getWidth());
-        this.setHeight(sprite.getHeight());
-        this.setLayoutX(sprite.getLayoutX());
-        this.setLayoutY(sprite.getLayoutY());
+    public Sprite() {
+
     }
-    public static Rectangle shoot(Rectangle shooter, double layoutX, double layoutY){
-        Rectangle bullet = new Rectangle(layoutX + shooter.getWidth()/2, layoutY, 4, 20);
+    public static Bullet shoot(Sprite shooter, double layoutX, double layoutY, Image image){
+        Bullet bullet = new Bullet(layoutX + shooter.getWidth()/2, layoutY, image);
         pane.getChildren().add(bullet);
         return bullet;
     }

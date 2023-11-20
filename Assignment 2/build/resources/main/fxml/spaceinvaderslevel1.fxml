@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Pane fx:id="enemiesPane" layoutX="49.0" layoutY="28.0" prefHeight="245.0" prefWidth="800.0">
          <children>
@@ -105,11 +104,7 @@
       <StackPane fx:id="spaceship" layoutX="454.0" layoutY="689.0" prefHeight="45.0" prefWidth="60.0">
          <children>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="45.0" stroke="TRANSPARENT" strokeType="INSIDE" width="60.0" />
-            <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../../../../../../Downloads/kenney_space-shooter-redux/PNG/playerShip1_blue.png" />
-               </image>
-            </ImageView>
+            <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </StackPane>
    </children>

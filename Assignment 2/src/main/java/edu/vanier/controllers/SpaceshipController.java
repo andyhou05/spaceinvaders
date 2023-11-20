@@ -5,6 +5,7 @@
 package edu.vanier.controllers;
 
 import edu.vanier.controllers.EnemiesController;
+import edu.vanier.models.Bullet;
 import edu.vanier.models.Enemy;
 import edu.vanier.models.Spaceship;
 import edu.vanier.models.Sprite;
@@ -16,6 +17,7 @@ import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import static javafx.scene.input.KeyCode.A;
 import static javafx.scene.input.KeyCode.D;
@@ -31,12 +33,14 @@ import javafx.util.Duration;
  */
 public class SpaceshipController {
 
-    static ArrayList<Rectangle> enemyBullets = new ArrayList<>();
+    static ArrayList<Bullet> enemyBullets = new ArrayList<>();
     Spaceship spaceship;
+    Image spaceshipBulletImage;
     int speed = Spaceship.getSpeed();
 
-    public SpaceshipController(Spaceship spaceship) {
+    public SpaceshipController(Spaceship spaceship, Image spaceshipBulletImage) {
         this.spaceship = spaceship;
+        this.spaceshipBulletImage = spaceshipBulletImage;
     }
 
     AnimationTimer animation = new AnimationTimer() {
@@ -68,7 +72,7 @@ public class SpaceshipController {
         spaceship.getSpaceship().setLayoutX(spaceship.getSpaceship().getLayoutX() + spaceship.getVelocity());
 
         // move the bullets
-        for (Rectangle b : spaceship.getBullet()) {
+        for (Bullet b : spaceship.getBullet()) {
             b.setLayoutY(b.getLayoutY() - 3);
         }
 
@@ -90,7 +94,7 @@ public class SpaceshipController {
                     break;
                 case SPACE:
                     if (canShoot) {
-                        Rectangle newBullet = Sprite.shoot(spaceship.getSpaceshipBody(), spaceship.getSpaceship().getLayoutX(), spaceship.getSpaceship().getLayoutY());
+                        Bullet newBullet = Sprite.shoot(spaceship, spaceship.getSpaceship().getLayoutX(), spaceship.getSpaceship().getLayoutY() - spaceship.getSpaceship().getHeight(), spaceshipBulletImage);
                         spaceship.getBullet().add(newBullet);
                         EnemiesController.spaceshipBullets.add(newBullet);
                     }
@@ -104,7 +108,7 @@ public class SpaceshipController {
 
     public void checkBulletCollision() {
         for (int i = 0; i < enemyBullets.size(); i++) {
-            if (spaceship.getSpaceshipBody().getBoundsInParent().intersects(enemyBullets.get(i).getBoundsInParent())) {
+            if (spaceship.getSpaceship().getBoundsInParent().intersects(enemyBullets.get(i).getBoundsInParent())) {
                 Sprite.removeEntity(enemyBullets.get(i));
                 spaceship.setInvincible(true);
                 spaceshipHitAnimation();
@@ -122,7 +126,7 @@ public class SpaceshipController {
 
             }
         },
-                new KeyValue(spaceship.getSpaceshipBody().opacityProperty(), 0)
+                new KeyValue(spaceship.getSpaceship().opacityProperty(), 0)
         ));
         spaceshipFlashing.setAutoReverse(true);
         spaceshipFlashing.setCycleCount(8);
@@ -144,7 +148,7 @@ public class SpaceshipController {
         animation.start();
     }
 
-    public static ArrayList<Rectangle> getEnemyBullets() {
+    public static ArrayList<Bullet> getEnemyBullets() {
         return enemyBullets;
     }
 

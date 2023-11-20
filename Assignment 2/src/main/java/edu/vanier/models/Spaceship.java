@@ -5,6 +5,8 @@
 package edu.vanier.models;
 
 import java.util.ArrayList;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
@@ -12,18 +14,20 @@ import javafx.scene.shape.Rectangle;
  *
  * @author andyhou
  */
-public class Spaceship{
+public class Spaceship extends Sprite {
     int velocity;
     static int speed = 5;
     StackPane spaceship;
+    Image image;
     Rectangle spaceshipBody;
-    ArrayList<Rectangle> bullet = new ArrayList<>();
+    ArrayList<Bullet> bullet = new ArrayList<>();
     boolean invincible = false;
     boolean canShoot = true;
 
-    public Spaceship(StackPane spaceship) {
+    public Spaceship(StackPane spaceship, Image image) {
         this.spaceship = spaceship;
         spaceshipBody = (Rectangle)spaceship.getChildren().get(0);
+        ((ImageView)spaceship.getChildren().get(1)).setImage(image);
     }
 
     public int getVelocity() {
@@ -50,11 +54,11 @@ public class Spaceship{
         this.spaceshipBody = spaceshipBody;
     }
 
-    public ArrayList<Rectangle> getBullet() {
+    public ArrayList<Bullet> getBullet() {
         return bullet;
     }
 
-    public void setBullet(ArrayList<Rectangle> bullet) {
+    public void setBullet(ArrayList<Bullet> bullet) {
         this.bullet = bullet;
     }
 

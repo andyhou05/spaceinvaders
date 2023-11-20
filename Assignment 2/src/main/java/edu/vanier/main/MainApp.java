@@ -42,6 +42,7 @@ public class MainApp extends Application {
         controller.startLevelOne();
         
 
+        primaryStage.setAlwaysOnTop(true);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

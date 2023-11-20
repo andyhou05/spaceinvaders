@@ -5,20 +5,23 @@
 package edu.vanier.models;
 
 import java.util.ArrayList;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 
 /**
  *
  * @author andyhou
  */
-public class Enemy {
+public class Enemy extends Sprite{
     static double horizontalMovementSpeed = 10;
     static double velocity;
     Rectangle enemyBody;
-    static ArrayList<Rectangle> bullets = new ArrayList<>();
+    StackPane enemy;
+    static ArrayList<Bullet> bullets = new ArrayList<>();
 
-    public Enemy(Rectangle enemyBody) {
-        this.enemyBody = enemyBody;
+    public Enemy(StackPane enemy) {
+        this.enemy = enemy;
+        enemyBody = (Rectangle)enemy.getChildren().get(0);
     }
 
     public static double getVelocity() {
@@ -37,7 +40,7 @@ public class Enemy {
         Enemy.horizontalMovementSpeed = horizontalMovementSpeed;
     }
 
-    public static ArrayList<Rectangle> getBullets() {
+    public static ArrayList<Bullet> getBullets() {
         return bullets;
     }
 
@@ -47,6 +50,10 @@ public class Enemy {
 
     public void setEnemyBody(Rectangle enemyBody) {
         this.enemyBody = enemyBody;
+    }
+
+    public StackPane getEnemy() {
+        return enemy;
     }
     
 }
