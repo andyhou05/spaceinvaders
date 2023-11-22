@@ -27,14 +27,14 @@ import javafx.util.Duration;
 public class EnemiesController {
 
     static ArrayList<Bullet> spaceshipBullets = new ArrayList<>();
-    Rectangle enemy;
+    StackPane enemy;
     Pane pane;
     Pane enemiesPane;
     ArrayList<Enemy> enemies = new ArrayList<>();
     double movementDuration;
     Image enemyBulletImage;
 
-    public EnemiesController(Rectangle enemy, Pane pane, Pane enemiesPane, double movementDuration, Image enemyBulletImage) {
+    public EnemiesController(StackPane enemy, Pane pane, Pane enemiesPane, double movementDuration, Image enemyBulletImage) {
         this.enemy = enemy;
         this.pane = pane;
         this.enemiesPane = enemiesPane;

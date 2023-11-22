@@ -18,7 +18,6 @@ public class Spaceship extends Sprite {
     int velocity;
     static int speed = 5;
     StackPane spaceship;
-    Image image;
     Rectangle spaceshipBody;
     ArrayList<Bullet> bullet = new ArrayList<>();
     boolean invincible = false;

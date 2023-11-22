@@ -5,107 +5,97 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Pane fx:id="enemiesPane" layoutX="49.0" layoutY="28.0" prefHeight="245.0" prefWidth="800.0">
+      <ImageView fx:id="backgroundImage" fitHeight="800.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true" />
+      <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0">
          <children>
-            <StackPane prefHeight="45.0" prefWidth="60.0">
+            <Pane fx:id="enemiesPane" layoutX="54.0" layoutY="-148.0" prefHeight="245.0" prefWidth="800.0">
                <children>
-                  <Rectangle fx:id="enemy" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                  <StackPane fx:id="enemy" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="740.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="740.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="555.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="555.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="555.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="370.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="370.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="370.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="185.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="740.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="185.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutX="185.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
+                  <StackPane layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
+                     <children>
+                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </StackPane>
                </children>
-            </StackPane>
-            <StackPane layoutX="740.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
+            </Pane>
+            <StackPane fx:id="spaceship" layoutX="454.0" layoutY="680.0" prefHeight="45.0" prefWidth="60.0">
                <children>
-                  <Rectangle fx:id="enemy1" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="740.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy2" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="555.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy3" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="555.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy4" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="555.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy5" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="370.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy6" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="370.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy7" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="370.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy8" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="185.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy9" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="740.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy10" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="185.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy11" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutX="185.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy12" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy13" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
-            <StackPane layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <Rectangle fx:id="enemy14" arcHeight="5.0" arcWidth="5.0" height="45.0" stroke="BLACK" strokeType="INSIDE" width="60.0" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="45.0" stroke="TRANSPARENT" strokeType="INSIDE" width="60.0" />
                   <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </StackPane>
          </children>
       </Pane>
-      <StackPane fx:id="spaceship" layoutX="454.0" layoutY="689.0" prefHeight="45.0" prefWidth="60.0">
-         <children>
-            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="45.0" stroke="TRANSPARENT" strokeType="INSIDE" width="60.0" />
-            <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </StackPane>
    </children>
-</Pane>
+</StackPane>
