@@ -18,15 +18,17 @@ public class Enemy extends Sprite {
 
     static double horizontalMovementSpeed = 10;
     static double velocity;
-    StackPane enemy;
+    StackPane enemyStack;
+    ImageView enemyImage;
     static ArrayList<Bullet> bullets = new ArrayList<>();
 
-    public Enemy(StackPane enemy) {
-        this.enemy = enemy;
+    public Enemy(StackPane enemyStack) {
+        this.enemyStack = enemyStack;
+        enemyImage = ((ImageView)enemyStack.getChildren().get(0));
         String enemyColor;
         StringBuilder filePathBuilder = new StringBuilder("/images/enemies/enemy");
 
-        // Generate random enemy color.
+        // Generate random enemyStack color.
         double random2 = Math.random();
         if (random2 <= (0.3333333333)) {
             enemyColor = "Red";
@@ -37,7 +39,7 @@ public class Enemy extends Sprite {
         }
         filePathBuilder.append(enemyColor);
 
-        // Generate random enemy model.
+        // Generate random enemyStack model.
         double random1 = Math.random();
         if (random1 <= 0.2) {
             filePathBuilder.append('1');
@@ -51,11 +53,10 @@ public class Enemy extends Sprite {
             filePathBuilder.append('5');
         }
         filePathBuilder.append(".png");
-        ImageView enemyImage = new ImageView(new Image(filePathBuilder.toString()));
+        enemyImage.setImage(new Image(filePathBuilder.toString()));
         enemyImage.setPreserveRatio(false);
-        enemyImage.setFitWidth(enemy.getPrefWidth());
-        enemyImage.setFitHeight(enemy.getPrefHeight());
-        enemy.getChildren().add(enemyImage);
+        enemyImage.setFitWidth(enemyStack.getPrefWidth());
+        enemyImage.setFitHeight(enemyStack.getPrefHeight());
     }
 
     public static double getVelocity() {
@@ -78,8 +79,16 @@ public class Enemy extends Sprite {
         return bullets;
     }
 
-    public StackPane getEnemy() {
-        return enemy;
+    public StackPane getEnemyStack() {
+        return enemyStack;
+    }
+
+    public ImageView getEnemyImage() {
+        return enemyImage;
+    }
+
+    public void setEnemyImage(ImageView enemyImage) {
+        this.enemyImage = enemyImage;
     }
 
 }

@@ -10,11 +10,13 @@ import edu.vanier.models.Sprite;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -85,8 +87,8 @@ public class EnemiesController {
                 for (Enemy currentEnemy : enemies) {
                     if (Math.random() < 0.15) {
                         Bullet currentBullet = Sprite.shoot(currentEnemy,
-                                currentEnemy.getEnemy().getLayoutX() + enemiesPane.getLayoutX(),
-                                currentEnemy.getEnemy().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getEnemy().getHeight(),
+                                currentEnemy.getEnemyStack().getLayoutX() + enemiesPane.getLayoutX(),
+                                currentEnemy.getEnemyStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getEnemyStack().getHeight(),
                                 enemyBulletImage
                         );
                         Enemy.getBullets().add(currentBullet);
@@ -115,12 +117,19 @@ public class EnemiesController {
             @Override
             public void handle(long n) {
                 for (int i = 0; i < enemies.size(); i++) {
+                    Enemy currentEnemy = enemies.get(i);
                     for (Bullet b : spaceshipBullets) {
                         // turns the local bounds of enemiesPane to the bounds of the pane,
                         // turns the local bounds of the enemy to the bounds of the enemiesPane.
-                        if (pane.localToScene(enemiesPane.localToScene(enemies.get(i).getEnemy().getBoundsInParent())).intersects(b.getBoundsInParent())) {
+                        if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getEnemyStack().getBoundsInParent())).intersects(b.getBoundsInParent())) {
                             // kill the space invader
-                            enemiesPane.getChildren().remove(enemies.get(i).getEnemy());
+                            currentEnemy.getEnemyImage().setImage(new Image("/images/Explosion.gif"));
+                            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+                            pause.setOnFinished((event) -> {
+                                enemiesPane.getChildren().remove(currentEnemy.getEnemyStack());
+                            });
+                            pause.setCycleCount(1);
+                            pause.play();
                             enemies.remove(enemies.get(i));
                             Sprite.removeEntity(b);
                             spaceshipBullets.remove(b);
