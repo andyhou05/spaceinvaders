@@ -15,7 +15,8 @@ import javafx.scene.shape.Rectangle;
  * @author andyhou
  */
 public class Spaceship extends Sprite {
-    int velocity;
+    int xVelocity;
+    int yVelocity;
     static int speed = 5;
     StackPane spaceship;
     Rectangle spaceshipBody;
@@ -29,12 +30,20 @@ public class Spaceship extends Sprite {
         ((ImageView)spaceship.getChildren().get(1)).setImage(image);
     }
 
-    public int getVelocity() {
-        return velocity;
+    public int getxVelocity() {
+        return xVelocity;
     }
 
-    public void setVelocity(int velocity) {
-        this.velocity = velocity;
+    public void setxVelocity(int xVelocity) {
+        this.xVelocity = xVelocity;
+    }
+
+    public int getyVelocity() {
+        return yVelocity;
+    }
+
+    public void setyVelocity(int yVelocity) {
+        this.yVelocity = yVelocity;
     }
 
     public static int getSpeed() {
