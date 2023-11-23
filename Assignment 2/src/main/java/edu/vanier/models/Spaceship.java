@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -21,6 +22,7 @@ public class Spaceship extends Sprite {
     StackPane spaceship;
     Rectangle spaceshipBody;
     ArrayList<Bullet> bullet = new ArrayList<>();
+    AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/audio/sfx_laser1.wav").toExternalForm());
     boolean invincible = false;
     boolean canShoot = true;
 
@@ -85,6 +87,10 @@ public class Spaceship extends Sprite {
 
     public boolean isCanShoot() {
         return canShoot;
+    }
+
+    public AudioClip getSpaceshipShootAudio() {
+        return spaceshipShootAudio;
     }
 
 }

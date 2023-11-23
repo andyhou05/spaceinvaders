@@ -93,6 +93,7 @@ public class EnemiesController {
                         );
                         Enemy.getBullets().add(currentBullet);
                         SpaceshipController.enemyBullets.add(currentBullet);
+                        currentEnemy.getEnemyShootAudio().play();
                     }
                 }
             }
@@ -130,6 +131,7 @@ public class EnemiesController {
                             });
                             pause.setCycleCount(1);
                             pause.play();
+                            enemies.get(i).getEnemyExplosionAudio().play();
                             enemies.remove(enemies.get(i));
                             Sprite.removeEntity(b);
                             spaceshipBullets.remove(b);

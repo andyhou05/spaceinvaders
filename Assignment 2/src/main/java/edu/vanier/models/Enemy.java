@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -20,6 +21,8 @@ public class Enemy extends Sprite {
     static double velocity;
     StackPane enemyStack;
     ImageView enemyImage;
+    AudioClip enemyShootAudio = new AudioClip(getClass().getResource("/audio/sfx_laser2.wav").toExternalForm());
+    AudioClip enemyExplosionAudio = new AudioClip(getClass().getResource("/audio/8bit_bomb_explosion.wav").toExternalForm());
     static ArrayList<Bullet> bullets = new ArrayList<>();
 
     public Enemy(StackPane enemyStack) {
@@ -89,6 +92,14 @@ public class Enemy extends Sprite {
 
     public void setEnemyImage(ImageView enemyImage) {
         this.enemyImage = enemyImage;
+    }
+
+    public AudioClip getEnemyShootAudio() {
+        return enemyShootAudio;
+    }
+
+    public AudioClip getEnemyExplosionAudio() {
+        return enemyExplosionAudio;
     }
 
 }

@@ -127,6 +127,7 @@ public class SpaceshipController {
                         Bullet newBullet = Sprite.shoot(spaceship, spaceship.getSpaceship().getLayoutX(), spaceship.getSpaceship().getLayoutY() - spaceship.getSpaceship().getHeight(), spaceshipBulletImage);
                         spaceship.getBullet().add(newBullet);
                         EnemiesController.spaceshipBullets.add(newBullet);
+                        spaceship.getSpaceshipShootAudio().play();
                     }
                     break;
             }
