@@ -26,7 +26,8 @@ public class Spaceship extends Sprite {
 
     public Spaceship(StackPane spaceshipStack, Image image) {
         setSpriteStack(spaceshipStack);
-        ((ImageView)spaceshipStack.getChildren().get(0)).setImage(image);
+        setSpriteImage((ImageView)spaceshipStack.getChildren().get(0));
+        getSpriteImage().setImage(image);
     }
 
     public int getxVelocity() {

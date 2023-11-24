@@ -6,6 +6,7 @@ package edu.vanier.models;
 
 import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
@@ -17,11 +18,8 @@ import javafx.scene.shape.Rectangle;
 public class Sprite {
 
     static Pane pane;
-    StackPane spriteStack;
-
-    public Sprite() {
-
-    }
+    ImageView spriteImage = new ImageView();
+    StackPane spriteStack = new StackPane(spriteImage);
 
     public static Bullet shoot(Sprite shooter, double layoutX, double layoutY, Image image) {
         Bullet bullet = new Bullet(layoutX + shooter.getSpriteStack().getWidth() / 2, layoutY, image);
@@ -35,6 +33,14 @@ public class Sprite {
 
     public void setSpriteStack(StackPane spriteStack) {
         this.spriteStack = spriteStack;
+    }
+
+    public ImageView getSpriteImage() {
+        return spriteImage;
+    }
+
+    public void setSpriteImage(ImageView spriteImage) {
+        this.spriteImage = spriteImage;
     }
 
     public static void setPane(Pane pane) {

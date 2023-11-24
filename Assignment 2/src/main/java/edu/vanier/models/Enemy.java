@@ -24,9 +24,8 @@ public class Enemy extends Sprite {
     AudioClip enemyExplosionAudio = new AudioClip(getClass().getResource("/sounds/8bit_bomb_explosion.wav").toExternalForm());
     static ArrayList<Bullet> bullets = new ArrayList<>();
 
-    public Enemy(StackPane enemyStack) {
-        setSpriteStack(enemyStack);
-        enemyImage = ((ImageView)enemyStack.getChildren().get(0));
+    public Enemy(double layoutX, double layoutY) {
+        enemyImage = getSpriteImage();
         String enemyColor;
         StringBuilder filePathBuilder = new StringBuilder("/images/enemies/enemy");
 
@@ -57,8 +56,10 @@ public class Enemy extends Sprite {
         filePathBuilder.append(".png");
         enemyImage.setImage(new Image(filePathBuilder.toString()));
         enemyImage.setPreserveRatio(false);
-        enemyImage.setFitWidth(enemyStack.getPrefWidth());
-        enemyImage.setFitHeight(enemyStack.getPrefHeight());
+        enemyImage.setFitWidth(60);
+        enemyImage.setFitHeight(45);
+        spriteStack.setLayoutX(layoutX);
+        spriteStack.setLayoutY(layoutY);
     }
 
     public static double getVelocity() {

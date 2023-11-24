@@ -155,12 +155,6 @@ public class SpaceshipController {
     public void spaceshipHitAnimation() {
         spaceshipHitAudio.play();
         Timeline spaceshipFlashing = new Timeline(new KeyFrame(Duration.seconds(0.1),
-                new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-
-            }
-        },
                 new KeyValue(spaceship.getSpriteStack().opacityProperty(), 0)
         ));
         spaceshipFlashing.setAutoReverse(true);

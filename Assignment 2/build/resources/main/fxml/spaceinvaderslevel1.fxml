@@ -4,91 +4,12 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="backgroundImage" fitHeight="800.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true" />
       <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0">
          <children>
-            <Pane fx:id="enemiesPane" layoutX="54.0" layoutY="-148.0" prefHeight="245.0" prefWidth="800.0">
-               <children>
-                  <StackPane fx:id="enemy" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="740.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="740.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="555.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="555.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="555.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="370.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="370.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="370.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="185.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="740.0" layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="185.0" layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutX="185.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutY="200.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-                  <StackPane layoutY="100.0" prefHeight="45.0" prefWidth="60.0">
-                     <children>
-                        <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </StackPane>
-               </children>
-            </Pane>
-            <StackPane fx:id="spaceship" layoutX="454.0" layoutY="680.0" prefHeight="45.0" prefWidth="60.0">
+            <StackPane fx:id="spaceship" layoutX="520.0" layoutY="680.0" prefHeight="45.0" prefWidth="60.0">
                <children>
                   <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
                </children>

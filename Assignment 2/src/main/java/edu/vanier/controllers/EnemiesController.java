@@ -31,21 +31,37 @@ public class EnemiesController {
     static ArrayList<Bullet> spaceshipBullets = new ArrayList<>();
     StackPane enemy;
     Pane pane;
-    Pane enemiesPane;
+    Pane enemiesPane = new Pane();
     ArrayList<Enemy> enemies = new ArrayList<>();
     double movementDuration;
     Image enemyBulletImage;
+    double enemyXdistance = 185;
+    double enemyYdistance = 100;
 
-    public EnemiesController(StackPane enemy, Pane pane, Pane enemiesPane, double movementDuration, Image enemyBulletImage) {
-        this.enemy = enemy;
+    public EnemiesController(Pane pane, double movementDuration, Image enemyBulletImage) {
+        enemiesPane.setPrefWidth(800);
+        enemiesPane.setPrefHeight(400);
         this.pane = pane;
-        this.enemiesPane = enemiesPane;
         this.movementDuration = movementDuration;
         this.enemyBulletImage = enemyBulletImage;
-        for (Node current : enemiesPane.getChildren()) {
-            StackPane currentStack = (StackPane)current;
-            enemies.add(new Enemy( currentStack));
+    }
+
+    public void spawn(int enemyNumber) {
+        double currentLayoutX;
+        double currentLayoutY = 0;
+        for (int i = 0; enemies.size() < enemyNumber; i++) {
+            currentLayoutX = enemyXdistance * i;
+            if (currentLayoutX + enemyXdistance > pane.getPrefWidth()) {
+                currentLayoutY += enemyYdistance;
+                currentLayoutX = 0;
+                i = 0;
+            }
+            Enemy currentEnemy = new Enemy(currentLayoutX, currentLayoutY);
+            enemiesPane.getChildren().add(currentEnemy.getSpriteStack());
+            enemies.add(currentEnemy);
+
         }
+        pane.getChildren().add(enemiesPane);
     }
 
     public void moveEnemies() throws InterruptedException {
@@ -56,7 +72,7 @@ public class EnemiesController {
 
             @Override
             public void handle(ActionEvent event) {
-                double y = enemy.getHeight();
+                double y = enemyYdistance;
 
                 if (((enemiesPane.getLayoutY() - ySpacing) / y) % 2 == 0) {
                     Enemy.setVelocity(Enemy.getHorizontalMovementSpeed());
