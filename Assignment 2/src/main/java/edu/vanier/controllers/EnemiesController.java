@@ -67,21 +67,19 @@ public class EnemiesController {
     public void moveEnemies() throws InterruptedException {
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(movementDuration), new EventHandler<ActionEvent>() {
-            double xSpacing = enemiesPane.getLayoutX();
-            double ySpacing = enemiesPane.getLayoutY();
 
             @Override
             public void handle(ActionEvent event) {
                 double y = enemyYdistance;
 
-                if (((enemiesPane.getLayoutY() - ySpacing) / y) % 2 == 0) {
+                if ((enemiesPane.getLayoutY() / y) % 2 == 0) {
                     Enemy.setVelocity(Enemy.getHorizontalMovementSpeed());
                 } else {
                     Enemy.setVelocity(-Enemy.getHorizontalMovementSpeed());
                 }
 
                 enemiesPane.setLayoutX(enemiesPane.getLayoutX() + Enemy.getVelocity());
-                if (enemiesPane.getLayoutX() + enemiesPane.getWidth() >= pane.getWidth() - xSpacing || enemiesPane.getLayoutX() <= xSpacing) {
+                if (enemiesPane.getLayoutX() + enemiesPane.getWidth() >= pane.getWidth() || enemiesPane.getLayoutX() <= 0) {
                     enemiesPane.setLayoutY(enemiesPane.getLayoutY() + y);
                 }
             }
