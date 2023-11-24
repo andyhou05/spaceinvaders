@@ -38,7 +38,7 @@ public class SpaceshipController {
     Spaceship spaceship;
     Image spaceshipBulletImage;
     int speed = Spaceship.getSpeed();
-    AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/audio/sfx_shieldDown.wav").toExternalForm());
+    AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/sounds/sfx_shieldDown.wav").toExternalForm());
 
     public SpaceshipController(Spaceship spaceship, Image spaceshipBulletImage) {
         this.spaceship = spaceship;

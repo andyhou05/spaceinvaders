@@ -20,8 +20,8 @@ public class Enemy extends Sprite {
     static double horizontalMovementSpeed = 10;
     static double velocity;
     ImageView enemyImage;
-    AudioClip enemyShootAudio = new AudioClip(getClass().getResource("/audio/sfx_laser2.wav").toExternalForm());
-    AudioClip enemyExplosionAudio = new AudioClip(getClass().getResource("/audio/8bit_bomb_explosion.wav").toExternalForm());
+    AudioClip enemyShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser2.wav").toExternalForm());
+    AudioClip enemyExplosionAudio = new AudioClip(getClass().getResource("/sounds/8bit_bomb_explosion.wav").toExternalForm());
     static ArrayList<Bullet> bullets = new ArrayList<>();
 
     public Enemy(StackPane enemyStack) {

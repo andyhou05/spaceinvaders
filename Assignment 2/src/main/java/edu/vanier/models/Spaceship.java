@@ -20,7 +20,7 @@ public class Spaceship extends Sprite {
     int yVelocity;
     static int speed = 5;
     ArrayList<Bullet> bullet = new ArrayList<>();
-    AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/audio/sfx_laser1.wav").toExternalForm());
+    AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser1.wav").toExternalForm());
     boolean invincible = false;
     boolean canShoot = true;
 
