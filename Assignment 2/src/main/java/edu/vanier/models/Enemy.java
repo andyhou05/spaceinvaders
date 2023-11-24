@@ -19,14 +19,13 @@ public class Enemy extends Sprite {
 
     static double horizontalMovementSpeed = 10;
     static double velocity;
-    StackPane enemyStack;
     ImageView enemyImage;
     AudioClip enemyShootAudio = new AudioClip(getClass().getResource("/audio/sfx_laser2.wav").toExternalForm());
     AudioClip enemyExplosionAudio = new AudioClip(getClass().getResource("/audio/8bit_bomb_explosion.wav").toExternalForm());
     static ArrayList<Bullet> bullets = new ArrayList<>();
 
     public Enemy(StackPane enemyStack) {
-        this.enemyStack = enemyStack;
+        setSpriteStack(enemyStack);
         enemyImage = ((ImageView)enemyStack.getChildren().get(0));
         String enemyColor;
         StringBuilder filePathBuilder = new StringBuilder("/images/enemies/enemy");
@@ -80,10 +79,6 @@ public class Enemy extends Sprite {
 
     public static ArrayList<Bullet> getBullets() {
         return bullets;
-    }
-
-    public StackPane getEnemyStack() {
-        return enemyStack;
     }
 
     public ImageView getEnemyImage() {

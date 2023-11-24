@@ -23,6 +23,7 @@ import static javafx.scene.input.KeyCode.A;
 import static javafx.scene.input.KeyCode.D;
 import static javafx.scene.input.KeyCode.SPACE;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -37,6 +38,7 @@ public class SpaceshipController {
     Spaceship spaceship;
     Image spaceshipBulletImage;
     int speed = Spaceship.getSpeed();
+    AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/audio/sfx_shieldDown.wav").toExternalForm());
 
     public SpaceshipController(Spaceship spaceship, Image spaceshipBulletImage) {
         this.spaceship = spaceship;
@@ -53,35 +55,35 @@ public class SpaceshipController {
     public void setSpaceshipAnimation() {
         // Border detection, if we reach a border, set the left/right speed to 0.
         double leftWall = 0;
-        double rightWall = ((Pane) spaceship.getSpaceship().getParent()).getPrefWidth() - spaceship.getSpaceship().getWidth();
+        double rightWall = ((Pane) spaceship.getSpriteStack().getParent()).getPrefWidth() - spaceship.getSpriteStack().getWidth();
         double topWall = 0;
-        double bottomWall = ((Pane) spaceship.getSpaceship().getParent()).getPrefHeight() - spaceship.getSpaceship().getHeight();
+        double bottomWall = ((Pane) spaceship.getSpriteStack().getParent()).getPrefHeight() - spaceship.getSpriteStack().getHeight();
         int currentLeft = -speed;
         int currentRight = speed;
         int currentTop = -speed;
         int currentBottom = speed;
         
         // spaceship hits the left wall
-        if (spaceship.getSpaceship().getLayoutX() <= leftWall) {
-            spaceship.getSpaceship().setLayoutX(leftWall);
+        if (spaceship.getSpriteStack().getLayoutX() <= leftWall) {
+            spaceship.getSpriteStack().setLayoutX(leftWall);
             setSpaceshipMechanics(speed, 0, currentTop, currentBottom, spaceship.isCanShoot());
             currentLeft = 0;
             currentRight = speed;
         } // spaceship hits the right wall
-        else if (spaceship.getSpaceship().getLayoutX() >= rightWall) {
-            spaceship.getSpaceship().setLayoutX(rightWall);
+        else if (spaceship.getSpriteStack().getLayoutX() >= rightWall) {
+            spaceship.getSpriteStack().setLayoutX(rightWall);
             setSpaceshipMechanics(0, -speed, currentTop, currentBottom, spaceship.isCanShoot());
             currentRight = 0;
             currentLeft = speed;
         } // spaceship hits the top wall
-        if (spaceship.getSpaceship().getLayoutY() <= topWall) {
-            spaceship.getSpaceship().setLayoutY(topWall);
+        if (spaceship.getSpriteStack().getLayoutY() <= topWall) {
+            spaceship.getSpriteStack().setLayoutY(topWall);
             setSpaceshipMechanics(currentRight, currentLeft, 0, speed, spaceship.isCanShoot());
             currentTop = 0;
             currentBottom = speed;
         } // spaceship hits the bottom wall
-        else if (spaceship.getSpaceship().getLayoutY() >= bottomWall) {
-            spaceship.getSpaceship().setLayoutY(bottomWall);
+        else if (spaceship.getSpriteStack().getLayoutY() >= bottomWall) {
+            spaceship.getSpriteStack().setLayoutY(bottomWall);
             setSpaceshipMechanics(currentRight, currentLeft, -speed, 0, spaceship.isCanShoot());
             currentBottom = 0;
             currentTop = speed;
@@ -92,12 +94,12 @@ public class SpaceshipController {
         }
 
         // move the spaceship
-        spaceship.getSpaceship().setLayoutX(spaceship.getSpaceship().getLayoutX() + spaceship.getxVelocity());
-        spaceship.getSpaceship().setLayoutY(spaceship.getSpaceship().getLayoutY() + spaceship.getyVelocity());
+        spaceship.getSpriteStack().setLayoutX(spaceship.getSpriteStack().getLayoutX() + spaceship.getxVelocity());
+        spaceship.getSpriteStack().setLayoutY(spaceship.getSpriteStack().getLayoutY() + spaceship.getyVelocity());
 
         // move the bullets
         for (Bullet b : spaceship.getBullet()) {
-            b.setLayoutY(b.getLayoutY() - 3);
+            b.getSpriteStack().setLayoutY(b.getSpriteStack().getLayoutY() - 3);
         }
 
         // Check for collisions.
@@ -108,7 +110,7 @@ public class SpaceshipController {
     }
 
     public void setSpaceshipMechanics(int right, int left, int top, int bottom, boolean canShoot) {
-        spaceship.getSpaceship().getScene().setOnKeyPressed((e) -> {
+        spaceship.getSpriteStack().getScene().setOnKeyPressed((e) -> {
             switch (e.getCode()) {
                 case D:
                     spaceship.setxVelocity(right);
@@ -124,7 +126,7 @@ public class SpaceshipController {
                     break;
                 case SPACE:
                     if (canShoot) {
-                        Bullet newBullet = Sprite.shoot(spaceship, spaceship.getSpaceship().getLayoutX(), spaceship.getSpaceship().getLayoutY() - spaceship.getSpaceship().getHeight(), spaceshipBulletImage);
+                        Bullet newBullet = Sprite.shoot(spaceship, spaceship.getSpriteStack().getLayoutX(), spaceship.getSpriteStack().getLayoutY() - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage);
                         spaceship.getBullet().add(newBullet);
                         EnemiesController.spaceshipBullets.add(newBullet);
                         spaceship.getSpaceshipShootAudio().play();
@@ -132,7 +134,7 @@ public class SpaceshipController {
                     break;
             }
         });
-        spaceship.getSpaceshipBody().getScene().setOnKeyReleased((e) -> {
+        spaceship.getSpriteStack().getScene().setOnKeyReleased((e) -> {
             spaceship.setxVelocity(0);
             spaceship.setyVelocity(0);
         });
@@ -140,7 +142,7 @@ public class SpaceshipController {
 
     public void checkBulletCollision() {
         for (int i = 0; i < enemyBullets.size(); i++) {
-            if (spaceship.getSpaceship().getBoundsInParent().intersects(enemyBullets.get(i).getBoundsInParent())) {
+            if (spaceship.getSpriteStack().getBoundsInParent().intersects(enemyBullets.get(i).getSpriteStack().getBoundsInParent())) {
                 Sprite.removeEntity(enemyBullets.get(i));
                 spaceship.setInvincible(true);
                 spaceshipHitAnimation();
@@ -151,6 +153,7 @@ public class SpaceshipController {
     }
 
     public void spaceshipHitAnimation() {
+        spaceshipHitAudio.play();
         Timeline spaceshipFlashing = new Timeline(new KeyFrame(Duration.seconds(0.1),
                 new EventHandler<ActionEvent>() {
             @Override
@@ -158,7 +161,7 @@ public class SpaceshipController {
 
             }
         },
-                new KeyValue(spaceship.getSpaceship().opacityProperty(), 0)
+                new KeyValue(spaceship.getSpriteStack().opacityProperty(), 0)
         ));
         spaceshipFlashing.setAutoReverse(true);
         spaceshipFlashing.setCycleCount(8);

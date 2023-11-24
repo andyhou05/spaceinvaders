@@ -87,8 +87,8 @@ public class EnemiesController {
                 for (Enemy currentEnemy : enemies) {
                     if (Math.random() < 0.15) {
                         Bullet currentBullet = Sprite.shoot(currentEnemy,
-                                currentEnemy.getEnemyStack().getLayoutX() + enemiesPane.getLayoutX(),
-                                currentEnemy.getEnemyStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getEnemyStack().getHeight(),
+                                currentEnemy.getSpriteStack().getLayoutX() + enemiesPane.getLayoutX(),
+                                currentEnemy.getSpriteStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getSpriteStack().getHeight(),
                                 enemyBulletImage
                         );
                         Enemy.getBullets().add(currentBullet);
@@ -105,7 +105,7 @@ public class EnemiesController {
             @Override
             public void handle(long n) {
                 for (Bullet bullet : Enemy.getBullets()) {
-                    bullet.setLayoutY(bullet.getLayoutY() + 3);
+                    bullet.getSpriteStack().setLayoutY(bullet.getSpriteStack().getLayoutY() + 3);
                 }
             }
         };
@@ -122,12 +122,12 @@ public class EnemiesController {
                     for (Bullet b : spaceshipBullets) {
                         // turns the local bounds of enemiesPane to the bounds of the pane,
                         // turns the local bounds of the enemy to the bounds of the enemiesPane.
-                        if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getEnemyStack().getBoundsInParent())).intersects(b.getBoundsInParent())) {
+                        if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getSpriteStack().getBoundsInParent())).intersects(b.getSpriteStack().getBoundsInParent())) {
                             // kill the space invader
                             currentEnemy.getEnemyImage().setImage(new Image("/images/Explosion.gif"));
                             PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
                             pause.setOnFinished((event) -> {
-                                enemiesPane.getChildren().remove(currentEnemy.getEnemyStack());
+                                enemiesPane.getChildren().remove(currentEnemy.getSpriteStack());
                             });
                             pause.setCycleCount(1);
                             pause.play();

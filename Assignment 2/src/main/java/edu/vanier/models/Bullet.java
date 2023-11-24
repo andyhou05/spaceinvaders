@@ -16,12 +16,12 @@ import javafx.scene.shape.Rectangle;
 public class Bullet extends Sprite {
     
     public Bullet(double layoutX, double layoutY, Image image) {
-        setWidth(4);
-        setHeight(20);
-        setLayoutX(layoutX);
-        setLayoutY(layoutY);
-        getChildren().addAll(new Rectangle(getWidth(), getHeight()), new ImageView());
-        ((ImageView)getChildren().get(1)).setImage(image);
+        setSpriteStack(new StackPane(new ImageView()));
+        getSpriteStack().setPrefWidth(4);
+        getSpriteStack().setPrefHeight(20);
+        getSpriteStack().setLayoutX(layoutX);
+        getSpriteStack().setLayoutY(layoutY);
+        ((ImageView)getSpriteStack().getChildren().get(0)).setImage(image);
     }
     
 }

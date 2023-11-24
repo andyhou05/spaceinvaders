@@ -14,24 +14,34 @@ import javafx.scene.shape.Rectangle;
  *
  * @author andyhou
  */
-public class Sprite extends StackPane{
+public class Sprite {
+
     static Pane pane;
-    
+    StackPane spriteStack;
 
     public Sprite() {
 
     }
-    public static Bullet shoot(Sprite shooter, double layoutX, double layoutY, Image image){
-        Bullet bullet = new Bullet(layoutX + shooter.getWidth()/2, layoutY, image);
-        pane.getChildren().add(bullet);
+
+    public static Bullet shoot(Sprite shooter, double layoutX, double layoutY, Image image) {
+        Bullet bullet = new Bullet(layoutX + shooter.getSpriteStack().getWidth() / 2, layoutY, image);
+        pane.getChildren().add(bullet.getSpriteStack());
         return bullet;
+    }
+
+    public StackPane getSpriteStack() {
+        return spriteStack;
+    }
+
+    public void setSpriteStack(StackPane spriteStack) {
+        this.spriteStack = spriteStack;
     }
 
     public static void setPane(Pane pane) {
         Sprite.pane = pane;
     }
-    
-    public static void removeEntity(Node entity){
-        pane.getChildren().remove(entity);
+
+    public static void removeEntity(Sprite entity) {
+        pane.getChildren().remove(entity.getSpriteStack());
     }
 }
