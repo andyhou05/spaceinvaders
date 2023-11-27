@@ -5,6 +5,7 @@
 package edu.vanier.models;
 
 import static edu.vanier.models.Sprite.pane;
+import java.util.ArrayList;
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,25 +31,6 @@ public class Bullet extends Sprite {
         Bullet bullet = new Bullet(layoutX + shooter.getSpriteStack().getWidth() / 2, layoutY, image);
         pane.getChildren().add(bullet.getSpriteStack());
         return bullet;
-    }
-
-    public static Bullet[] speedShot(Sprite shooter, double layoutX, double layoutY, Image image) {
-        Bullet[] bullets = new Bullet[3];
-        PauseTransition bulletPause = new PauseTransition(Duration.seconds(0.5));
-        for (int i = 0; i < 3; i++) {
-            bullets[i] = new Bullet(layoutX + shooter.getSpriteStack().getWidth() / 2, layoutY, image);
-            StackPane currentBulletStack = bullets[i].getSpriteStack();
-            bulletPause.setOnFinished((event) -> {
-                pane.getChildren().add(currentBulletStack);
-            });
-            bulletPause.setCycleCount(1);
-            bulletPause.play();
-        }
-        return bullets;
-    }
-
-    public static Bullet[] spreadShot(Sprite shooter, double layoutX, double layoutY, Image image) {
-        return null;
     }
 
 }

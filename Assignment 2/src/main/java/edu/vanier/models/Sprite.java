@@ -21,7 +21,6 @@ import javafx.util.Duration;
 public class Sprite {
 
     static Pane pane;
-    static ArrayList<Bullet> bullets = new ArrayList<>();
     ImageView spriteImage = new ImageView();
     StackPane spriteStack = new StackPane(spriteImage);
 
@@ -31,10 +30,6 @@ public class Sprite {
 
     public void setSpriteStack(StackPane spriteStack) {
         this.spriteStack = spriteStack;
-    }
-
-    public static ArrayList<Bullet> getBullets() {
-        return bullets;
     }
 
     public ImageView getSpriteImage() {
