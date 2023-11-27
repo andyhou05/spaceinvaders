@@ -46,7 +46,7 @@ public class LevelOneController {
                 new Image("/images/spaceships/playerShip2_blue.png")), new Image("/images/bullets/laserBlue05.png"));
         spaceship_Level_One.move();
         
-        EnemiesController enemies_Level_One = new EnemiesController(pane, 0.2, new Image("/images/bullets/laserRed05.png"));
+        EnemiesController enemies_Level_One = new EnemiesController(pane, 0.1, new Image("/images/bullets/laserRed05.png"));
         enemies_Level_One.spawn(15);
         enemies_Level_One.moveEnemies();
         

@@ -62,7 +62,7 @@ public class SpaceshipController {
         int currentRight = speed;
         int currentTop = -speed;
         int currentBottom = speed;
-        
+
         // spaceship hits the left wall
         if (spaceship.getSpriteStack().getLayoutX() <= leftWall) {
             spaceship.getSpriteStack().setLayoutX(leftWall);
@@ -87,7 +87,7 @@ public class SpaceshipController {
             setSpaceshipMechanics(currentRight, currentLeft, -speed, 0, spaceship.isCanShoot());
             currentBottom = 0;
             currentTop = speed;
-            
+
         } // no walls hit
         else {
             setSpaceshipMechanics(speed, -speed, -speed, speed, spaceship.isCanShoot());
@@ -98,7 +98,7 @@ public class SpaceshipController {
         spaceship.getSpriteStack().setLayoutY(spaceship.getSpriteStack().getLayoutY() + spaceship.getyVelocity());
 
         // move the bullets
-        for (Bullet b : spaceship.getBullet()) {
+        for (Bullet b : spaceship.getBullets()) {
             b.getSpriteStack().setLayoutY(b.getSpriteStack().getLayoutY() - 3);
         }
 
@@ -124,12 +124,21 @@ public class SpaceshipController {
                 case S:
                     spaceship.setyVelocity(bottom);
                     break;
+                case E:
+                    switchShoot();
+                    break;
                 case SPACE:
                     if (canShoot) {
-                        Bullet newBullet = Sprite.shoot(spaceship, spaceship.getSpriteStack().getLayoutX(), spaceship.getSpriteStack().getLayoutY() - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage);
-                        spaceship.getBullet().add(newBullet);
-                        EnemiesController.spaceshipBullets.add(newBullet);
-                        spaceship.getSpaceshipShootAudio().play();
+                        if (spaceship.isSingleShot()) {
+                            Bullet newBullet = Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX(), spaceship.getSpriteStack().getLayoutY() - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage);
+                            spaceship.getBullets().add(newBullet);
+                            EnemiesController.spaceshipBullets.add(newBullet);
+                            spaceship.getSpaceshipShootAudio().play();
+                        } else if (spaceship.isSpeedShot()) {
+                            Bullet.speedShot(spaceship, spaceship.getSpriteStack().getLayoutX(), spaceship.getSpriteStack().getLayoutY() - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage);
+                        } else {
+                            System.out.println("spread");
+                        }
                     }
                     break;
             }
@@ -139,7 +148,15 @@ public class SpaceshipController {
             spaceship.setyVelocity(0);
         });
     }
-
+    public void switchShoot(){
+    if(spaceship.isSingleShot()){
+        spaceship.setShot(2);
+    } else if (spaceship.isSpeedShot()){
+        spaceship.setShot(3);
+    } else {
+        spaceship.setShot(1);
+    }
+}
     public void checkBulletCollision() {
         for (int i = 0; i < enemyBullets.size(); i++) {
             if (spaceship.getSpriteStack().getBoundsInParent().intersects(enemyBullets.get(i).getSpriteStack().getBoundsInParent())) {

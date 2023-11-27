@@ -4,12 +4,15 @@
  */
 package edu.vanier.models;
 
+import java.util.ArrayList;
+import javafx.animation.PauseTransition;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 /**
  *
@@ -18,14 +21,9 @@ import javafx.scene.shape.Rectangle;
 public class Sprite {
 
     static Pane pane;
+    static ArrayList<Bullet> bullets = new ArrayList<>();
     ImageView spriteImage = new ImageView();
     StackPane spriteStack = new StackPane(spriteImage);
-
-    public static Bullet shoot(Sprite shooter, double layoutX, double layoutY, Image image) {
-        Bullet bullet = new Bullet(layoutX + shooter.getSpriteStack().getWidth() / 2, layoutY, image);
-        pane.getChildren().add(bullet.getSpriteStack());
-        return bullet;
-    }
 
     public StackPane getSpriteStack() {
         return spriteStack;
@@ -33,6 +31,10 @@ public class Sprite {
 
     public void setSpriteStack(StackPane spriteStack) {
         this.spriteStack = spriteStack;
+    }
+
+    public static ArrayList<Bullet> getBullets() {
+        return bullets;
     }
 
     public ImageView getSpriteImage() {

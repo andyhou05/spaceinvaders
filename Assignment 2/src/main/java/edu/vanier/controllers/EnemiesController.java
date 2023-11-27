@@ -87,7 +87,7 @@ public class EnemiesController {
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
 
-        // Make enemies able to shoot.
+        // Make enemies able to singleShot.
         enemiesShoot();
 
         // Check for collisions.
@@ -100,7 +100,7 @@ public class EnemiesController {
             public void handle(ActionEvent event) {
                 for (Enemy currentEnemy : enemies) {
                     if (Math.random() < 0.15) {
-                        Bullet currentBullet = Sprite.shoot(currentEnemy,
+                        Bullet currentBullet = Bullet.singleShot(currentEnemy,
                                 currentEnemy.getSpriteStack().getLayoutX() + enemiesPane.getLayoutX(),
                                 currentEnemy.getSpriteStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getSpriteStack().getHeight(),
                                 enemyBulletImage

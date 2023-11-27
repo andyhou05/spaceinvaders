@@ -19,10 +19,13 @@ public class Spaceship extends Sprite {
     int xVelocity;
     int yVelocity;
     static int speed = 5;
-    ArrayList<Bullet> bullet = new ArrayList<>();
+    ArrayList<Bullet> bullets = new ArrayList<>();
     AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser1.wav").toExternalForm());
     boolean invincible = false;
     boolean canShoot = true;
+    boolean singleShot = true;
+    boolean speedShot = false;
+    boolean spreadShot = false;
 
     public Spaceship(StackPane spaceshipStack, Image image) {
         setSpriteStack(spaceshipStack);
@@ -54,12 +57,12 @@ public class Spaceship extends Sprite {
         Spaceship.speed = speed;
     }
 
-    public ArrayList<Bullet> getBullet() {
-        return bullet;
+    public ArrayList<Bullet> getBullets() {
+        return bullets;
     }
 
-    public void setBullet(ArrayList<Bullet> bullet) {
-        this.bullet = bullet;
+    public void setBullets(ArrayList<Bullet> bullets) {
+        this.bullets = bullets;
     }
 
     public boolean isInvincible() {
@@ -77,6 +80,46 @@ public class Spaceship extends Sprite {
 
     public AudioClip getSpaceshipShootAudio() {
         return spaceshipShootAudio;
+    }
+
+    public boolean isSingleShot() {
+        return singleShot;
+    }
+
+    public void setSingleShot(boolean singleShot) {
+        this.singleShot = singleShot;
+    }
+
+    public boolean isSpeedShot() {
+        return speedShot;
+    }
+
+    public void setSpeedShot(boolean speedShot) {
+        this.speedShot = speedShot;
+    }
+
+    public boolean isSpreadShot() {
+        return spreadShot;
+    }
+
+    public void setSpreadShot(boolean spreadShot) {
+        this.spreadShot = spreadShot;
+    }
+    
+    public void setShot(int shotChoice){ // must enter either 1,2 or 3.
+        if(shotChoice == 1){
+            setSingleShot(true);
+            setSpeedShot(false);
+            setSpreadShot(false);
+        } else if (shotChoice == 2){
+            setSingleShot(false);
+            setSpeedShot(true);
+            setSpreadShot(false);
+        } else if (shotChoice == 3){
+            setSingleShot(false);
+            setSpeedShot(false);
+            setSpreadShot(true);
+        }
     }
 
 }
