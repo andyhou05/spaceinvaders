@@ -67,33 +67,33 @@ public class SpaceshipController {
         // spaceship hits the left wall
         if (spaceship.getSpriteStack().getLayoutX() <= leftWall) {
             spaceship.getSpriteStack().setLayoutX(leftWall);
-            setSpaceshipMechanics(speed, 0, currentTop, currentBottom, spaceship.isCanShoot());
+            //setSpaceshipMechanics(speed, 0, currentTop, currentBottom, spaceship.isCanShoot());
             currentLeft = 0;
             currentRight = speed;
-        } // spaceship hits the right wall
+        }
+        // spaceship hits the right wall
         else if (spaceship.getSpriteStack().getLayoutX() >= rightWall) {
             spaceship.getSpriteStack().setLayoutX(rightWall);
-            setSpaceshipMechanics(0, -speed, currentTop, currentBottom, spaceship.isCanShoot());
+            //setSpaceshipMechanics(0, -speed, currentTop, currentBottom, spaceship.isCanShoot());
             currentRight = 0;
-            currentLeft = speed;
+            currentLeft = -speed;
         }
         // spaceship hits the top wall
         if (spaceship.getSpriteStack().getLayoutY() <= topWall) {
             spaceship.getSpriteStack().setLayoutY(topWall);
-            setSpaceshipMechanics(currentRight, currentLeft, 0, speed, spaceship.isCanShoot());
+            //setSpaceshipMechanics(currentRight, currentLeft, 0, speed, spaceship.isCanShoot());
             currentTop = 0;
             currentBottom = speed;
         } // spaceship hits the bottom wall
         else if (spaceship.getSpriteStack().getLayoutY() >= bottomWall) {
             spaceship.getSpriteStack().setLayoutY(bottomWall);
-            setSpaceshipMechanics(currentRight, currentLeft, -speed, 0, spaceship.isCanShoot());
+            //setSpaceshipMechanics(currentRight, currentLeft, -speed, 0, spaceship.isCanShoot());
             currentBottom = 0;
-            currentTop = speed;
+            currentTop = -speed;
 
-        } // no walls hit
-        else {
-            setSpaceshipMechanics(speed, -speed, -speed, speed, spaceship.isCanShoot());
         }
+         setSpaceshipMechanics(currentRight, currentLeft, currentTop, currentBottom, spaceship.isCanShoot());
+         System.out.println(currentLeft);
 
         // move the spaceship
         spaceship.getSpriteStack().setLayoutX(spaceship.getSpriteStack().getLayoutX() + spaceship.getxVelocity());
@@ -194,8 +194,8 @@ public class SpaceshipController {
 
     public void checkEnemyCollision() {
         for (Enemy currentEnemy : EnemiesController.getEnemies()) {
-            System.out.println(currentEnemy.getSpriteStack().getBoundsInParent());
-            if (currentEnemy.getSpriteStack().getBoundsInParent().intersects(spaceship.getSpriteStack().getBoundsInParent())) {
+            if (pane.localToScene(EnemiesController.enemiesPane.localToScene(currentEnemy.getSpriteStack().getBoundsInParent()))
+                    .intersects(spaceship.getSpriteStack().getBoundsInParent())) {
                 spaceshipHit();
             }
         }

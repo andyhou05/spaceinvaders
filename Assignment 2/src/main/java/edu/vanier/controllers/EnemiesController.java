@@ -30,7 +30,7 @@ public class EnemiesController {
 
     static ArrayList<Bullet> spaceshipBullets = new ArrayList<>();
     Pane pane;
-    Pane enemiesPane = new Pane();
+    static Pane enemiesPane = new Pane();
     static ArrayList<Enemy> enemies = new ArrayList<>();
     double movementDuration;
     Image enemyBulletImage;
