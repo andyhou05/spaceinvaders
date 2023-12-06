@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -29,15 +30,15 @@ import javafx.util.Duration;
 public class EnemiesController {
 
     static ArrayList<Bullet> spaceshipBullets = new ArrayList<>();
-    Pane pane;
+    static Pane pane;
     static Pane enemiesPane = new Pane();
     static ArrayList<Enemy> enemies = new ArrayList<>();
-    double movementDuration;
-    Image enemyBulletImage;
-    double enemyXdistance = 185;
-    double enemyYdistance = 100;
+    static Image enemyBulletImage;
+    static double enemyXdistance = 185;
+    static double enemyYdistance = 100;
+    static Text txtCongratulations;
 
-    AnimationTimer enemyAnimation = new AnimationTimer() {
+    static AnimationTimer enemyAnimation = new AnimationTimer() {
         @Override
         public void handle(long now) {
             double y = enemyYdistance;
@@ -54,32 +55,32 @@ public class EnemiesController {
             }
             // Make enemies able to singleShot.
             for (Enemy currentEnemy : enemies) {
-                    if (Math.random() < 0.001) {
-                        Bullet currentBullet = Bullet.singleShot(currentEnemy,
-                                currentEnemy.getSpriteStack().getLayoutX() + enemiesPane.getLayoutX(),
-                                currentEnemy.getSpriteStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getSpriteStack().getHeight(),
-                                enemyBulletImage
-                        );
-                        Enemy.getBullets().add(currentBullet);
-                        SpaceshipController.enemyBullets.add(currentBullet);
-                        currentEnemy.getEnemyShootAudio().play();
-                    }
+                if (Math.random() < 0.001) {
+                    Bullet currentBullet = Bullet.singleShot(currentEnemy,
+                            currentEnemy.getSpriteStack().getLayoutX() + enemiesPane.getLayoutX(),
+                            currentEnemy.getSpriteStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getSpriteStack().getHeight(),
+                            enemyBulletImage
+                    );
+                    Enemy.getBullets().add(currentBullet);
+                    SpaceshipController.enemyBullets.add(currentBullet);
+                    currentEnemy.getEnemyShootAudio().play();
                 }
+            }
             for (Bullet bullet : Enemy.getBullets()) {
-                    bullet.getSpriteStack().setLayoutY(bullet.getSpriteStack().getLayoutY() + 3);
-                }
+                bullet.getSpriteStack().setLayoutY(bullet.getSpriteStack().getLayoutY() + 3);
+            }
 
             // Check for collisions.
             checkBulletCollision();
         }
     };
 
-    public EnemiesController(Pane pane, double movementDuration, Image enemyBulletImage) {
+    public EnemiesController(Pane pane, Image enemyBulletImage, Text txtCongratulations) {
         enemiesPane.setPrefWidth(800);
         enemiesPane.setPrefHeight(400);
         this.pane = pane;
-        this.movementDuration = movementDuration;
         this.enemyBulletImage = enemyBulletImage;
+        EnemiesController.txtCongratulations = txtCongratulations;
     }
 
     public void spawn(int enemyNumber) {
@@ -100,33 +101,7 @@ public class EnemiesController {
     }
 
     public void moveEnemies() throws InterruptedException {
-
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(movementDuration), new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                double y = enemyYdistance;
-
-                if ((enemiesPane.getLayoutY() / y) % 2 == 0) {
-                    Enemy.setVelocity(Enemy.getHorizontalMovementSpeed());
-                } else {
-                    Enemy.setVelocity(-Enemy.getHorizontalMovementSpeed());
-                }
-
-                enemiesPane.setLayoutX(enemiesPane.getLayoutX() + Enemy.getVelocity());
-                if (enemiesPane.getLayoutX() + enemiesPane.getWidth() >= pane.getWidth() || enemiesPane.getLayoutX() <= 0) {
-                    enemiesPane.setLayoutY(enemiesPane.getLayoutY() + y);
-                }
-            }
-        }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-
-        // Make enemies able to singleShot.
-        enemiesShoot();
-
-        // Check for collisions.
-        checkBulletCollision();
+        enemyAnimation.start();
     }
 
     public void enemiesShoot() {
@@ -162,7 +137,7 @@ public class EnemiesController {
 
     }
 
-    public void checkBulletCollision() {
+    public static void checkBulletCollision() {
         AnimationTimer animation = new AnimationTimer() {
             @Override
             public void handle(long n) {
@@ -177,6 +152,7 @@ public class EnemiesController {
                             enemies.remove(enemies.get(i));
                             Sprite.removeEntity(b);
                             spaceshipBullets.remove(b);
+                            txtCongratulations.setVisible(enemies.isEmpty());
                             break;
                         }
                     }

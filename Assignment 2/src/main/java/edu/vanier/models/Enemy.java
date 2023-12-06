@@ -17,7 +17,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class Enemy extends Sprite {
 
-    static double horizontalMovementSpeed = 10;
+    static double horizontalMovementSpeed = 1;
     static double velocity;
     AudioClip enemyShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser2.wav").toExternalForm());
     static ArrayList<Bullet> bullets = new ArrayList<>();

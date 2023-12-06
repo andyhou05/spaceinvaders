@@ -18,12 +18,14 @@ import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import static javafx.scene.input.KeyCode.A;
 import static javafx.scene.input.KeyCode.D;
 import static javafx.scene.input.KeyCode.SPACE;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -35,9 +37,11 @@ public class SpaceshipController {
     static ArrayList<Bullet> enemyBullets = new ArrayList<>();
     static Pane pane;
     static Spaceship spaceship;
+    static Text txtGameOver;
     Image spaceshipBulletImage;
     int speed = Spaceship.getSpeed();
     AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/sounds/sfx_shieldDown.wav").toExternalForm());
+    static AudioClip gameOverAudio = new AudioClip(SpaceshipController.class.getResource("/sounds/gameOver.wav").toExternalForm());
 
     AnimationTimer animation = new AnimationTimer() {
         @Override
@@ -47,10 +51,11 @@ public class SpaceshipController {
         }
     };
 
-    public SpaceshipController(Spaceship spaceship, Image spaceshipBulletImage, Pane pane) {
+    public SpaceshipController(Spaceship spaceship, Image spaceshipBulletImage, Pane pane, Text lblGameOver) {
         this.spaceship = spaceship;
         this.spaceshipBulletImage = spaceshipBulletImage;
         SpaceshipController.pane = pane;
+        SpaceshipController.txtGameOver = lblGameOver;
     }
 
     public void setSpaceshipAnimation() {
@@ -67,33 +72,28 @@ public class SpaceshipController {
         // spaceship hits the left wall
         if (spaceship.getSpriteStack().getLayoutX() <= leftWall) {
             spaceship.getSpriteStack().setLayoutX(leftWall);
-            //setSpaceshipMechanics(speed, 0, currentTop, currentBottom, spaceship.isCanShoot());
             currentLeft = 0;
             currentRight = speed;
         }
         // spaceship hits the right wall
         else if (spaceship.getSpriteStack().getLayoutX() >= rightWall) {
             spaceship.getSpriteStack().setLayoutX(rightWall);
-            //setSpaceshipMechanics(0, -speed, currentTop, currentBottom, spaceship.isCanShoot());
             currentRight = 0;
             currentLeft = -speed;
         }
         // spaceship hits the top wall
         if (spaceship.getSpriteStack().getLayoutY() <= topWall) {
             spaceship.getSpriteStack().setLayoutY(topWall);
-            //setSpaceshipMechanics(currentRight, currentLeft, 0, speed, spaceship.isCanShoot());
             currentTop = 0;
             currentBottom = speed;
         } // spaceship hits the bottom wall
         else if (spaceship.getSpriteStack().getLayoutY() >= bottomWall) {
             spaceship.getSpriteStack().setLayoutY(bottomWall);
-            //setSpaceshipMechanics(currentRight, currentLeft, -speed, 0, spaceship.isCanShoot());
             currentBottom = 0;
             currentTop = -speed;
 
         }
          setSpaceshipMechanics(currentRight, currentLeft, currentTop, currentBottom, spaceship.isCanShoot());
-         System.out.println(currentLeft);
 
         // move the spaceship
         spaceship.getSpriteStack().setLayoutX(spaceship.getSpriteStack().getLayoutX() + spaceship.getxVelocity());
@@ -208,6 +208,9 @@ public class SpaceshipController {
         if (spaceship.getLives() == 0) {
             spaceship.killAnimation(pane);
             animation.stop();
+            EnemiesController.enemyAnimation.stop();
+            gameOverAudio.play();
+            txtGameOver.setVisible(true);
         }
     }
 

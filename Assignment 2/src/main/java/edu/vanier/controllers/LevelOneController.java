@@ -9,11 +9,13 @@ import edu.vanier.models.Sprite;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -29,6 +31,12 @@ public class LevelOneController {
     
     @FXML
     ImageView backgroundImage;
+    
+    @FXML
+    Text txtGameOver;
+    
+    @FXML
+    Text txtCongratulations;
 
     @FXML
     public void initialize() {
@@ -42,12 +50,13 @@ public class LevelOneController {
         backgroundImage.setFitHeight(pane.getPrefHeight());
         Sprite.setPane(pane);
         
-        EnemiesController enemies_Level_One = new EnemiesController(pane, 0.2, new Image("/images/bullets/laserRed05.png"));
-        enemies_Level_One.spawn(15);
+        EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"), txtCongratulations);
+        enemies_Level_One.spawn(1);
         enemies_Level_One.moveEnemies();
         SpaceshipController spaceship_Level_One = new SpaceshipController(new Spaceship(spaceship, 
                 new Image("/images/spaceships/playerShip2_blue.png")), new Image("/images/bullets/laserBlue05.png"),
-                pane
+                pane,
+                txtGameOver
         );
         spaceship_Level_One.move();
         
