@@ -18,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 public class Spaceship extends Sprite {
     int xVelocity;
     int yVelocity;
+    int lives = 3;
     static int speed = 5;
     ArrayList<Bullet> bullets = new ArrayList<>();
     AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser1.wav").toExternalForm());
@@ -39,6 +40,14 @@ public class Spaceship extends Sprite {
 
     public void setxVelocity(int xVelocity) {
         this.xVelocity = xVelocity;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
     }
 
     public int getyVelocity() {

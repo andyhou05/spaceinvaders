@@ -33,22 +33,25 @@ import javafx.util.Duration;
 public class SpaceshipController {
 
     static ArrayList<Bullet> enemyBullets = new ArrayList<>();
-    Spaceship spaceship;
+    static Pane pane;
+    static Spaceship spaceship;
     Image spaceshipBulletImage;
     int speed = Spaceship.getSpeed();
     AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/sounds/sfx_shieldDown.wav").toExternalForm());
 
-    public SpaceshipController(Spaceship spaceship, Image spaceshipBulletImage) {
-        this.spaceship = spaceship;
-        this.spaceshipBulletImage = spaceshipBulletImage;
-    }
-
     AnimationTimer animation = new AnimationTimer() {
         @Override
         public void handle(long n) {
+            // *refactor this*
             setSpaceshipAnimation();
         }
     };
+
+    public SpaceshipController(Spaceship spaceship, Image spaceshipBulletImage, Pane pane) {
+        this.spaceship = spaceship;
+        this.spaceshipBulletImage = spaceshipBulletImage;
+        SpaceshipController.pane = pane;
+    }
 
     public void setSpaceshipAnimation() {
         // Border detection, if we reach a border, set the left/right speed to 0.
@@ -73,7 +76,8 @@ public class SpaceshipController {
             setSpaceshipMechanics(0, -speed, currentTop, currentBottom, spaceship.isCanShoot());
             currentRight = 0;
             currentLeft = speed;
-        } // spaceship hits the top wall
+        }
+        // spaceship hits the top wall
         if (spaceship.getSpriteStack().getLayoutY() <= topWall) {
             spaceship.getSpriteStack().setLayoutY(topWall);
             setSpaceshipMechanics(currentRight, currentLeft, 0, speed, spaceship.isCanShoot());
@@ -103,6 +107,7 @@ public class SpaceshipController {
         // Check for collisions.
         if (!spaceship.isInvincible()) {
             checkBulletCollision();
+            checkEnemyCollision();
         }
 
     }
@@ -180,11 +185,29 @@ public class SpaceshipController {
         for (int i = 0; i < enemyBullets.size(); i++) {
             if (spaceship.getSpriteStack().getBoundsInParent().intersects(enemyBullets.get(i).getSpriteStack().getBoundsInParent())) {
                 Sprite.removeEntity(enemyBullets.get(i));
-                spaceship.setInvincible(true);
-                spaceshipHitAnimation();
+                spaceshipHit();
                 Enemy.getBullets().remove(enemyBullets.get(i));
                 enemyBullets.remove(enemyBullets.get(i));
             }
+        }
+    }
+
+    public void checkEnemyCollision() {
+        for (Enemy currentEnemy : EnemiesController.getEnemies()) {
+            System.out.println(currentEnemy.getSpriteStack().getBoundsInParent());
+            if (currentEnemy.getSpriteStack().getBoundsInParent().intersects(spaceship.getSpriteStack().getBoundsInParent())) {
+                spaceshipHit();
+            }
+        }
+    }
+
+    public void spaceshipHit() {
+        spaceship.setInvincible(true);
+        spaceshipHitAnimation();
+        spaceship.setLives(spaceship.getLives() - 1);
+        if (spaceship.getLives() == 0) {
+            spaceship.killAnimation(pane);
+            animation.stop();
         }
     }
 

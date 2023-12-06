@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
@@ -23,6 +24,18 @@ public class Sprite {
     static Pane pane;
     ImageView spriteImage = new ImageView();
     StackPane spriteStack = new StackPane(spriteImage);
+    AudioClip explosionAudio = new AudioClip(getClass().getResource("/sounds/8bit_bomb_explosion.wav").toExternalForm());
+
+    public void killAnimation(Pane spaceshipPane) {
+        this.getSpriteImage().setImage(new Image("/images/Explosion.gif"));
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+        pause.setOnFinished((event) -> {
+            spaceshipPane.getChildren().remove(this.getSpriteStack());
+        });
+        pause.setCycleCount(1);
+        pause.play();
+        explosionAudio.play();
+    }
 
     public StackPane getSpriteStack() {
         return spriteStack;
@@ -47,4 +60,9 @@ public class Sprite {
     public static void removeEntity(Sprite entity) {
         pane.getChildren().remove(entity.getSpriteStack());
     }
+
+    public AudioClip getExplosionAudio() {
+        return explosionAudio;
+    }
+
 }

@@ -19,13 +19,11 @@ public class Enemy extends Sprite {
 
     static double horizontalMovementSpeed = 10;
     static double velocity;
-    ImageView enemyImage;
     AudioClip enemyShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser2.wav").toExternalForm());
-    AudioClip enemyExplosionAudio = new AudioClip(getClass().getResource("/sounds/8bit_bomb_explosion.wav").toExternalForm());
     static ArrayList<Bullet> bullets = new ArrayList<>();
 
     public Enemy(double layoutX, double layoutY) {
-        enemyImage = getSpriteImage();
+        ImageView enemyImage = getSpriteImage();
         String enemyColor;
         StringBuilder filePathBuilder = new StringBuilder("/images/enemies/enemy");
 
@@ -82,20 +80,8 @@ public class Enemy extends Sprite {
         return bullets;
     }
 
-    public ImageView getEnemyImage() {
-        return enemyImage;
-    }
-
-    public void setEnemyImage(ImageView enemyImage) {
-        this.enemyImage = enemyImage;
-    }
-
     public AudioClip getEnemyShootAudio() {
         return enemyShootAudio;
-    }
-
-    public AudioClip getEnemyExplosionAudio() {
-        return enemyExplosionAudio;
     }
 
 }

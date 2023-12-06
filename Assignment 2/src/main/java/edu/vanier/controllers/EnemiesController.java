@@ -29,14 +29,50 @@ import javafx.util.Duration;
 public class EnemiesController {
 
     static ArrayList<Bullet> spaceshipBullets = new ArrayList<>();
-    StackPane enemy;
     Pane pane;
     Pane enemiesPane = new Pane();
-    ArrayList<Enemy> enemies = new ArrayList<>();
+    static ArrayList<Enemy> enemies = new ArrayList<>();
     double movementDuration;
     Image enemyBulletImage;
     double enemyXdistance = 185;
     double enemyYdistance = 100;
+
+    AnimationTimer enemyAnimation = new AnimationTimer() {
+        @Override
+        public void handle(long now) {
+            double y = enemyYdistance;
+
+            if ((enemiesPane.getLayoutY() / y) % 2 == 0) {
+                Enemy.setVelocity(Enemy.getHorizontalMovementSpeed());
+            } else {
+                Enemy.setVelocity(-Enemy.getHorizontalMovementSpeed());
+            }
+
+            enemiesPane.setLayoutX(enemiesPane.getLayoutX() + Enemy.getVelocity());
+            if (enemiesPane.getLayoutX() + enemiesPane.getWidth() >= pane.getWidth() || enemiesPane.getLayoutX() <= 0) {
+                enemiesPane.setLayoutY(enemiesPane.getLayoutY() + y);
+            }
+            // Make enemies able to singleShot.
+            for (Enemy currentEnemy : enemies) {
+                    if (Math.random() < 0.001) {
+                        Bullet currentBullet = Bullet.singleShot(currentEnemy,
+                                currentEnemy.getSpriteStack().getLayoutX() + enemiesPane.getLayoutX(),
+                                currentEnemy.getSpriteStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getSpriteStack().getHeight(),
+                                enemyBulletImage
+                        );
+                        Enemy.getBullets().add(currentBullet);
+                        SpaceshipController.enemyBullets.add(currentBullet);
+                        currentEnemy.getEnemyShootAudio().play();
+                    }
+                }
+            for (Bullet bullet : Enemy.getBullets()) {
+                    bullet.getSpriteStack().setLayoutY(bullet.getSpriteStack().getLayoutY() + 3);
+                }
+
+            // Check for collisions.
+            checkBulletCollision();
+        }
+    };
 
     public EnemiesController(Pane pane, double movementDuration, Image enemyBulletImage) {
         enemiesPane.setPrefWidth(800);
@@ -59,7 +95,6 @@ public class EnemiesController {
             Enemy currentEnemy = new Enemy(currentLayoutX, currentLayoutY);
             enemiesPane.getChildren().add(currentEnemy.getSpriteStack());
             enemies.add(currentEnemy);
-
         }
         pane.getChildren().add(enemiesPane);
     }
@@ -138,14 +173,7 @@ public class EnemiesController {
                         // turns the local bounds of the enemy to the bounds of the enemiesPane.
                         if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getSpriteStack().getBoundsInParent())).intersects(b.getSpriteStack().getBoundsInParent())) {
                             // kill the space invader
-                            currentEnemy.getEnemyImage().setImage(new Image("/images/Explosion.gif"));
-                            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
-                            pause.setOnFinished((event) -> {
-                                enemiesPane.getChildren().remove(currentEnemy.getSpriteStack());
-                            });
-                            pause.setCycleCount(1);
-                            pause.play();
-                            enemies.get(i).getEnemyExplosionAudio().play();
+                            currentEnemy.killAnimation(enemiesPane);
                             enemies.remove(enemies.get(i));
                             Sprite.removeEntity(b);
                             spaceshipBullets.remove(b);
@@ -157,5 +185,9 @@ public class EnemiesController {
             }
         };
         animation.start();
+    }
+
+    public static ArrayList<Enemy> getEnemies() {
+        return enemies;
     }
 }
