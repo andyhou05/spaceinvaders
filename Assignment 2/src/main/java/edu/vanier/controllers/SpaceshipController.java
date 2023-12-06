@@ -75,8 +75,7 @@ public class SpaceshipController {
             spaceship.getSpriteStack().setLayoutX(leftWall);
             currentLeft = 0;
             currentRight = speed;
-        }
-        // spaceship hits the right wall
+        } // spaceship hits the right wall
         else if (spaceship.getSpriteStack().getLayoutX() >= rightWall) {
             spaceship.getSpriteStack().setLayoutX(rightWall);
             currentRight = 0;
@@ -94,7 +93,7 @@ public class SpaceshipController {
             currentTop = -speed;
 
         }
-         setSpaceshipMechanics(currentRight, currentLeft, currentTop, currentBottom, spaceship.isCanShoot());
+        setSpaceshipMechanics(currentRight, currentLeft, currentTop, currentBottom);
 
         // move the spaceship
         spaceship.getSpriteStack().setLayoutX(spaceship.getSpriteStack().getLayoutX() + spaceship.getxVelocity());
@@ -113,7 +112,7 @@ public class SpaceshipController {
 
     }
 
-    public void setSpaceshipMechanics(int right, int left, int top, int bottom, boolean canShoot) {
+    public void setSpaceshipMechanics(int right, int left, int top, int bottom) {
         spaceship.getSpriteStack().getScene().setOnKeyPressed((e) -> {
             switch (e.getCode()) {
                 case D:
@@ -132,20 +131,19 @@ public class SpaceshipController {
                     switchShoot();
                     break;
                 case SPACE:
-                    if (canShoot) {
-                        if (spaceship.isSingleShot()) {
-                            addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX(), spaceship.getSpriteStack().getLayoutY() - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
-                            spaceship.getSpaceshipShootAudio().play();
-                            delayShoot(0.2);
-                            
-                        } else if (spaceship.isSpeedShot()) {
-                            speedShot(spaceship);
-                            delayShoot(1.5);
-                        } else {
-                            spreadShot();
-                            delayShoot(3);
-                        }
+                    if (spaceship.isCanShoot() && spaceship.isSingleShot()) {
+                        addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX(), spaceship.getSpriteStack().getLayoutY() - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
+                        spaceship.getSpaceshipShootAudio().play();
+                        delaySingleShoot();
+
+                    } else if (spaceship.isCanSpeedShoot() && spaceship.isSpeedShot()) {
+                        speedShot(spaceship);
+                        delaySpeedShoot();
+                    } else if (spaceship.isCanSpreadShoot() && spaceship.isSpreadShot()) {
+                        spreadShot();
+                        delaySpreadShoot();
                     }
+
                     break;
             }
         });
@@ -173,9 +171,10 @@ public class SpaceshipController {
     }
 
     public void spreadShot() {
-        addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX() - spaceship.getSpriteStack().getWidth()/2, spaceship.getSpriteStack().getLayoutY()+20 - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
-        addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX() + spaceship.getSpriteStack().getWidth()/2, spaceship.getSpriteStack().getLayoutY()+20 - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
+        addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX() - spaceship.getSpriteStack().getWidth() / 2, spaceship.getSpriteStack().getLayoutY() + 20 - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
+        addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX() + spaceship.getSpriteStack().getWidth() / 2, spaceship.getSpriteStack().getLayoutY() + 20 - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
         addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX(), spaceship.getSpriteStack().getLayoutY() - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
+        spaceship.getSpaceshipShootAudio().play();
     }
 
     public void switchShoot() {
@@ -187,19 +186,30 @@ public class SpaceshipController {
             spaceship.setShot(1);
         }
     }
-    
-    public void delayShoot(double seconds){
-        PauseTransition instant = new PauseTransition(Duration.ZERO);
-        instant.setOnFinished((event) -> {
-            spaceship.setCanShoot(false);
-        });
-        PauseTransition pause = new PauseTransition(Duration.seconds(seconds));
+
+    public void delaySingleShoot() {
+        spaceship.setCanShoot(false);
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
         pause.setOnFinished((event) -> {
             spaceship.setCanShoot(true);
         });
-        SequentialTransition sequenece = new SequentialTransition(instant, pause);
-        sequenece.setCycleCount(1);
-        sequenece.play();
+        pause.play();
+    }
+    public void delaySpeedShoot() {
+        spaceship.setCanSpeedShoot(false);
+        PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+        pause.setOnFinished((event) -> {
+            spaceship.setCanSpeedShoot(true);
+        });
+        pause.play();
+    }
+    public void delaySpreadShoot() {
+        spaceship.setCanSpreadShoot(false);
+        PauseTransition pause = new PauseTransition(Duration.seconds(2.5));
+        pause.setOnFinished((event) -> {
+            spaceship.setCanSpreadShoot(true);
+        });
+        pause.play();
     }
 
     public void checkBulletCollision() {

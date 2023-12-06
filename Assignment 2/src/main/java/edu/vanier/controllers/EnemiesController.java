@@ -58,7 +58,7 @@ public class EnemiesController {
             }
             // Make enemies able to singleShot.
             for (Enemy currentEnemy : enemies) {
-                if (Math.random() < 0.001) {
+                if (Math.random() < 0.0015) {
                     Bullet currentBullet = Bullet.singleShot(currentEnemy,
                             currentEnemy.getSpriteStack().getLayoutX() + enemiesPane.getLayoutX(),
                             currentEnemy.getSpriteStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getSpriteStack().getHeight(),

@@ -24,6 +24,8 @@ public class Spaceship extends Sprite {
     AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser1.wav").toExternalForm());
     boolean invincible = false;
     boolean canShoot = true;
+    boolean canSpeedShoot = true;
+    boolean canSpreadShoot = true;
     boolean singleShot = true;
     boolean speedShot = false;
     boolean spreadShot = false;
@@ -89,6 +91,22 @@ public class Spaceship extends Sprite {
 
     public boolean isCanShoot() {
         return canShoot;
+    }
+
+    public boolean isCanSpeedShoot() {
+        return canSpeedShoot;
+    }
+
+    public void setCanSpeedShoot(boolean canSpeedShoot) {
+        this.canSpeedShoot = canSpeedShoot;
+    }
+
+    public boolean isCanSpreadShoot() {
+        return canSpreadShoot;
+    }
+
+    public void setCanSpreadShoot(boolean canSpreadShoot) {
+        this.canSpreadShoot = canSpreadShoot;
     }
 
     public AudioClip getSpaceshipShootAudio() {
