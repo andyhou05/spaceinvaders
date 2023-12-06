@@ -1,31 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="backgroundImage" fitHeight="800.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true" />
-      <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" visible="false">
+      <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0">
          <children>
             <StackPane fx:id="spaceship" layoutX="520.0" layoutY="680.0" prefHeight="45.0" prefWidth="60.0">
                <children>
                   <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </StackPane>
-            <Text fx:id="txtGameOver" fill="#51ff00" layoutX="287.0" layoutY="300.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="4.0" text="GAME OVER" visible="false">
+            <Label fx:id="lblCongratulations" layoutX="112.0" layoutY="267.0" prefHeight="106.0" prefWidth="868.0" text="CONGRATULATIONS" visible="false">
                <font>
                   <Font name="Berlin Sans FB" size="96.0" />
                </font>
-            </Text>
-            <Text fx:id="txtCongratulations" fill="#00ff44" layoutX="89.0" layoutY="299.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="4.0" text="CONGRATULATIONS" visible="false">
+               <textFill>
+                  <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color green="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.8289473652839661" green="0.9473684430122375" blue="0.3552631437778473" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </textFill>
+            </Label>
+            <Label fx:id="lblGameOver" layoutX="291.0" layoutY="294.0" text="GAME OVER" visible="false">
                <font>
                   <Font name="Berlin Sans FB" size="96.0" />
                </font>
-            </Text>
+               <textFill>
+                  <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.42105263471603394" green="0.0623781681060791" blue="0.0623781681060791" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </textFill>
+            </Label>
          </children>
       </Pane>
    </children>

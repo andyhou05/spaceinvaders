@@ -15,10 +15,12 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -36,7 +38,8 @@ public class EnemiesController {
     static Image enemyBulletImage;
     static double enemyXdistance = 185;
     static double enemyYdistance = 100;
-    static Text txtCongratulations;
+    static Label lblCongratulations;
+    static AudioClip winAudio = new AudioClip(SpaceshipController.class.getResource("/sounds/win.wav").toExternalForm());
 
     static AnimationTimer enemyAnimation = new AnimationTimer() {
         @Override
@@ -75,12 +78,12 @@ public class EnemiesController {
         }
     };
 
-    public EnemiesController(Pane pane, Image enemyBulletImage, Text txtCongratulations) {
+    public EnemiesController(Pane pane, Image enemyBulletImage, Label lblCongratulations) {
         enemiesPane.setPrefWidth(800);
         enemiesPane.setPrefHeight(400);
         this.pane = pane;
         this.enemyBulletImage = enemyBulletImage;
-        EnemiesController.txtCongratulations = txtCongratulations;
+        EnemiesController.lblCongratulations = lblCongratulations;
     }
 
     public void spawn(int enemyNumber) {
@@ -152,7 +155,10 @@ public class EnemiesController {
                             enemies.remove(enemies.get(i));
                             Sprite.removeEntity(b);
                             spaceshipBullets.remove(b);
-                            txtCongratulations.setVisible(enemies.isEmpty());
+                            if(enemies.isEmpty()){
+                                lblCongratulations.setVisible(true);
+                                winAudio.play();
+                            }
                             break;
                         }
                     }

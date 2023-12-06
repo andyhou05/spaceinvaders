@@ -83,6 +83,10 @@ public class Spaceship extends Sprite {
         this.canShoot = !invincible;
     }
 
+    public void setCanShoot(boolean canShoot) {
+        this.canShoot = canShoot;
+    }
+
     public boolean isCanShoot() {
         return canShoot;
     }
@@ -116,19 +120,9 @@ public class Spaceship extends Sprite {
     }
     
     public void setShot(int shotChoice){ // must enter either 1,2 or 3.
-        if(shotChoice == 1){
-            setSingleShot(true);
-            setSpeedShot(false);
-            setSpreadShot(false);
-        } else if (shotChoice == 2){
-            setSingleShot(false);
-            setSpeedShot(true);
-            setSpreadShot(false);
-        } else if (shotChoice == 3){
-            setSingleShot(false);
-            setSpeedShot(false);
-            setSpreadShot(true);
-        }
+        setSingleShot(shotChoice == 1);
+        setSpeedShot(shotChoice == 2);
+        setSpreadShot(shotChoice == 3);
     }
 
 }

@@ -33,10 +33,10 @@ public class LevelOneController {
     ImageView backgroundImage;
     
     @FXML
-    Text txtGameOver;
+    Label lblGameOver;
     
     @FXML
-    Text txtCongratulations;
+    Label lblCongratulations;
 
     @FXML
     public void initialize() {
@@ -50,13 +50,13 @@ public class LevelOneController {
         backgroundImage.setFitHeight(pane.getPrefHeight());
         Sprite.setPane(pane);
         
-        EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"), txtCongratulations);
-        enemies_Level_One.spawn(1);
+        EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"), lblCongratulations);
+        enemies_Level_One.spawn(15);
         enemies_Level_One.moveEnemies();
         SpaceshipController spaceship_Level_One = new SpaceshipController(new Spaceship(spaceship, 
                 new Image("/images/spaceships/playerShip2_blue.png")), new Image("/images/bullets/laserBlue05.png"),
                 pane,
-                txtGameOver
+                lblGameOver
         );
         spaceship_Level_One.move();
         

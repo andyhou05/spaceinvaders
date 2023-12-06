@@ -27,6 +27,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javax.sound.midi.Sequence;
 
 /**
  *
@@ -37,7 +38,7 @@ public class SpaceshipController {
     static ArrayList<Bullet> enemyBullets = new ArrayList<>();
     static Pane pane;
     static Spaceship spaceship;
-    static Text txtGameOver;
+    static Label lblGameOver;
     Image spaceshipBulletImage;
     int speed = Spaceship.getSpeed();
     AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/sounds/sfx_shieldDown.wav").toExternalForm());
@@ -51,11 +52,11 @@ public class SpaceshipController {
         }
     };
 
-    public SpaceshipController(Spaceship spaceship, Image spaceshipBulletImage, Pane pane, Text lblGameOver) {
+    public SpaceshipController(Spaceship spaceship, Image spaceshipBulletImage, Pane pane, Label lblGameOver) {
         this.spaceship = spaceship;
         this.spaceshipBulletImage = spaceshipBulletImage;
         SpaceshipController.pane = pane;
-        SpaceshipController.txtGameOver = lblGameOver;
+        SpaceshipController.lblGameOver = lblGameOver;
     }
 
     public void setSpaceshipAnimation() {
@@ -135,10 +136,14 @@ public class SpaceshipController {
                         if (spaceship.isSingleShot()) {
                             addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX(), spaceship.getSpriteStack().getLayoutY() - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
                             spaceship.getSpaceshipShootAudio().play();
+                            delayShoot(0.2);
+                            
                         } else if (spaceship.isSpeedShot()) {
-                            speedShot(spaceship, spaceshipBulletImage);
+                            speedShot(spaceship);
+                            delayShoot(1.5);
                         } else {
-                            System.out.println("spread");
+                            spreadShot();
+                            delayShoot(3);
                         }
                     }
                     break;
@@ -150,15 +155,15 @@ public class SpaceshipController {
         });
     }
 
-    public void speedShot(Spaceship shooter, Image image) {
+    public void speedShot(Spaceship shooter) {
         SequentialTransition speedShotAnimation = new SequentialTransition();
         double height = shooter.getSpriteStack().getPrefHeight();
-        addBullet(singleShot(shooter, shooter.getSpriteStack().getLayoutX(), shooter.getSpriteStack().getLayoutY() - height, image));
+        addBullet(singleShot(shooter, shooter.getSpriteStack().getLayoutX(), shooter.getSpriteStack().getLayoutY() - height, spaceshipBulletImage));
         spaceship.getSpaceshipShootAudio().play();
         for (int i = 0; i < 2; i++) {
             PauseTransition bulletPause = new PauseTransition(Duration.seconds(0.25));
             bulletPause.setOnFinished((event) -> {
-                addBullet(singleShot(shooter, shooter.getSpriteStack().getLayoutX(), shooter.getSpriteStack().getLayoutY() - height, image));
+                addBullet(singleShot(shooter, shooter.getSpriteStack().getLayoutX(), shooter.getSpriteStack().getLayoutY() - height, spaceshipBulletImage));
                 spaceship.getSpaceshipShootAudio().play();
             });
             bulletPause.setCycleCount(1);
@@ -167,8 +172,10 @@ public class SpaceshipController {
         speedShotAnimation.play();
     }
 
-    public static Bullet[] spreadShot(Sprite shooter, double layoutX, double layoutY, Image image) {
-        return null;
+    public void spreadShot() {
+        addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX() - spaceship.getSpriteStack().getWidth()/2, spaceship.getSpriteStack().getLayoutY()+20 - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
+        addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX() + spaceship.getSpriteStack().getWidth()/2, spaceship.getSpriteStack().getLayoutY()+20 - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
+        addBullet(Bullet.singleShot(spaceship, spaceship.getSpriteStack().getLayoutX(), spaceship.getSpriteStack().getLayoutY() - spaceship.getSpriteStack().getHeight(), spaceshipBulletImage));
     }
 
     public void switchShoot() {
@@ -179,6 +186,20 @@ public class SpaceshipController {
         } else {
             spaceship.setShot(1);
         }
+    }
+    
+    public void delayShoot(double seconds){
+        PauseTransition instant = new PauseTransition(Duration.ZERO);
+        instant.setOnFinished((event) -> {
+            spaceship.setCanShoot(false);
+        });
+        PauseTransition pause = new PauseTransition(Duration.seconds(seconds));
+        pause.setOnFinished((event) -> {
+            spaceship.setCanShoot(true);
+        });
+        SequentialTransition sequenece = new SequentialTransition(instant, pause);
+        sequenece.setCycleCount(1);
+        sequenece.play();
     }
 
     public void checkBulletCollision() {
@@ -210,7 +231,7 @@ public class SpaceshipController {
             animation.stop();
             EnemiesController.enemyAnimation.stop();
             gameOverAudio.play();
-            txtGameOver.setVisible(true);
+            lblGameOver.setVisible(true);
         }
     }
 
