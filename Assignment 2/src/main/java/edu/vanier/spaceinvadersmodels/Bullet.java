@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package edu.vanier.models;
+package edu.vanier.spaceinvadersmodels;
 
-import static edu.vanier.models.GameObject.pane;
+import static edu.vanier.spaceinvadersmodels.GameObject.pane;
 import java.util.List;
 import javafx.scene.image.Image;
 

@@ -1,6 +1,6 @@
-package edu.vanier.main;
+package edu.vanier.spaceinvaders.main;
 
-import edu.vanier.controllers.LevelOneController;
+import edu.vanier.spaceinvaders.controllers.LevelOneController;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;

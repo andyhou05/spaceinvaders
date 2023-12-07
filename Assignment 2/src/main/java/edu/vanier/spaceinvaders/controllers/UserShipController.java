@@ -2,12 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package edu.vanier.controllers;
+package edu.vanier.spaceinvaders.controllers;
 
-import edu.vanier.models.Bullet;
-import static edu.vanier.models.Bullet.singleShot;
-import edu.vanier.models.Enemy;
-import edu.vanier.models.User;
+import edu.vanier.spaceinvadersmodels.Bullet;
+import static edu.vanier.spaceinvadersmodels.Bullet.singleShot;
+import edu.vanier.spaceinvadersmodels.Enemy;
+import edu.vanier.spaceinvadersmodels.User;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
@@ -36,7 +36,7 @@ import javafx.util.Duration;
  *
  * @author andyhou
  */
-public class SpaceshipController {
+public class UserShipController {
 
     ArrayList<Bullet> enemyBullets = Enemy.getBullets();
     static Pane pane;
@@ -45,9 +45,9 @@ public class SpaceshipController {
     Image userShipBulletImage;
     int speed = User.getSpeed();
     AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/sounds/sfx_shieldDown.wav").toExternalForm());
-    static AudioClip gameOverAudio = new AudioClip(SpaceshipController.class.getResource("/sounds/gameOver.wav").toExternalForm());
+    static AudioClip gameOverAudio = new AudioClip(UserShipController.class.getResource("/sounds/gameOver.wav").toExternalForm());
     static Label lblCongratulations;
-    static AudioClip winAudio = new AudioClip(SpaceshipController.class.getResource("/sounds/win.wav").toExternalForm());
+    static AudioClip winAudio = new AudioClip(UserShipController.class.getResource("/sounds/win.wav").toExternalForm());
     static Circle portal;
     static boolean portalSpawned = false;
     static boolean portalEntered = false;
@@ -69,13 +69,13 @@ public class SpaceshipController {
         }
     };
 
-    public SpaceshipController(User userShip, Image spaceshipBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal) {
+    public UserShipController(User userShip, Image spaceshipBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal) {
         this.userShip = userShip;
         this.userShipBulletImage = spaceshipBulletImage;
-        SpaceshipController.pane = pane;
-        SpaceshipController.lblGameOver = lblGameOver;
-        SpaceshipController.lblCongratulations = lblCongratulations;
-        SpaceshipController.portal = portal;
+        UserShipController.pane = pane;
+        UserShipController.lblGameOver = lblGameOver;
+        UserShipController.lblCongratulations = lblCongratulations;
+        UserShipController.portal = portal;
         currentLevel = 1;
     }
 
@@ -304,6 +304,10 @@ public class SpaceshipController {
                     .intersects(userShip.getObjectImage().getBoundsInParent())) {
                 spaceshipHit();
             }
+            if(currentEnemy.getObjectImage().getLayoutY() + EnemiesController.enemiesPane.getLayoutY() >= pane.getPrefHeight()){
+                User.setLives(0);
+                checkLivesRemaining();
+            }
         }
     }
 
@@ -311,6 +315,10 @@ public class SpaceshipController {
         userShip.setInvincible(true);
         spaceshipHitAnimation();
         userShip.setLives(userShip.getLives() - 1);
+        checkLivesRemaining();
+    }
+    
+    public void checkLivesRemaining(){
         if (userShip.getLives() == 0) {
             userShip.killAnimation(pane);
             animation.stop();

@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package edu.vanier.controllers;
+package edu.vanier.spaceinvaders.controllers;
 
-import edu.vanier.models.Bullet;
-import edu.vanier.models.Enemy;
-import edu.vanier.models.User;
+import edu.vanier.spaceinvadersmodels.Bullet;
+import edu.vanier.spaceinvadersmodels.Enemy;
+import edu.vanier.spaceinvadersmodels.User;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
