@@ -41,6 +41,8 @@ import javafx.util.Duration;
 public class UserShipController {
 
     ArrayList<Bullet> enemyBullets = Enemy.getBullets();
+    static boolean speedShotUnlocked;
+    static boolean spreadShotUnlocked;
     static Pane pane;
     static User userShip;
     static Label lblGameOver;
@@ -86,8 +88,10 @@ public class UserShipController {
         UserShipController.lblScore = lblScore;
         UserShipController.lifeImages = lifeImages;
         currentLevel = 1;
+        checkAvailableShots();
         setLevelLabel();
         setScoreLabel();
+        EnemiesController.spawn(15);
     }
 
     private void checkWallCollision() {
@@ -263,9 +267,9 @@ public class UserShipController {
     }
 
     public void switchShoot() {
-        if (userShip.isSingleShot()) {
+        if (userShip.isSingleShot() && speedShotUnlocked) {
             userShip.setShot(2);
-        } else if (userShip.isSpeedShot()) {
+        } else if (userShip.isSpeedShot() && spreadShotUnlocked) {
             userShip.setShot(3);
         } else {
             userShip.setShot(1);
@@ -400,6 +404,11 @@ public class UserShipController {
     public static void setLevelLabel(){
         lblLevel.setText("Level "+currentLevel);
     }
+    
+    public static void checkAvailableShots(){
+        speedShotUnlocked = (currentLevel == 2);
+        spreadShotUnlocked = (currentLevel == 3);
+    }
 
     private void startNextLevel() {
         currentLevel++;
@@ -408,6 +417,7 @@ public class UserShipController {
         User.setLives(3);
         setLifeImage();
         setLevelLabel();
+        checkAvailableShots();
         EnemiesController.enemyAnimation.start();
         if (currentLevel == 2) {
             EnemiesController.spawn(20);

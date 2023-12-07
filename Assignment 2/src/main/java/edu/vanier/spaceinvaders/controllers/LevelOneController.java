@@ -79,7 +79,6 @@ public class LevelOneController {
     public void startLevelOne() throws InterruptedException, FileNotFoundException{
         
         EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"),0.8);
-        enemies_Level_One.spawn(15);
         enemies_Level_One.move();
         UserShipController spaceship_Level_One = new UserShipController(new User(userShipImage, 
                 new Image("/images/spaceships/playerShip2_blue.png")), new Image("/images/bullets/laserBlue05.png"),
