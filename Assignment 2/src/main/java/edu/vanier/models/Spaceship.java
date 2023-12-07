@@ -22,14 +22,20 @@ import javafx.util.Duration;
 public class Spaceship {
 
     static Pane pane;
+    static double width = 60;
+    static double height = 45;
     ImageView shipImage = new ImageView();
     StackPane stack = new StackPane(shipImage);
     AudioClip explosionAudio = new AudioClip(getClass().getResource("/sounds/8bit_bomb_explosion.wav").toExternalForm());
 
     public void killAnimation(Pane spaceshipPane) {
+        // we must create a new ImageView and add this to the main pane because
+        // if the spaceship to kill is an enemy, simply changing the image of
+        // the enemy will make it so that the explosion gif will move with the
+        // enemiesPane which is undesired.
         ImageView explosion = new ImageView(new Image("/images/Explosion.gif"));
-        explosion.setLayoutX(spaceshipPane.getLayoutX()+this.getStack().getLayoutX());
-        explosion.setLayoutY(spaceshipPane.getLayoutY()+this.getStack().getLayoutY());
+        explosion.setLayoutX(spaceshipPane.getLayoutX() + this.getStack().getLayoutX());
+        explosion.setLayoutY(spaceshipPane.getLayoutY() + this.getStack().getLayoutY());
         pane.getChildren().add(explosion);
         spaceshipPane.getChildren().remove(this.getStack());
         PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
