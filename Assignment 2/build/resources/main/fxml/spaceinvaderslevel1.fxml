@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fx:id="backgroundImage" fitHeight="800.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true" />
       <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0">
@@ -60,6 +60,19 @@
             <Circle fx:id="portal" fill="#1f93ff00" layoutX="546.0" layoutY="471.0" opacity="0.0" radius="71.0" stroke="BLACK" strokeType="INSIDE" />
             <StackPane fx:id="spaceship" layoutX="516.0" layoutY="665.0" prefHeight="45.0" prefWidth="60.0" />
             <ImageView fx:id="userShipImage" fitHeight="45.0" fitWidth="60.0" layoutX="520.0" layoutY="643.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="lblScore" layoutX="471.0" layoutY="14.0" text="Score:     " textFill="WHITE">
+               <font>
+                  <Font name="Century Gothic Bold Italic" size="22.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblLevel" layoutX="475.0" layoutY="42.0" text="Level  " textFill="WHITE">
+               <font>
+                  <Font name="Century Gothic Bold Italic" size="22.0" />
+               </font>
+            </Label>
+            <ImageView fx:id="life1" fitHeight="20.0" fitWidth="20.0" layoutX="15.0" layoutY="756.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="life2" fitHeight="20.0" fitWidth="20.0" layoutX="40.0" layoutY="756.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="life3" fitHeight="20.0" fitWidth="20.0" layoutX="65.0" layoutY="756.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
    </children>

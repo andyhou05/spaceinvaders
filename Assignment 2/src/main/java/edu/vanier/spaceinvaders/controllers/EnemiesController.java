@@ -114,6 +114,9 @@ public class EnemiesController {
                     enemies.remove(enemies.get(i));
                     Bullet.removeBullet(b);
                     spaceshipBullets.remove(b);
+                    // update the score
+                    LevelOneController.score += 10;
+                    UserShipController.setScoreLabel();
                     break;
                 }
             }

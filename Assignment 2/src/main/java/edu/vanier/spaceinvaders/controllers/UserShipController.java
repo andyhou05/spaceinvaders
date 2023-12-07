@@ -9,6 +9,7 @@ import static edu.vanier.spaceinvadersmodels.Bullet.singleShot;
 import edu.vanier.spaceinvadersmodels.Enemy;
 import edu.vanier.spaceinvadersmodels.User;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -24,6 +25,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import static javafx.scene.input.KeyCode.A;
 import static javafx.scene.input.KeyCode.D;
 import static javafx.scene.input.KeyCode.SPACE;
@@ -52,6 +54,10 @@ public class UserShipController {
     static boolean portalSpawned = false;
     static boolean portalEntered = false;
     static int currentLevel;
+    
+    static Label lblScore;
+    static Label lblLevel;
+    static List<ImageView> lifeImages;
 
     AnimationTimer animation = new AnimationTimer() {
         @Override
@@ -69,14 +75,19 @@ public class UserShipController {
         }
     };
 
-    public UserShipController(User userShip, Image spaceshipBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal) {
+    public UserShipController(User userShip, Image spaceshipBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal, Label lblScore, Label lblLevel, List<ImageView> lifeImages) {
         this.userShip = userShip;
         this.userShipBulletImage = spaceshipBulletImage;
         UserShipController.pane = pane;
         UserShipController.lblGameOver = lblGameOver;
         UserShipController.lblCongratulations = lblCongratulations;
         UserShipController.portal = portal;
+        UserShipController.lblLevel = lblLevel;
+        UserShipController.lblScore = lblScore;
+        UserShipController.lifeImages = lifeImages;
         currentLevel = 1;
+        setLevelLabel();
+        setScoreLabel();
     }
 
     private void checkWallCollision() {
@@ -312,10 +323,18 @@ public class UserShipController {
     }
 
     public void spaceshipHit() {
+        userShip.setLives(userShip.getLives() - 1);
         userShip.setInvincible(true);
         spaceshipHitAnimation();
-        userShip.setLives(userShip.getLives() - 1);
+        setLifeImage();
         checkLivesRemaining();
+    }
+    
+    public void setLifeImage(){
+            lifeImages.get(2).setVisible(User.getLives() >= 3);
+            lifeImages.get(1).setVisible(User.getLives() >= 2);
+            lifeImages.get(0).setVisible(User.getLives() >= 1);
+        
     }
     
     public void checkLivesRemaining(){
@@ -373,12 +392,22 @@ public class UserShipController {
             userShip.setCanShoot(true);
         }
     }
+    
+    public static void setScoreLabel(){
+        lblScore.setText("Score: "+LevelOneController.score);
+    }
+    
+    public static void setLevelLabel(){
+        lblLevel.setText("Level "+currentLevel);
+    }
 
     private void startNextLevel() {
         currentLevel++;
         portalSpawned = false;
         portalEntered = false;
         User.setLives(3);
+        setLifeImage();
+        setLevelLabel();
         EnemiesController.enemyAnimation.start();
         if (currentLevel == 2) {
             EnemiesController.spawn(20);
