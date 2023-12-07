@@ -16,10 +16,11 @@ import javafx.scene.shape.Rectangle;
  * @author andyhou
  */
 public class User extends Spaceship {
+
     int xVelocity;
     int yVelocity;
-    int lives = 3;
     static int speed = 5;
+    int lives = 3;
     ArrayList<Bullet> bullets = new ArrayList<>();
     AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser1.wav").toExternalForm());
     boolean invincible = false;
@@ -32,7 +33,7 @@ public class User extends Spaceship {
 
     public User(StackPane spaceshipStack, Image image) {
         setStack(spaceshipStack);
-        setShipImage((ImageView)spaceshipStack.getChildren().get(0));
+        setShipImage((ImageView) spaceshipStack.getChildren().get(0));
         getShipImage().setImage(image);
     }
 
@@ -136,8 +137,8 @@ public class User extends Spaceship {
     public void setSpreadShot(boolean spreadShot) {
         this.spreadShot = spreadShot;
     }
-    
-    public void setShot(int shotChoice){ // must enter either 1,2 or 3.
+
+    public void setShot(int shotChoice) { // must enter either 1,2 or 3.
         setSingleShot(shotChoice == 1);
         setSpeedShot(shotChoice == 2);
         setSpreadShot(shotChoice == 3);

@@ -27,10 +27,14 @@ public class Spaceship {
     AudioClip explosionAudio = new AudioClip(getClass().getResource("/sounds/8bit_bomb_explosion.wav").toExternalForm());
 
     public void killAnimation(Pane spaceshipPane) {
-        this.getShipImage().setImage(new Image("/images/Explosion.gif"));
+        ImageView explosion = new ImageView(new Image("/images/Explosion.gif"));
+        explosion.setLayoutX(spaceshipPane.getLayoutX()+this.getStack().getLayoutX());
+        explosion.setLayoutY(spaceshipPane.getLayoutY()+this.getStack().getLayoutY());
+        pane.getChildren().add(explosion);
+        spaceshipPane.getChildren().remove(this.getStack());
         PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
         pause.setOnFinished((event) -> {
-            spaceshipPane.getChildren().remove(this.getStack());
+            pane.getChildren().remove(explosion);
         });
         pause.setCycleCount(1);
         pause.play();
