@@ -22,43 +22,53 @@ import javafx.scene.shape.Circle;
  * @author andyhou
  */
 public class LevelOneController {
-    
+
     static int score;
 
     @FXML
     ImageView userShipImage;
-    
+
     @FXML
     Pane pane;
-    
+
     @FXML
     ImageView backgroundImage;
-    
+
     @FXML
     Label lblGameOver;
-    
+
     @FXML
     Label lblCongratulations;
-    
+
     @FXML
     Circle portal;
-    
+
     @FXML
     Label lblScore;
-    
+
     @FXML
     Label lblLevel;
-    
+
     @FXML
     ImageView life1;
-    
+
     @FXML
     ImageView life2;
-    
+
     @FXML
     ImageView life3;
+
+    @FXML
+    ImageView singleShotImage;
+    
+    @FXML
+    ImageView speedShotImage;
+    
+    @FXML
+    ImageView spreadShotImage;
     
     List<ImageView> lifeImages = new ArrayList<>();
+    List<ImageView> shotImages = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -69,31 +79,37 @@ public class LevelOneController {
         lifeImages.add(life1);
         lifeImages.add(life2);
         lifeImages.add(life3);
-        for(ImageView life:lifeImages){
+        for (ImageView life : lifeImages) {
             life.setImage(new Image("/images/heart.png"));
         }
+        singleShotImage.setImage(new Image("/images/singleShotImage.png"));
+        speedShotImage.setImage(new Image("/images/locked.png"));
+        spreadShotImage.setImage(new Image("/images/locked.png"));
+        shotImages.add(singleShotImage);
+        shotImages.add(speedShotImage);
+        shotImages.add(spreadShotImage);
         portal.setFill(new ImagePattern(new Image("/images/portal.png")));
         GameObject.setPane(pane);
-    }
-    
-    public void startLevelOne() throws InterruptedException, FileNotFoundException{
         
-        EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"),0.8);
+    }
+
+    public void startLevelOne() throws InterruptedException, FileNotFoundException {
+
+        EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"), 0.8);
         enemies_Level_One.move();
-        UserShipController spaceship_Level_One = new UserShipController(new User(userShipImage, 
+        UserShipController spaceship_Level_One = new UserShipController(new User(userShipImage,
                 new Image("/images/spaceships/playerShip2_blue.png")),
                 new Image("/images/bullets/laserBlue05.png"),
                 new Image("/images/bullets/laserBlue01.png"),
                 new Image("images/bullets/laserBlue10.png"),
-                pane, lblGameOver, lblCongratulations, portal, lblScore, lblLevel, lifeImages
+                pane, lblGameOver, lblCongratulations, portal, lblScore, lblLevel, lifeImages, shotImages
         );
         spaceship_Level_One.move();
-        
+
     }
 
     public Pane getPane() {
         return pane;
     }
-    
 
 }

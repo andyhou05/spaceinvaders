@@ -20,7 +20,9 @@ public class User extends GameObject {
     static int speed = 5;
     static int lives = 3;
     static ArrayList<Bullet> bullets = new ArrayList<>();
-    AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser1.wav").toExternalForm());
+    static AudioClip userShipSingleShootAudio = new AudioClip(User.class.getResource("/sounds/sfx_laser1.wav").toExternalForm());
+    static AudioClip userShipSpeedShootAudio = new AudioClip(User.class.getResource("/sounds/speedShot.wav").toExternalForm());
+    static AudioClip userShipSpreadShootAudio = new AudioClip(User.class.getResource("/sounds/spreadShot.wav").toExternalForm());
     boolean invincible = false;
     boolean canShoot = true;
     boolean canSpeedShoot = true;
@@ -107,8 +109,16 @@ public class User extends GameObject {
         this.canSpreadShoot = canSpreadShoot;
     }
 
-    public AudioClip getSpaceshipShootAudio() {
-        return spaceshipShootAudio;
+    public static AudioClip getUserShipSingleShootAudio() {
+        return userShipSingleShootAudio;
+    }
+
+    public static AudioClip getUserShipSpeedShootAudio() {
+        return userShipSpeedShootAudio;
+    }
+
+    public static AudioClip getUserShipSpreadShootAudio() {
+        return userShipSpreadShootAudio;
     }
 
     public boolean isSingleShot() {

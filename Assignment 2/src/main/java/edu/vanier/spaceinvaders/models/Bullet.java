@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
 public class Bullet extends GameObject {
 
     static double bulletSpeed = 3;
+    boolean bulletSpin;
 
     public Bullet(double layoutX, double layoutY, Image image) {
         getObjectImage().setImage(image);
@@ -22,13 +23,15 @@ public class Bullet extends GameObject {
         getObjectImage().setFitHeight(35);
         getObjectImage().setLayoutX(layoutX);
         getObjectImage().setLayoutY(layoutY);
+        bulletSpin = false;
     }
-    public Bullet(double layoutX, double layoutY, double width, double height, Image image) {
+    public Bullet(double layoutX, double layoutY, double width, double height, Image image, boolean bulletSpin) {
         getObjectImage().setImage(image);
         getObjectImage().setFitWidth(width);
         getObjectImage().setFitHeight(height);
         getObjectImage().setLayoutX(layoutX);
         getObjectImage().setLayoutY(layoutY);
+        this.bulletSpin = bulletSpin;
     }
 
     public static Bullet singleShotBullet(GameObject shooter, double layoutX, double layoutY, Image image) {
@@ -37,12 +40,12 @@ public class Bullet extends GameObject {
         return bullet;
     }
     public static Bullet speedShotBullet(GameObject shooter, double layoutX, double layoutY, Image image){
-        Bullet bullet = new Bullet(layoutX + shooter.getObjectImage().getFitWidth() / 2, layoutY, 4, 25, image);
+        Bullet bullet = new Bullet(layoutX + shooter.getObjectImage().getFitWidth() / 2, layoutY, 4, 25, image, false);
         pane.getChildren().add(bullet.getObjectImage());
         return bullet;
     }
     public static Bullet spreadShotBullet(GameObject shooter, double layoutX, double layoutY, Image image){
-        Bullet bullet = new Bullet(layoutX + shooter.getObjectImage().getFitWidth() / 2, layoutY, 20, 20, image);
+        Bullet bullet = new Bullet(layoutX + shooter.getObjectImage().getFitWidth() / 2, layoutY, 20, 20, image, true);
         pane.getChildren().add(bullet.getObjectImage());
         return bullet;
     }
@@ -69,6 +72,9 @@ public class Bullet extends GameObject {
         for (int i = 0; i < bullets.size(); i++) {
             Bullet currentBullet = bullets.get(i);
             currentBullet.getObjectImage().setLayoutY(currentBullet.getObjectImage().getLayoutY() + direction * bulletSpeed);
+            if(currentBullet.bulletSpin){
+                currentBullet.getObjectImage().setRotate(currentBullet.getObjectImage().getRotate() + 15);
+            }
             if (currentBullet.getObjectImage().getLayoutY() < -currentBullet.getObjectImage().getFitHeight() || currentBullet.getObjectImage().getLayoutY() > pane.getPrefHeight()) {
                 // remove from pane
                 removeBullet(currentBullet);
@@ -76,6 +82,10 @@ public class Bullet extends GameObject {
                 bullets.remove(currentBullet);
             }
         }
+    }
+    
+    public static void spinBullets(){
+        
     }
 
 }

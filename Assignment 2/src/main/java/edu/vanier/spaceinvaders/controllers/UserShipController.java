@@ -59,9 +59,16 @@ public class UserShipController {
     static boolean portalEntered = false;
     static int currentLevel;
     
+    static Image singleShotImage;// = new Image("/images/singleShotImage.png");
+    static Image speedShotImage = new Image("/images/speedShotImage.png");
+    static Image spreadShotImage = new Image("/images/spreadShotImage.png");
+    static Image lockedImage;// = new Image("/images/locked.png");
+    
+
     static Label lblScore;
     static Label lblLevel;
     static List<ImageView> lifeImages;
+    static List<ImageView> shotImages;
 
     AnimationTimer animation = new AnimationTimer() {
         @Override
@@ -79,7 +86,7 @@ public class UserShipController {
         }
     };
 
-    public UserShipController(User userShip, Image spaceshipBulletImage, Image userShipSpeedBulletImage, Image userShipSpreadBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal, Label lblScore, Label lblLevel, List<ImageView> lifeImages) {
+    public UserShipController(User userShip, Image spaceshipBulletImage, Image userShipSpeedBulletImage, Image userShipSpreadBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal, Label lblScore, Label lblLevel, List<ImageView> lifeImages, List<ImageView> shotImages) {
         this.userShip = userShip;
         this.userShipSingleBulletImage = spaceshipBulletImage;
         this.userShipSpeedBulletImage = userShipSpeedBulletImage;
@@ -91,11 +98,14 @@ public class UserShipController {
         UserShipController.lblLevel = lblLevel;
         UserShipController.lblScore = lblScore;
         UserShipController.lifeImages = lifeImages;
+        UserShipController.shotImages = shotImages;
         currentLevel = 1;
         checkAvailableShots();
         setLevelLabel();
         setScoreLabel();
         EnemiesController.spawn(15);
+
+        //updateShotImages();
     }
 
     private void checkWallCollision() {
@@ -155,8 +165,7 @@ public class UserShipController {
                     break;
                 case SPACE:
                     if (userShip.isCanShoot() && userShip.isSingleShot()) {
-                        addBullet(Bullet.singleShotBullet(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipSingleBulletImage));
-                        userShip.getSpaceshipShootAudio().play();
+                        singleShot();
                         delaySingleShoot();
 
                     } else if (userShip.isCanSpeedShoot() && userShip.isSpeedShot()) {
@@ -246,16 +255,21 @@ public class UserShipController {
         }
     }
 
+    public void singleShot() {
+        addBullet(Bullet.singleShotBullet(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipSingleBulletImage));
+        User.getUserShipSingleShootAudio().play();
+    }
+
     public void speedShot(User shooter) {
         SequentialTransition speedShotAnimation = new SequentialTransition();
         double height = shooter.getObjectImage().getFitHeight();
         addBullet(Bullet.speedShotBullet(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipSpeedBulletImage));
-        userShip.getSpaceshipShootAudio().play();
+        userShip.getUserShipSpeedShootAudio().play();
         for (int i = 0; i < 2; i++) {
             PauseTransition bulletPause = new PauseTransition(Duration.seconds(0.10));
             bulletPause.setOnFinished((event) -> {
                 addBullet(Bullet.speedShotBullet(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipSpeedBulletImage));
-                userShip.getSpaceshipShootAudio().play();
+                User.getUserShipSpeedShootAudio().play();
             });
             bulletPause.setCycleCount(1);
             speedShotAnimation.getChildren().add(bulletPause);
@@ -267,7 +281,7 @@ public class UserShipController {
         addBullet(Bullet.spreadShotBullet(userShip, userShip.getObjectImage().getLayoutX() - userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipSpreadBulletImage));
         addBullet(Bullet.spreadShotBullet(userShip, userShip.getObjectImage().getLayoutX() + userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipSpreadBulletImage));
         addBullet(Bullet.spreadShotBullet(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipSpreadBulletImage));
-        userShip.getSpaceshipShootAudio().play();
+        userShip.getUserShipSpreadShootAudio().play();
     }
 
     public void switchShoot() {
@@ -278,6 +292,7 @@ public class UserShipController {
         } else {
             userShip.setShot(1);
         }
+        updateShotImages();
     }
 
     public void delaySingleShoot() {
@@ -291,7 +306,7 @@ public class UserShipController {
 
     public void delaySpeedShoot() {
         userShip.setCanSpeedShoot(false);
-        PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
         pause.setOnFinished((event) -> {
             userShip.setCanSpeedShoot(true);
         });
@@ -300,7 +315,7 @@ public class UserShipController {
 
     public void delaySpreadShoot() {
         userShip.setCanSpreadShoot(false);
-        PauseTransition pause = new PauseTransition(Duration.seconds(2.5));
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.75));
         pause.setOnFinished((event) -> {
             userShip.setCanSpreadShoot(true);
         });
@@ -323,7 +338,7 @@ public class UserShipController {
                     .intersects(userShip.getObjectImage().getBoundsInParent())) {
                 spaceshipHit();
             }
-            if(currentEnemy.getObjectImage().getLayoutY() + EnemiesController.enemiesPane.getLayoutY() >= pane.getPrefHeight()){
+            if (currentEnemy.getObjectImage().getLayoutY() + EnemiesController.enemiesPane.getLayoutY() >= pane.getPrefHeight()) {
                 User.setLives(0);
                 checkLivesRemaining();
             }
@@ -337,15 +352,15 @@ public class UserShipController {
         setLifeImage();
         checkLivesRemaining();
     }
-    
-    public void setLifeImage(){
-            lifeImages.get(2).setVisible(User.getLives() >= 3);
-            lifeImages.get(1).setVisible(User.getLives() >= 2);
-            lifeImages.get(0).setVisible(User.getLives() >= 1);
-        
+
+    public void setLifeImage() {
+        lifeImages.get(2).setVisible(User.getLives() >= 3);
+        lifeImages.get(1).setVisible(User.getLives() >= 2);
+        lifeImages.get(0).setVisible(User.getLives() >= 1);
+
     }
-    
-    public void checkLivesRemaining(){
+
+    public void checkLivesRemaining() {
         if (userShip.getLives() == 0) {
             userShip.killAnimation(pane);
             animation.stop();
@@ -395,31 +410,30 @@ public class UserShipController {
             userShip.setxVelocity(0);
             userShip.setyVelocity(0);
             userShip.setCanShoot(false);
-        }else{
+        } else {
             speed = User.getSpeed();
             userShip.setCanShoot(true);
         }
     }
-    
-    public static void setScoreLabel(){
-        lblScore.setText("Score: "+LevelOneController.score);
+
+    public static void setScoreLabel() {
+        lblScore.setText("Score: " + LevelOneController.score);
     }
-    
-    public static void setLevelLabel(){
-        lblLevel.setText("Level "+currentLevel);
+
+    public static void setLevelLabel() {
+        lblLevel.setText("Level " + currentLevel);
     }
-    
-    public static void checkAvailableShots(){
-        speedShotUnlocked = true;
-        spreadShotUnlocked = true;
-        /*
-        speedShotUnlocked = (currentLevel == 2);
-        spreadShotUnlocked = (currentLevel == 3);
-*/
+
+    public static void checkAvailableShots() {
+        speedShotUnlocked = (currentLevel > 1);
+        spreadShotUnlocked = (currentLevel > 2);
     }
 
     private void startNextLevel() {
         currentLevel++;
+        // bring the portal back to original position
+        portal.setLayoutX(540);
+        portal.setLayoutY(470);
         portalSpawned = false;
         portalEntered = false;
         User.setLives(3);
@@ -435,6 +449,31 @@ public class UserShipController {
             Enemy.setSpeed(1.2);
         }
         setImmobilize(false);
+        updateShotImages();
+    }
+
+    public void updateShotImages() {
+        
+        if (speedShotUnlocked) {
+            shotImages.get(1).setImage(speedShotImage);
+        }
+        if (spreadShotUnlocked) {
+            shotImages.get(2).setImage(spreadShotImage);
+        }
+        if (userShip.isSingleShot()) {
+            shotImages.get(0).setOpacity(1.0);
+            shotImages.get(1).setOpacity(0.6);
+            shotImages.get(2).setOpacity(0.6);
+        } else if (userShip.isSpeedShot()) {
+            shotImages.get(0).setOpacity(0.6);
+            shotImages.get(1).setOpacity(1.0);
+            shotImages.get(2).setOpacity(0.6);
+        } else if (userShip.isSpreadShot()) {
+            shotImages.get(0).setOpacity(0.6);
+            shotImages.get(1).setOpacity(0.6);
+            shotImages.get(2).setOpacity(1.0);
+        }
+
     }
 
 }
