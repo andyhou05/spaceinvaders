@@ -4,10 +4,9 @@
  */
 package edu.vanier.spaceinvaders.controllers;
 
-import edu.vanier.spaceinvadersmodels.Bullet;
-import static edu.vanier.spaceinvadersmodels.Bullet.singleShot;
-import edu.vanier.spaceinvadersmodels.Enemy;
-import edu.vanier.spaceinvadersmodels.User;
+import edu.vanier.spaceinvaders.models.Bullet;
+import edu.vanier.spaceinvaders.models.Enemy;
+import edu.vanier.spaceinvaders.models.User;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.AnimationTimer;
@@ -33,6 +32,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
+import static edu.vanier.spaceinvaders.models.Bullet.singleShotBullet;
 
 /**
  *
@@ -46,7 +46,9 @@ public class UserShipController {
     static Pane pane;
     static User userShip;
     static Label lblGameOver;
-    Image userShipBulletImage;
+    Image userShipSingleBulletImage;
+    Image userShipSpeedBulletImage;
+    Image userShipSpreadBulletImage;
     int speed = User.getSpeed();
     AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/sounds/sfx_shieldDown.wav").toExternalForm());
     static AudioClip gameOverAudio = new AudioClip(UserShipController.class.getResource("/sounds/gameOver.wav").toExternalForm());
@@ -77,9 +79,11 @@ public class UserShipController {
         }
     };
 
-    public UserShipController(User userShip, Image spaceshipBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal, Label lblScore, Label lblLevel, List<ImageView> lifeImages) {
+    public UserShipController(User userShip, Image spaceshipBulletImage, Image userShipSpeedBulletImage, Image userShipSpreadBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal, Label lblScore, Label lblLevel, List<ImageView> lifeImages) {
         this.userShip = userShip;
-        this.userShipBulletImage = spaceshipBulletImage;
+        this.userShipSingleBulletImage = spaceshipBulletImage;
+        this.userShipSpeedBulletImage = userShipSpeedBulletImage;
+        this.userShipSpreadBulletImage = userShipSpreadBulletImage;
         UserShipController.pane = pane;
         UserShipController.lblGameOver = lblGameOver;
         UserShipController.lblCongratulations = lblCongratulations;
@@ -151,7 +155,7 @@ public class UserShipController {
                     break;
                 case SPACE:
                     if (userShip.isCanShoot() && userShip.isSingleShot()) {
-                        addBullet(Bullet.singleShot(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipBulletImage));
+                        addBullet(Bullet.singleShotBullet(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipSingleBulletImage));
                         userShip.getSpaceshipShootAudio().play();
                         delaySingleShoot();
 
@@ -245,12 +249,12 @@ public class UserShipController {
     public void speedShot(User shooter) {
         SequentialTransition speedShotAnimation = new SequentialTransition();
         double height = shooter.getObjectImage().getFitHeight();
-        addBullet(singleShot(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipBulletImage));
+        addBullet(Bullet.speedShotBullet(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipSpeedBulletImage));
         userShip.getSpaceshipShootAudio().play();
         for (int i = 0; i < 2; i++) {
-            PauseTransition bulletPause = new PauseTransition(Duration.seconds(0.25));
+            PauseTransition bulletPause = new PauseTransition(Duration.seconds(0.10));
             bulletPause.setOnFinished((event) -> {
-                addBullet(singleShot(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipBulletImage));
+                addBullet(Bullet.speedShotBullet(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipSpeedBulletImage));
                 userShip.getSpaceshipShootAudio().play();
             });
             bulletPause.setCycleCount(1);
@@ -260,9 +264,9 @@ public class UserShipController {
     }
 
     public void spreadShot() {
-        addBullet(Bullet.singleShot(userShip, userShip.getObjectImage().getLayoutX() - userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipBulletImage));
-        addBullet(Bullet.singleShot(userShip, userShip.getObjectImage().getLayoutX() + userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipBulletImage));
-        addBullet(Bullet.singleShot(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipBulletImage));
+        addBullet(Bullet.spreadShotBullet(userShip, userShip.getObjectImage().getLayoutX() - userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipSpreadBulletImage));
+        addBullet(Bullet.spreadShotBullet(userShip, userShip.getObjectImage().getLayoutX() + userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipSpreadBulletImage));
+        addBullet(Bullet.spreadShotBullet(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipSpreadBulletImage));
         userShip.getSpaceshipShootAudio().play();
     }
 
@@ -406,8 +410,12 @@ public class UserShipController {
     }
     
     public static void checkAvailableShots(){
+        speedShotUnlocked = true;
+        spreadShotUnlocked = true;
+        /*
         speedShotUnlocked = (currentLevel == 2);
         spreadShotUnlocked = (currentLevel == 3);
+*/
     }
 
     private void startNextLevel() {

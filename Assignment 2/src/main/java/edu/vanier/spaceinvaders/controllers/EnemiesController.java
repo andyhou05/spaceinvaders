@@ -4,9 +4,9 @@
  */
 package edu.vanier.spaceinvaders.controllers;
 
-import edu.vanier.spaceinvadersmodels.Bullet;
-import edu.vanier.spaceinvadersmodels.Enemy;
-import edu.vanier.spaceinvadersmodels.User;
+import edu.vanier.spaceinvaders.models.Bullet;
+import edu.vanier.spaceinvaders.models.Enemy;
+import edu.vanier.spaceinvaders.models.User;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
@@ -83,10 +83,10 @@ public class EnemiesController {
     }
 
     private static void enemiesShoot() {
-        // Make enemies able to singleShot.
+        // Make enemies able to singleShotBullet.
         for (Enemy currentEnemy : enemies) {
             if (Math.random() < 0.0005) {
-                Bullet currentBullet = Bullet.singleShot(currentEnemy,
+                Bullet currentBullet = Bullet.singleShotBullet(currentEnemy,
                         currentEnemy.getObjectImage().getLayoutX() + enemiesPane.getLayoutX(),
                         currentEnemy.getObjectImage().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getObjectImage().getFitHeight(),
                         enemyBulletImage

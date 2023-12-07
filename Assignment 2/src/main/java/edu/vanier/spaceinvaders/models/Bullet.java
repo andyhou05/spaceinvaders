@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package edu.vanier.spaceinvadersmodels;
+package edu.vanier.spaceinvaders.models;
 
-import static edu.vanier.spaceinvadersmodels.GameObject.pane;
+import static edu.vanier.spaceinvaders.models.GameObject.pane;
 import java.util.List;
 import javafx.scene.image.Image;
 
@@ -23,9 +23,26 @@ public class Bullet extends GameObject {
         getObjectImage().setLayoutX(layoutX);
         getObjectImage().setLayoutY(layoutY);
     }
+    public Bullet(double layoutX, double layoutY, double width, double height, Image image) {
+        getObjectImage().setImage(image);
+        getObjectImage().setFitWidth(width);
+        getObjectImage().setFitHeight(height);
+        getObjectImage().setLayoutX(layoutX);
+        getObjectImage().setLayoutY(layoutY);
+    }
 
-    public static Bullet singleShot(GameObject shooter, double layoutX, double layoutY, Image image) {
+    public static Bullet singleShotBullet(GameObject shooter, double layoutX, double layoutY, Image image) {
         Bullet bullet = new Bullet(layoutX + shooter.getObjectImage().getFitWidth() / 2, layoutY, image);
+        pane.getChildren().add(bullet.getObjectImage());
+        return bullet;
+    }
+    public static Bullet speedShotBullet(GameObject shooter, double layoutX, double layoutY, Image image){
+        Bullet bullet = new Bullet(layoutX + shooter.getObjectImage().getFitWidth() / 2, layoutY, 4, 25, image);
+        pane.getChildren().add(bullet.getObjectImage());
+        return bullet;
+    }
+    public static Bullet spreadShotBullet(GameObject shooter, double layoutX, double layoutY, Image image){
+        Bullet bullet = new Bullet(layoutX + shooter.getObjectImage().getFitWidth() / 2, layoutY, 20, 20, image);
         pane.getChildren().add(bullet.getObjectImage());
         return bullet;
     }

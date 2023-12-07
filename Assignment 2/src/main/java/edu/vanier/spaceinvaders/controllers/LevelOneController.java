@@ -4,8 +4,8 @@
  */
 package edu.vanier.spaceinvaders.controllers;
 
-import edu.vanier.spaceinvadersmodels.User;
-import edu.vanier.spaceinvadersmodels.GameObject;
+import edu.vanier.spaceinvaders.models.User;
+import edu.vanier.spaceinvaders.models.GameObject;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +81,10 @@ public class LevelOneController {
         EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"),0.8);
         enemies_Level_One.move();
         UserShipController spaceship_Level_One = new UserShipController(new User(userShipImage, 
-                new Image("/images/spaceships/playerShip2_blue.png")), new Image("/images/bullets/laserBlue05.png"),
+                new Image("/images/spaceships/playerShip2_blue.png")),
+                new Image("/images/bullets/laserBlue05.png"),
+                new Image("/images/bullets/laserBlue01.png"),
+                new Image("images/bullets/laserBlue10.png"),
                 pane, lblGameOver, lblCongratulations, portal, lblScore, lblLevel, lifeImages
         );
         spaceship_Level_One.move();
