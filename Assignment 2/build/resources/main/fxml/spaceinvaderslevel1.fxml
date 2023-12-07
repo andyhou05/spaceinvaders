@@ -7,6 +7,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.RadialGradient?>
 <?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
@@ -14,11 +15,6 @@
       <ImageView fx:id="backgroundImage" fitHeight="800.0" fitWidth="1100.0" pickOnBounds="true" preserveRatio="true" />
       <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1100.0">
          <children>
-            <StackPane fx:id="spaceship" layoutX="520.0" layoutY="680.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
             <Label fx:id="lblCongratulations" layoutX="112.0" layoutY="267.0" prefHeight="106.0" prefWidth="868.0" text="CONGRATULATIONS" visible="false">
                <font>
                   <Font name="Berlin Sans FB" size="96.0" />
@@ -61,6 +57,12 @@
                   </RadialGradient>
                </textFill>
             </Label>
+            <Circle fx:id="portal" fill="#1f93ff00" layoutX="546.0" layoutY="471.0" opacity="0.0" radius="71.0" stroke="BLACK" strokeType="INSIDE" />
+            <StackPane fx:id="spaceship" layoutX="516.0" layoutY="665.0" prefHeight="45.0" prefWidth="60.0">
+               <children>
+                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </StackPane>
          </children>
       </Pane>
    </children>

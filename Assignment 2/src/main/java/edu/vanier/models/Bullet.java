@@ -4,8 +4,9 @@
  */
 package edu.vanier.models;
 
-import static edu.vanier.models.Sprite.pane;
+import static edu.vanier.models.Spaceship.pane;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,20 +18,38 @@ import javafx.util.Duration;
  *
  * @author 2276884
  */
-public class Bullet extends Sprite {
+public class Bullet extends Spaceship {
+
+    static double bulletSpeed = 3;
 
     public Bullet(double layoutX, double layoutY, Image image) {
-        getSpriteImage().setImage(image);
-        getSpriteStack().setPrefWidth(4);
-        getSpriteStack().setPrefHeight(20);
-        getSpriteStack().setLayoutX(layoutX);
-        getSpriteStack().setLayoutY(layoutY);
+        getShipImage().setImage(image);
+        getStack().setPrefWidth(4);
+        getStack().setPrefHeight(20);
+        getStack().setLayoutX(layoutX);
+        getStack().setLayoutY(layoutY);
     }
 
-    public static Bullet singleShot(Sprite shooter, double layoutX, double layoutY, Image image) {
-        Bullet bullet = new Bullet(layoutX + shooter.getSpriteStack().getWidth() / 2, layoutY, image);
-        pane.getChildren().add(bullet.getSpriteStack());
+    public static Bullet singleShot(Spaceship shooter, double layoutX, double layoutY, Image image) {
+        Bullet bullet = new Bullet(layoutX + shooter.getStack().getWidth() / 2, layoutY, image);
+        pane.getChildren().add(bullet.getStack());
         return bullet;
+    }
+    
+    public static void removeBullet(Bullet bullet){
+        pane.getChildren().remove(bullet.getStack());
+    }
+
+    public static void moveBullets(List<Bullet> bullets, boolean isEnemy) {
+        double direction;
+        if (isEnemy) {
+            direction = 1;
+        } else {
+            direction = -1;
+        }
+        for (Bullet b : bullets) {
+            b.getStack().setLayoutY(b.getStack().getLayoutY() + direction*bulletSpeed);
+        }
     }
 
 }

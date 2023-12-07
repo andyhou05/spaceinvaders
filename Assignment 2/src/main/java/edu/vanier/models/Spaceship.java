@@ -5,142 +5,60 @@
 package edu.vanier.models;
 
 import java.util.ArrayList;
+import javafx.animation.PauseTransition;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 /**
  *
  * @author andyhou
  */
-public class Spaceship extends Sprite {
-    int xVelocity;
-    int yVelocity;
-    int lives = 3;
-    static int speed = 5;
-    ArrayList<Bullet> bullets = new ArrayList<>();
-    AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser1.wav").toExternalForm());
-    boolean invincible = false;
-    boolean canShoot = true;
-    boolean canSpeedShoot = true;
-    boolean canSpreadShoot = true;
-    boolean singleShot = true;
-    boolean speedShot = false;
-    boolean spreadShot = false;
+public class Spaceship {
 
-    public Spaceship(StackPane spaceshipStack, Image image) {
-        setSpriteStack(spaceshipStack);
-        setSpriteImage((ImageView)spaceshipStack.getChildren().get(0));
-        getSpriteImage().setImage(image);
+    static Pane pane;
+    ImageView shipImage = new ImageView();
+    StackPane stack = new StackPane(shipImage);
+    AudioClip explosionAudio = new AudioClip(getClass().getResource("/sounds/8bit_bomb_explosion.wav").toExternalForm());
+
+    public void killAnimation(Pane spaceshipPane) {
+        this.getShipImage().setImage(new Image("/images/Explosion.gif"));
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+        pause.setOnFinished((event) -> {
+            spaceshipPane.getChildren().remove(this.getStack());
+        });
+        pause.setCycleCount(1);
+        pause.play();
+        explosionAudio.play();
     }
 
-    public int getxVelocity() {
-        return xVelocity;
+    public StackPane getStack() {
+        return stack;
     }
 
-    public void setxVelocity(int xVelocity) {
-        this.xVelocity = xVelocity;
+    public void setStack(StackPane stack) {
+        this.stack = stack;
     }
 
-    public int getLives() {
-        return lives;
+    public ImageView getShipImage() {
+        return shipImage;
     }
 
-    public void setLives(int lives) {
-        this.lives = lives;
+    public void setShipImage(ImageView shipImage) {
+        this.shipImage = shipImage;
     }
 
-    public int getyVelocity() {
-        return yVelocity;
+    public static void setPane(Pane pane) {
+        Spaceship.pane = pane;
     }
 
-    public void setyVelocity(int yVelocity) {
-        this.yVelocity = yVelocity;
-    }
-
-    public static int getSpeed() {
-        return speed;
-    }
-
-    public static void setSpeed(int speed) {
-        Spaceship.speed = speed;
-    }
-
-    public ArrayList<Bullet> getBullets() {
-        return bullets;
-    }
-
-    public void setBullets(ArrayList<Bullet> bullets) {
-        this.bullets = bullets;
-    }
-
-    public boolean isInvincible() {
-        return invincible;
-    }
-
-    public void setInvincible(boolean invincible) {
-        this.invincible = invincible;
-        this.canShoot = !invincible;
-    }
-
-    public void setCanShoot(boolean canShoot) {
-        this.canShoot = canShoot;
-    }
-
-    public boolean isCanShoot() {
-        return canShoot;
-    }
-
-    public boolean isCanSpeedShoot() {
-        return canSpeedShoot;
-    }
-
-    public void setCanSpeedShoot(boolean canSpeedShoot) {
-        this.canSpeedShoot = canSpeedShoot;
-    }
-
-    public boolean isCanSpreadShoot() {
-        return canSpreadShoot;
-    }
-
-    public void setCanSpreadShoot(boolean canSpreadShoot) {
-        this.canSpreadShoot = canSpreadShoot;
-    }
-
-    public AudioClip getSpaceshipShootAudio() {
-        return spaceshipShootAudio;
-    }
-
-    public boolean isSingleShot() {
-        return singleShot;
-    }
-
-    public void setSingleShot(boolean singleShot) {
-        this.singleShot = singleShot;
-    }
-
-    public boolean isSpeedShot() {
-        return speedShot;
-    }
-
-    public void setSpeedShot(boolean speedShot) {
-        this.speedShot = speedShot;
-    }
-
-    public boolean isSpreadShot() {
-        return spreadShot;
-    }
-
-    public void setSpreadShot(boolean spreadShot) {
-        this.spreadShot = spreadShot;
-    }
-    
-    public void setShot(int shotChoice){ // must enter either 1,2 or 3.
-        setSingleShot(shotChoice == 1);
-        setSpeedShot(shotChoice == 2);
-        setSpreadShot(shotChoice == 3);
+    public AudioClip getExplosionAudio() {
+        return explosionAudio;
     }
 
 }

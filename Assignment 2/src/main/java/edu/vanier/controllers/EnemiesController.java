@@ -6,9 +6,10 @@ package edu.vanier.controllers;
 
 import edu.vanier.models.Bullet;
 import edu.vanier.models.Enemy;
-import edu.vanier.models.Sprite;
+import edu.vanier.models.Spaceship;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -21,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -40,50 +42,26 @@ public class EnemiesController {
     static double enemyYdistance = 100;
     static Label lblCongratulations;
     static AudioClip winAudio = new AudioClip(SpaceshipController.class.getResource("/sounds/win.wav").toExternalForm());
+    static Circle portal;
 
     static AnimationTimer enemyAnimation = new AnimationTimer() {
         @Override
         public void handle(long now) {
-            double y = enemyYdistance;
-
-            if ((enemiesPane.getLayoutY() / y) % 2 == 0) {
-                Enemy.setVelocity(Enemy.getHorizontalMovementSpeed());
-            } else {
-                Enemy.setVelocity(-Enemy.getHorizontalMovementSpeed());
-            }
-
-            enemiesPane.setLayoutX(enemiesPane.getLayoutX() + Enemy.getVelocity());
-            if (enemiesPane.getLayoutX() + enemiesPane.getWidth() >= pane.getWidth() || enemiesPane.getLayoutX() <= 0) {
-                enemiesPane.setLayoutY(enemiesPane.getLayoutY() + y);
-            }
-            // Make enemies able to singleShot.
-            for (Enemy currentEnemy : enemies) {
-                if (Math.random() < 0.0015) {
-                    Bullet currentBullet = Bullet.singleShot(currentEnemy,
-                            currentEnemy.getSpriteStack().getLayoutX() + enemiesPane.getLayoutX(),
-                            currentEnemy.getSpriteStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getSpriteStack().getHeight(),
-                            enemyBulletImage
-                    );
-                    Enemy.getBullets().add(currentBullet);
-                    SpaceshipController.enemyBullets.add(currentBullet);
-                    currentEnemy.getEnemyShootAudio().play();
-                }
-            }
-            for (Bullet bullet : Enemy.getBullets()) {
-                bullet.getSpriteStack().setLayoutY(bullet.getSpriteStack().getLayoutY() + 3);
-            }
-
+            moveEnemies();
+            enemiesShoot();
             // Check for collisions.
             checkBulletCollision();
         }
     };
 
-    public EnemiesController(Pane pane, Image enemyBulletImage, Label lblCongratulations) {
+    public EnemiesController(Pane pane, Image enemyBulletImage, Label lblCongratulations, Circle portal, double enemySpeed) {
         enemiesPane.setPrefWidth(800);
         enemiesPane.setPrefHeight(400);
         this.pane = pane;
         this.enemyBulletImage = enemyBulletImage;
         EnemiesController.lblCongratulations = lblCongratulations;
+        EnemiesController.portal = portal;
+        Enemy.setSpeed(enemySpeed);
     }
 
     public void spawn(int enemyNumber) {
@@ -97,47 +75,44 @@ public class EnemiesController {
                 i = 0;
             }
             Enemy currentEnemy = new Enemy(currentLayoutX, currentLayoutY);
-            enemiesPane.getChildren().add(currentEnemy.getSpriteStack());
+            enemiesPane.getChildren().add(currentEnemy.getStack());
             enemies.add(currentEnemy);
         }
         pane.getChildren().add(enemiesPane);
     }
 
-    public void moveEnemies() throws InterruptedException {
-        enemyAnimation.start();
+    private static void moveEnemies() {
+        double y = enemyYdistance;
+        if ((enemiesPane.getLayoutY() / y) % 2 == 0) {
+            Enemy.setVelocity(Enemy.getSpeed());
+        } else {
+            Enemy.setVelocity(-Enemy.getSpeed());
+        }
+
+        enemiesPane.setLayoutX(enemiesPane.getLayoutX() + Enemy.getVelocity());
+        if (enemiesPane.getLayoutX() + enemiesPane.getWidth() >= pane.getWidth() || enemiesPane.getLayoutX() <= 0) {
+            enemiesPane.setLayoutY(enemiesPane.getLayoutY() + y);
+        }
     }
 
-    public void enemiesShoot() {
-        Timeline enemyShoot = new Timeline(new KeyFrame(Duration.seconds(2), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                for (Enemy currentEnemy : enemies) {
-                    if (Math.random() < 0.15) {
-                        Bullet currentBullet = Bullet.singleShot(currentEnemy,
-                                currentEnemy.getSpriteStack().getLayoutX() + enemiesPane.getLayoutX(),
-                                currentEnemy.getSpriteStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getSpriteStack().getHeight(),
-                                enemyBulletImage
-                        );
-                        Enemy.getBullets().add(currentBullet);
-                        SpaceshipController.enemyBullets.add(currentBullet);
-                        currentEnemy.getEnemyShootAudio().play();
-                    }
-                }
+    private static void enemiesShoot() {
+        // Make enemies able to singleShot.
+        for (Enemy currentEnemy : enemies) {
+            if (Math.random() < 0.0015) {
+                Bullet currentBullet = Bullet.singleShot(currentEnemy,
+                        currentEnemy.getStack().getLayoutX() + enemiesPane.getLayoutX(),
+                        currentEnemy.getStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getStack().getHeight(),
+                        enemyBulletImage
+                );
+                Enemy.getBullets().add(currentBullet);
+                currentEnemy.getEnemyShootAudio().play();
             }
-        }));
-        enemyShoot.setCycleCount(Timeline.INDEFINITE);
-        enemyShoot.play();
+        }
+        Bullet.moveBullets(Enemy.getBullets(), true);
+    }
 
-        AnimationTimer bulletMove = new AnimationTimer() {
-            @Override
-            public void handle(long n) {
-                for (Bullet bullet : Enemy.getBullets()) {
-                    bullet.getSpriteStack().setLayoutY(bullet.getSpriteStack().getLayoutY() + 3);
-                }
-            }
-        };
-        bulletMove.start();
-
+    public void move() throws InterruptedException {
+        enemyAnimation.start();
     }
 
     public static void checkBulletCollision() {
@@ -149,15 +124,22 @@ public class EnemiesController {
                     for (Bullet b : spaceshipBullets) {
                         // turns the local bounds of enemiesPane to the bounds of the pane,
                         // turns the local bounds of the enemy to the bounds of the enemiesPane.
-                        if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getSpriteStack().getBoundsInParent())).intersects(b.getSpriteStack().getBoundsInParent())) {
+                        if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getStack().getBoundsInParent())).intersects(b.getStack().getBoundsInParent())) {
                             // kill the space invader
                             currentEnemy.killAnimation(enemiesPane);
                             enemies.remove(enemies.get(i));
-                            Sprite.removeEntity(b);
+                            Bullet.removeBullet(b);
                             spaceshipBullets.remove(b);
-                            if(enemies.isEmpty()){
+                            // if game is over
+                            if (enemies.isEmpty()) {
                                 lblCongratulations.setVisible(true);
                                 winAudio.play();
+                                FadeTransition portalFade = new FadeTransition(Duration.seconds(0.5), portal);
+                                portalFade.setFromValue(0);
+                                portalFade.setByValue(1.0);
+                                portalFade.setCycleCount(1);
+                                portalFade.setDelay(Duration.seconds(0.5));
+                                portalFade.play();
                             }
                             break;
                         }
