@@ -4,7 +4,7 @@
  */
 package edu.vanier.models;
 
-import static edu.vanier.models.Spaceship.pane;
+import static edu.vanier.models.GameObject.pane;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.PauseTransition;
@@ -18,26 +18,26 @@ import javafx.util.Duration;
  *
  * @author 2276884
  */
-public class Bullet extends Spaceship {
+public class Bullet extends GameObject {
 
     static double bulletSpeed = 3;
 
     public Bullet(double layoutX, double layoutY, Image image) {
-        getShipImage().setImage(image);
-        getStack().setPrefWidth(4);
-        getStack().setPrefHeight(20);
-        getStack().setLayoutX(layoutX);
-        getStack().setLayoutY(layoutY);
+        getObjectImage().setImage(image);
+        getObjectImage().setFitWidth(6);
+        getObjectImage().setFitHeight(35);
+        getObjectImage().setLayoutX(layoutX);
+        getObjectImage().setLayoutY(layoutY);
     }
 
-    public static Bullet singleShot(Spaceship shooter, double layoutX, double layoutY, Image image) {
-        Bullet bullet = new Bullet(layoutX + shooter.getStack().getWidth() / 2, layoutY, image);
-        pane.getChildren().add(bullet.getStack());
+    public static Bullet singleShot(GameObject shooter, double layoutX, double layoutY, Image image) {
+        Bullet bullet = new Bullet(layoutX + shooter.getObjectImage().getFitWidth() / 2, layoutY, image);
+        pane.getChildren().add(bullet.getObjectImage());
         return bullet;
     }
     
     public static void removeBullet(Bullet bullet){
-        pane.getChildren().remove(bullet.getStack());
+        pane.getChildren().remove(bullet.getObjectImage());
     }
 
     public static void moveBullets(List<Bullet> bullets, boolean isEnemy) {
@@ -48,7 +48,7 @@ public class Bullet extends Spaceship {
             direction = -1;
         }
         for (Bullet b : bullets) {
-            b.getStack().setLayoutY(b.getStack().getLayoutY() + direction*bulletSpeed);
+            b.getObjectImage().setLayoutY(b.getObjectImage().getLayoutY() + direction*bulletSpeed);
         }
     }
 

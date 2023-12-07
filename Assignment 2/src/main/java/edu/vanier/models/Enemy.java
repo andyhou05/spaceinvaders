@@ -15,15 +15,15 @@ import javafx.scene.shape.Rectangle;
  *
  * @author andyhou
  */
-public class Enemy extends Spaceship {
-
+public class Enemy extends GameObject {
+    
     static double speed;
     static double velocity;
     AudioClip enemyShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser2.wav").toExternalForm());
     static ArrayList<Bullet> bullets = new ArrayList<>();
 
     public Enemy(double layoutX, double layoutY) {
-        ImageView enemyImage = getShipImage();
+        ImageView enemyImage = getObjectImage();
         String enemyColor;
         StringBuilder filePathBuilder = new StringBuilder("/images/enemies/enemy");
 
@@ -56,8 +56,8 @@ public class Enemy extends Spaceship {
         enemyImage.setPreserveRatio(false);
         enemyImage.setFitWidth(60);
         enemyImage.setFitHeight(45);
-        stack.setLayoutX(layoutX);
-        stack.setLayoutY(layoutY);
+        enemyImage.setLayoutX(layoutX);
+        enemyImage.setLayoutY(layoutY);
     }
 
     public static double getVelocity() {

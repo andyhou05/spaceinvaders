@@ -6,25 +6,14 @@ package edu.vanier.controllers;
 
 import edu.vanier.models.Bullet;
 import edu.vanier.models.Enemy;
-import edu.vanier.models.Spaceship;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 /**
@@ -75,7 +64,7 @@ public class EnemiesController {
                 i = 0;
             }
             Enemy currentEnemy = new Enemy(currentLayoutX, currentLayoutY);
-            enemiesPane.getChildren().add(currentEnemy.getStack());
+            enemiesPane.getChildren().add(currentEnemy.getObjectImage());
             enemies.add(currentEnemy);
         }
         pane.getChildren().add(enemiesPane);
@@ -100,8 +89,8 @@ public class EnemiesController {
         for (Enemy currentEnemy : enemies) {
             if (Math.random() < 0.0015) {
                 Bullet currentBullet = Bullet.singleShot(currentEnemy,
-                        currentEnemy.getStack().getLayoutX() + enemiesPane.getLayoutX(),
-                        currentEnemy.getStack().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getStack().getHeight(),
+                        currentEnemy.getObjectImage().getLayoutX() + enemiesPane.getLayoutX(),
+                        currentEnemy.getObjectImage().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getObjectImage().getFitHeight(),
                         enemyBulletImage
                 );
                 Enemy.getBullets().add(currentBullet);
@@ -124,7 +113,7 @@ public class EnemiesController {
                     for (Bullet b : spaceshipBullets) {
                         // turns the local bounds of enemiesPane to the bounds of the pane,
                         // turns the local bounds of the enemy to the bounds of the enemiesPane.
-                        if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getStack().getBoundsInParent())).intersects(b.getStack().getBoundsInParent())) {
+                        if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getObjectImage().getBoundsInParent())).intersects(b.getObjectImage().getBoundsInParent())) {
                             // kill the space invader
                             currentEnemy.killAnimation(enemiesPane);
                             enemies.remove(enemies.get(i));

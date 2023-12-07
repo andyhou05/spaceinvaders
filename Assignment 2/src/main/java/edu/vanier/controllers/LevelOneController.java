@@ -5,7 +5,7 @@
 package edu.vanier.controllers;
 
 import edu.vanier.models.User;
-import edu.vanier.models.Spaceship;
+import edu.vanier.models.GameObject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.fxml.FXML;
@@ -26,7 +26,7 @@ import javafx.scene.text.Text;
 public class LevelOneController {
 
     @FXML
-    StackPane spaceship;
+    ImageView userShipImage;
     
     @FXML
     Pane pane;
@@ -54,12 +54,12 @@ public class LevelOneController {
         backgroundImage.setFitWidth(pane.getPrefWidth());
         backgroundImage.setFitHeight(pane.getPrefHeight());
         portal.setFill(new ImagePattern(new Image("/images/portal.png")));
-        Spaceship.setPane(pane);
+        GameObject.setPane(pane);
         
         EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"), lblCongratulations, portal, 0.8);
         enemies_Level_One.spawn(1);
         enemies_Level_One.move();
-        SpaceshipController spaceship_Level_One = new SpaceshipController(new User(spaceship, 
+        SpaceshipController spaceship_Level_One = new SpaceshipController(new User(userShipImage, 
                 new Image("/images/spaceships/playerShip2_blue.png")), new Image("/images/bullets/laserBlue05.png"),
                 pane,
                 lblGameOver

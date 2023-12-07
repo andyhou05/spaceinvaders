@@ -15,7 +15,7 @@ import javafx.scene.shape.Rectangle;
  *
  * @author andyhou
  */
-public class User extends Spaceship {
+public class User extends GameObject {
 
     int xVelocity;
     int yVelocity;
@@ -31,10 +31,9 @@ public class User extends Spaceship {
     boolean speedShot = false;
     boolean spreadShot = false;
 
-    public User(StackPane spaceshipStack, Image image) {
-        setStack(spaceshipStack);
-        setShipImage((ImageView) spaceshipStack.getChildren().get(0));
-        getShipImage().setImage(image);
+    public User(ImageView userShipImage, Image image) {
+        setObjectImage(userShipImage);
+        getObjectImage().setImage(image);
     }
 
     public int getxVelocity() {

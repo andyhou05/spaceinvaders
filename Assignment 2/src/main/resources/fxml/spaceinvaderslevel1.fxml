@@ -58,11 +58,8 @@
                </textFill>
             </Label>
             <Circle fx:id="portal" fill="#1f93ff00" layoutX="546.0" layoutY="471.0" opacity="0.0" radius="71.0" stroke="BLACK" strokeType="INSIDE" />
-            <StackPane fx:id="spaceship" layoutX="516.0" layoutY="665.0" prefHeight="45.0" prefWidth="60.0">
-               <children>
-                  <ImageView fitHeight="45.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" />
-               </children>
-            </StackPane>
+            <StackPane fx:id="spaceship" layoutX="516.0" layoutY="665.0" prefHeight="45.0" prefWidth="60.0" />
+            <ImageView fx:id="userShipImage" fitHeight="45.0" fitWidth="60.0" layoutX="520.0" layoutY="643.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Pane>
    </children>

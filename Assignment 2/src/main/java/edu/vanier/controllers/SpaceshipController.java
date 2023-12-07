@@ -8,7 +8,7 @@ import edu.vanier.models.Bullet;
 import static edu.vanier.models.Bullet.singleShot;
 import edu.vanier.models.Enemy;
 import edu.vanier.models.User;
-import edu.vanier.models.Spaceship;
+import edu.vanier.models.GameObject;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -58,8 +58,8 @@ public class SpaceshipController {
         }
     };
 
-    public SpaceshipController(User spaceship, Image spaceshipBulletImage, Pane pane, Label lblGameOver) {
-        this.userShip = spaceship;
+    public SpaceshipController(User userShip, Image spaceshipBulletImage, Pane pane, Label lblGameOver) {
+        this.userShip = userShip;
         this.userShipBulletImage = spaceshipBulletImage;
         SpaceshipController.pane = pane;
         SpaceshipController.lblGameOver = lblGameOver;
@@ -68,33 +68,33 @@ public class SpaceshipController {
     private void checkWallCollision() {
         // Border detection, if we reach a border, set the left/right speed to 0.
         double leftWall = 0;
-        double rightWall = pane.getPrefWidth() - userShip.getStack().getWidth();
+        double rightWall = pane.getPrefWidth() - userShip.getObjectImage().getFitWidth();
         double topWall = 0;
-        double bottomWall = pane.getPrefHeight() - userShip.getStack().getHeight();
+        double bottomWall = pane.getPrefHeight() - userShip.getObjectImage().getFitHeight();
         int currentLeft = -speed;
         int currentRight = speed;
         int currentTop = -speed;
         int currentBottom = speed;
 
         // userShip hits the left wall
-        if (userShip.getStack().getLayoutX() <= leftWall) {
-            userShip.getStack().setLayoutX(leftWall);
+        if (userShip.getObjectImage().getLayoutX() <= leftWall) {
+            userShip.getObjectImage().setLayoutX(leftWall);
             currentLeft = 0;
             currentRight = speed;
         } // userShip hits the right wall
-        else if (userShip.getStack().getLayoutX() >= rightWall) {
-            userShip.getStack().setLayoutX(rightWall);
+        else if (userShip.getObjectImage().getLayoutX() >= rightWall) {
+            userShip.getObjectImage().setLayoutX(rightWall);
             currentRight = 0;
             currentLeft = -speed;
         }
         // userShip hits the top wall
-        if (userShip.getStack().getLayoutY() <= topWall) {
-            userShip.getStack().setLayoutY(topWall);
+        if (userShip.getObjectImage().getLayoutY() <= topWall) {
+            userShip.getObjectImage().setLayoutY(topWall);
             currentTop = 0;
             currentBottom = speed;
         } // userShip hits the bottom wall
-        else if (userShip.getStack().getLayoutY() >= bottomWall) {
-            userShip.getStack().setLayoutY(bottomWall);
+        else if (userShip.getObjectImage().getLayoutY() >= bottomWall) {
+            userShip.getObjectImage().setLayoutY(bottomWall);
             currentBottom = 0;
             currentTop = -speed;
 
@@ -103,7 +103,7 @@ public class SpaceshipController {
     }
 
     public void setSpaceshipMechanics(int right, int left, int top, int bottom) {
-        userShip.getStack().getScene().setOnKeyPressed((e) -> {
+        userShip.getObjectImage().getScene().setOnKeyPressed((e) -> {
             switch (e.getCode()) {
                 case D:
                     userShip.setxVelocity(right);
@@ -122,7 +122,7 @@ public class SpaceshipController {
                     break;
                 case SPACE:
                     if (userShip.isCanShoot() && userShip.isSingleShot()) {
-                        addBullet(Bullet.singleShot(userShip, userShip.getStack().getLayoutX(), userShip.getStack().getLayoutY() - userShip.getStack().getHeight(), userShipBulletImage));
+                        addBullet(Bullet.singleShot(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipBulletImage));
                         userShip.getSpaceshipShootAudio().play();
                         delaySingleShoot();
 
@@ -137,29 +137,29 @@ public class SpaceshipController {
                     break;
             }
         });
-        userShip.getStack().getScene().setOnKeyReleased((e) -> {
+        userShip.getObjectImage().getScene().setOnKeyReleased((e) -> {
             userShip.setxVelocity(0);
             userShip.setyVelocity(0);
         });
     }
 
     private void moveSpaceship() {
-        userShip.getStack().setLayoutX(userShip.getStack().getLayoutX() + userShip.getxVelocity());
-        userShip.getStack().setLayoutY(userShip.getStack().getLayoutY() + userShip.getyVelocity());
+        userShip.getObjectImage().setLayoutX(userShip.getObjectImage().getLayoutX() + userShip.getxVelocity());
+        userShip.getObjectImage().setLayoutY(userShip.getObjectImage().getLayoutY() + userShip.getyVelocity());
     }
 
     private void checkGameOverPortal() {
         if (EnemiesController.portal.opacityProperty().get() == 1.0
-                && userShip.getStack().getBoundsInParent().intersects(EnemiesController.portal.getBoundsInParent())) {
+                && userShip.getObjectImage().getBoundsInParent().intersects(EnemiesController.portal.getBoundsInParent())) {
             setSpaceshipMechanics(0, 0, 0, 0);
             speed = 0;
             userShip.setxVelocity(0);
             userShip.setyVelocity(0);
-            Timeline teleport = new Timeline(new KeyFrame(Duration.seconds(2), new KeyValue(userShip.getStack().rotateProperty(), 360 * 5)),
-                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getStack().scaleXProperty(), 0)),
-                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getStack().scaleYProperty(), 0)),
-                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getStack().layoutXProperty(), EnemiesController.portal.getLayoutX() - 0.5 * userShip.getStack().getPrefWidth())),
-                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getStack().layoutYProperty(), EnemiesController.portal.getLayoutY() - 0.5 * userShip.getStack().getPrefHeight()))
+            Timeline teleport = new Timeline(new KeyFrame(Duration.seconds(2), new KeyValue(userShip.getObjectImage().rotateProperty(), 360 * 5)),
+                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getObjectImage().scaleXProperty(), 0)),
+                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getObjectImage().scaleYProperty(), 0)),
+                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getObjectImage().layoutXProperty(), EnemiesController.portal.getLayoutX() - 0.5 * userShip.getObjectImage().getFitWidth())),
+                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getObjectImage().layoutYProperty(), EnemiesController.portal.getLayoutY() - 0.5 * userShip.getObjectImage().getFitHeight()))
             );
             teleport.setCycleCount(1);
             teleport.play();
@@ -175,13 +175,13 @@ public class SpaceshipController {
 
     public void speedShot(User shooter) {
         SequentialTransition speedShotAnimation = new SequentialTransition();
-        double height = shooter.getStack().getPrefHeight();
-        addBullet(singleShot(shooter, shooter.getStack().getLayoutX(), shooter.getStack().getLayoutY() - height, userShipBulletImage));
+        double height = shooter.getObjectImage().getFitHeight();
+        addBullet(singleShot(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipBulletImage));
         userShip.getSpaceshipShootAudio().play();
         for (int i = 0; i < 2; i++) {
             PauseTransition bulletPause = new PauseTransition(Duration.seconds(0.25));
             bulletPause.setOnFinished((event) -> {
-                addBullet(singleShot(shooter, shooter.getStack().getLayoutX(), shooter.getStack().getLayoutY() - height, userShipBulletImage));
+                addBullet(singleShot(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipBulletImage));
                 userShip.getSpaceshipShootAudio().play();
             });
             bulletPause.setCycleCount(1);
@@ -191,9 +191,9 @@ public class SpaceshipController {
     }
 
     public void spreadShot() {
-        addBullet(Bullet.singleShot(userShip, userShip.getStack().getLayoutX() - userShip.getStack().getWidth() / 2, userShip.getStack().getLayoutY() + 20 - userShip.getStack().getHeight(), userShipBulletImage));
-        addBullet(Bullet.singleShot(userShip, userShip.getStack().getLayoutX() + userShip.getStack().getWidth() / 2, userShip.getStack().getLayoutY() + 20 - userShip.getStack().getHeight(), userShipBulletImage));
-        addBullet(Bullet.singleShot(userShip, userShip.getStack().getLayoutX(), userShip.getStack().getLayoutY() - userShip.getStack().getHeight(), userShipBulletImage));
+        addBullet(Bullet.singleShot(userShip, userShip.getObjectImage().getLayoutX() - userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipBulletImage));
+        addBullet(Bullet.singleShot(userShip, userShip.getObjectImage().getLayoutX() + userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipBulletImage));
+        addBullet(Bullet.singleShot(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipBulletImage));
         userShip.getSpaceshipShootAudio().play();
     }
 
@@ -236,7 +236,7 @@ public class SpaceshipController {
 
     public void checkBulletCollision() {
         for (int i = 0; i < enemyBullets.size(); i++) {
-            if (userShip.getStack().getBoundsInParent().intersects(enemyBullets.get(i).getStack().getBoundsInParent())) {
+            if (userShip.getObjectImage().getBoundsInParent().intersects(enemyBullets.get(i).getObjectImage().getBoundsInParent())) {
                 Bullet.removeBullet(enemyBullets.get(i));
                 spaceshipHit();
                 enemyBullets.remove(enemyBullets.get(i));
@@ -246,8 +246,8 @@ public class SpaceshipController {
 
     public void checkEnemyCollision() {
         for (Enemy currentEnemy : EnemiesController.getEnemies()) {
-            if (pane.localToScene(EnemiesController.enemiesPane.localToScene(currentEnemy.getStack().getBoundsInParent()))
-                    .intersects(userShip.getStack().getBoundsInParent())) {
+            if (pane.localToScene(EnemiesController.enemiesPane.localToScene(currentEnemy.getObjectImage().getBoundsInParent()))
+                    .intersects(userShip.getObjectImage().getBoundsInParent())) {
                 spaceshipHit();
             }
         }
@@ -269,7 +269,7 @@ public class SpaceshipController {
     public void spaceshipHitAnimation() {
         spaceshipHitAudio.play();
         Timeline spaceshipFlashing = new Timeline(new KeyFrame(Duration.seconds(0.1),
-                new KeyValue(userShip.getStack().opacityProperty(), 0)
+                new KeyValue(userShip.getObjectImage().opacityProperty(), 0)
         ));
         spaceshipFlashing.setAutoReverse(true);
         spaceshipFlashing.setCycleCount(8);
