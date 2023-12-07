@@ -8,12 +8,16 @@ import edu.vanier.models.Bullet;
 import static edu.vanier.models.Bullet.singleShot;
 import edu.vanier.models.Enemy;
 import edu.vanier.models.User;
-import edu.vanier.models.GameObject;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -25,9 +29,8 @@ import static javafx.scene.input.KeyCode.D;
 import static javafx.scene.input.KeyCode.SPACE;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.text.Text;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import javax.sound.midi.Sequence;
 
 /**
  *
@@ -43,6 +46,12 @@ public class SpaceshipController {
     int speed = User.getSpeed();
     AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/sounds/sfx_shieldDown.wav").toExternalForm());
     static AudioClip gameOverAudio = new AudioClip(SpaceshipController.class.getResource("/sounds/gameOver.wav").toExternalForm());
+    static Label lblCongratulations;
+    static AudioClip winAudio = new AudioClip(SpaceshipController.class.getResource("/sounds/win.wav").toExternalForm());
+    static Circle portal;
+    static boolean portalSpawned = false;
+    static boolean portalEntered = false;
+    static int currentLevel;
 
     AnimationTimer animation = new AnimationTimer() {
         @Override
@@ -53,16 +62,21 @@ public class SpaceshipController {
             Bullet.moveBullets(userShip.getBullets(), false);
             // Check for collisions.
             checkBulletEnemyCollisions();
+            // Check if the game is over
+            checkLevelComplete();
             // Check if the userShip is in the portal at the end of the level.
             checkGameOverPortal();
         }
     };
 
-    public SpaceshipController(User userShip, Image spaceshipBulletImage, Pane pane, Label lblGameOver) {
+    public SpaceshipController(User userShip, Image spaceshipBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal) {
         this.userShip = userShip;
         this.userShipBulletImage = spaceshipBulletImage;
         SpaceshipController.pane = pane;
         SpaceshipController.lblGameOver = lblGameOver;
+        SpaceshipController.lblCongratulations = lblCongratulations;
+        SpaceshipController.portal = portal;
+        currentLevel = 1;
     }
 
     private void checkWallCollision() {
@@ -148,21 +162,59 @@ public class SpaceshipController {
         userShip.getObjectImage().setLayoutY(userShip.getObjectImage().getLayoutY() + userShip.getyVelocity());
     }
 
+    private void checkLevelComplete() {
+        // if level is completed
+        if (EnemiesController.getEnemies().isEmpty() && !portalSpawned) {
+            lblCongratulations.setVisible(true);
+            winAudio.play();
+            FadeTransition portalFade = new FadeTransition(Duration.seconds(0.5), portal);
+            portalFade.setFromValue(0);
+            portalFade.setByValue(1.0);
+            portalFade.setCycleCount(1);
+            portalFade.setDelay(Duration.seconds(0.5));
+            portalFade.play();
+            portalSpawned = true;
+        }
+    }
+
     private void checkGameOverPortal() {
-        if (EnemiesController.portal.opacityProperty().get() == 1.0
-                && userShip.getObjectImage().getBoundsInParent().intersects(EnemiesController.portal.getBoundsInParent())) {
-            setSpaceshipMechanics(0, 0, 0, 0);
-            speed = 0;
-            userShip.setxVelocity(0);
-            userShip.setyVelocity(0);
-            Timeline teleport = new Timeline(new KeyFrame(Duration.seconds(2), new KeyValue(userShip.getObjectImage().rotateProperty(), 360 * 5)),
-                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getObjectImage().scaleXProperty(), 0)),
-                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getObjectImage().scaleYProperty(), 0)),
-                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getObjectImage().layoutXProperty(), EnemiesController.portal.getLayoutX() - 0.5 * userShip.getObjectImage().getFitWidth())),
-                    new KeyFrame(Duration.seconds(1), new KeyValue(userShip.getObjectImage().layoutYProperty(), EnemiesController.portal.getLayoutY() - 0.5 * userShip.getObjectImage().getFitHeight()))
+        if (portal.opacityProperty().get() == 1.0
+                && userShip.getObjectImage().getBoundsInParent().intersects(portal.getBoundsInParent())
+                && !portalEntered) {
+            portalEntered = true;
+            setImmobilize(true);
+            lblCongratulations.setVisible(false);
+
+            Timeline portalDisappear = new Timeline(
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(portal.opacityProperty(), 0))
+            );
+            portalDisappear.setCycleCount(1);
+            Timeline appear = new Timeline(
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().rotateProperty(), 360)),
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().scaleXProperty(), 1)),
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().scaleYProperty(), 1)),
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(portal.radiusProperty(), portal.getRadius())),
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().layoutYProperty(), userShip.getObjectImage().getLayoutY() + 80)),
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(portal.layoutYProperty(), userShip.getObjectImage().getLayoutY() + 80))
+            );
+            appear.setCycleCount(1);
+            appear.setDelay(Duration.seconds(0.75));
+            Timeline teleport = new Timeline(
+                    new KeyFrame(Duration.seconds(0.8), new KeyValue(userShip.getObjectImage().rotateProperty(), 720)),
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().scaleXProperty(), 0)),
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().scaleYProperty(), 0)),
+                    new KeyFrame(Duration.seconds(0.8), new KeyValue(portal.radiusProperty(), 0)),
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().layoutXProperty(), portal.getLayoutX() - 0.5 * userShip.getObjectImage().getFitWidth())),
+                    new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().layoutYProperty(), portal.getLayoutY() - 0.5 * userShip.getObjectImage().getFitHeight()))
             );
             teleport.setCycleCount(1);
-            teleport.play();
+
+            SequentialTransition transition = new SequentialTransition(teleport, appear, portalDisappear);
+            transition.setCycleCount(1);
+            transition.play();
+            transition.setOnFinished((event) -> {
+                startNextLevel();
+            });
         }
     }
 
@@ -298,6 +350,33 @@ public class SpaceshipController {
 
     public ArrayList<Bullet> getEnemyBullets() {
         return enemyBullets;
+    }
+
+    private void setImmobilize(boolean immobilize) {
+        if (immobilize) {
+            setSpaceshipMechanics(0, 0, 0, 0);
+            speed = 0;
+            userShip.setxVelocity(0);
+            userShip.setyVelocity(0);
+            userShip.setCanShoot(false);
+        }else{
+            speed = User.getSpeed();
+            userShip.setCanShoot(true);
+        }
+    }
+
+    private void startNextLevel() {
+        currentLevel++;
+        portalSpawned = false;
+        portalEntered = false;
+        if (currentLevel == 2) {
+            EnemiesController.spawn(20);
+            Enemy.setSpeed(1);
+        } else if (currentLevel == 3) {
+            EnemiesController.spawn(25);
+            Enemy.setSpeed(1.2);
+        }
+        setImmobilize(false);
     }
 
 }

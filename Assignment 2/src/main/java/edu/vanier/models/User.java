@@ -7,9 +7,7 @@ package edu.vanier.models;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.shape.Rectangle;
 
 /**
  *

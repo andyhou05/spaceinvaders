@@ -8,13 +8,8 @@ import edu.vanier.models.Bullet;
 import edu.vanier.models.Enemy;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
-import javafx.animation.FadeTransition;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.AudioClip;
-import javafx.scene.shape.Circle;
-import javafx.util.Duration;
 
 /**
  *
@@ -29,9 +24,6 @@ public class EnemiesController {
     static Image enemyBulletImage;
     static double enemyXdistance = 185;
     static double enemyYdistance = 100;
-    static Label lblCongratulations;
-    static AudioClip winAudio = new AudioClip(SpaceshipController.class.getResource("/sounds/win.wav").toExternalForm());
-    static Circle portal;
 
     static AnimationTimer enemyAnimation = new AnimationTimer() {
         @Override
@@ -43,17 +35,18 @@ public class EnemiesController {
         }
     };
 
-    public EnemiesController(Pane pane, Image enemyBulletImage, Label lblCongratulations, Circle portal, double enemySpeed) {
+    public EnemiesController(Pane pane, Image enemyBulletImage, double enemySpeed) {
         enemiesPane.setPrefWidth(800);
         enemiesPane.setPrefHeight(400);
         this.pane = pane;
         this.enemyBulletImage = enemyBulletImage;
-        EnemiesController.lblCongratulations = lblCongratulations;
-        EnemiesController.portal = portal;
         Enemy.setSpeed(enemySpeed);
     }
 
-    public void spawn(int enemyNumber) {
+    public static void spawn(int enemyNumber) {
+        Pane newEnemiesPane = new Pane();
+        newEnemiesPane.setPrefWidth(800);
+        newEnemiesPane.setPrefHeight(400);
         double currentLayoutX;
         double currentLayoutY = 0;
         for (int i = 0; enemies.size() < enemyNumber; i++) {
@@ -64,10 +57,13 @@ public class EnemiesController {
                 i = 0;
             }
             Enemy currentEnemy = new Enemy(currentLayoutX, currentLayoutY);
-            enemiesPane.getChildren().add(currentEnemy.getObjectImage());
+            newEnemiesPane.getChildren().add(currentEnemy.getObjectImage());
             enemies.add(currentEnemy);
         }
-        pane.getChildren().add(enemiesPane);
+        newEnemiesPane.setLayoutX(0);
+        newEnemiesPane.setLayoutY(0);
+        pane.getChildren().add(newEnemiesPane);
+        enemiesPane = newEnemiesPane;
     }
 
     private static void moveEnemies() {
@@ -87,7 +83,7 @@ public class EnemiesController {
     private static void enemiesShoot() {
         // Make enemies able to singleShot.
         for (Enemy currentEnemy : enemies) {
-            if (Math.random() < 0.0015) {
+            if (Math.random() < 0.0005) {
                 Bullet currentBullet = Bullet.singleShot(currentEnemy,
                         currentEnemy.getObjectImage().getLayoutX() + enemiesPane.getLayoutX(),
                         currentEnemy.getObjectImage().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getObjectImage().getFitHeight(),
@@ -119,17 +115,6 @@ public class EnemiesController {
                             enemies.remove(enemies.get(i));
                             Bullet.removeBullet(b);
                             spaceshipBullets.remove(b);
-                            // if game is over
-                            if (enemies.isEmpty()) {
-                                lblCongratulations.setVisible(true);
-                                winAudio.play();
-                                FadeTransition portalFade = new FadeTransition(Duration.seconds(0.5), portal);
-                                portalFade.setFromValue(0);
-                                portalFade.setByValue(1.0);
-                                portalFade.setCycleCount(1);
-                                portalFade.setDelay(Duration.seconds(0.5));
-                                portalFade.play();
-                            }
                             break;
                         }
                     }

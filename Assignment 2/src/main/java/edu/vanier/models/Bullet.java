@@ -5,14 +5,8 @@
 package edu.vanier.models;
 
 import static edu.vanier.models.GameObject.pane;
-import java.util.ArrayList;
 import java.util.List;
-import javafx.animation.PauseTransition;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
 /**
  *

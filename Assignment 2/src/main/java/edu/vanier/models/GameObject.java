@@ -4,15 +4,11 @@
  */
 package edu.vanier.models;
 
-import java.util.ArrayList;
 import javafx.animation.PauseTransition;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 /**
