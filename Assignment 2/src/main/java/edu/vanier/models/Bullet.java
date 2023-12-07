@@ -29,9 +29,17 @@ public class Bullet extends GameObject {
         pane.getChildren().add(bullet.getObjectImage());
         return bullet;
     }
-    
-    public static void removeBullet(Bullet bullet){
+
+    public static void removeBullet(Bullet bullet) {
         pane.getChildren().remove(bullet.getObjectImage());
+    }
+
+    public static void removeBullet(List<Bullet> bullets) {
+        
+        for (Bullet b: bullets) {
+            pane.getChildren().remove(b.getObjectImage());
+        }
+        bullets.removeAll(bullets);
     }
 
     public static void moveBullets(List<Bullet> bullets, boolean isEnemy) {
@@ -41,8 +49,15 @@ public class Bullet extends GameObject {
         } else {
             direction = -1;
         }
-        for (Bullet b : bullets) {
-            b.getObjectImage().setLayoutY(b.getObjectImage().getLayoutY() + direction*bulletSpeed);
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullet currentBullet = bullets.get(i);
+            currentBullet.getObjectImage().setLayoutY(currentBullet.getObjectImage().getLayoutY() + direction * bulletSpeed);
+            if (currentBullet.getObjectImage().getLayoutY() < -currentBullet.getObjectImage().getFitHeight() || currentBullet.getObjectImage().getLayoutY() > pane.getPrefHeight()) {
+                // remove from pane
+                removeBullet(currentBullet);
+                // remove from list
+                bullets.remove(currentBullet);
+            }
         }
     }
 

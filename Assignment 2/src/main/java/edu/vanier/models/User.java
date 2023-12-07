@@ -18,8 +18,8 @@ public class User extends GameObject {
     int xVelocity;
     int yVelocity;
     static int speed = 5;
-    int lives = 3;
-    ArrayList<Bullet> bullets = new ArrayList<>();
+    static int lives = 3;
+    static ArrayList<Bullet> bullets = new ArrayList<>();
     AudioClip spaceshipShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser1.wav").toExternalForm());
     boolean invincible = false;
     boolean canShoot = true;
@@ -42,12 +42,12 @@ public class User extends GameObject {
         this.xVelocity = xVelocity;
     }
 
-    public int getLives() {
+    public static int getLives() {
         return lives;
     }
 
-    public void setLives(int lives) {
-        this.lives = lives;
+    public static void setLives(int lives) {
+        User.lives = lives;
     }
 
     public int getyVelocity() {
@@ -66,12 +66,12 @@ public class User extends GameObject {
         User.speed = speed;
     }
 
-    public ArrayList<Bullet> getBullets() {
+    public static ArrayList<Bullet> getBullets() {
         return bullets;
     }
 
-    public void setBullets(ArrayList<Bullet> bullets) {
-        this.bullets = bullets;
+    public static void setBullets(ArrayList<Bullet> bullets) {
+        User.bullets = bullets;
     }
 
     public boolean isInvincible() {

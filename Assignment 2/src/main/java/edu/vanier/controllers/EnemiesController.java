@@ -6,6 +6,7 @@ package edu.vanier.controllers;
 
 import edu.vanier.models.Bullet;
 import edu.vanier.models.Enemy;
+import edu.vanier.models.User;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
@@ -17,7 +18,7 @@ import javafx.scene.layout.Pane;
  */
 public class EnemiesController {
 
-    static ArrayList<Bullet> spaceshipBullets = new ArrayList<>();
+    static ArrayList<Bullet> spaceshipBullets;
     static Pane pane;
     static Pane enemiesPane = new Pane();
     static ArrayList<Enemy> enemies = new ArrayList<>();
@@ -38,6 +39,7 @@ public class EnemiesController {
     public EnemiesController(Pane pane, Image enemyBulletImage, double enemySpeed) {
         enemiesPane.setPrefWidth(800);
         enemiesPane.setPrefHeight(400);
+        spaceshipBullets = User.getBullets();
         this.pane = pane;
         this.enemyBulletImage = enemyBulletImage;
         Enemy.setSpeed(enemySpeed);
@@ -101,28 +103,23 @@ public class EnemiesController {
     }
 
     public static void checkBulletCollision() {
-        AnimationTimer animation = new AnimationTimer() {
-            @Override
-            public void handle(long n) {
-                for (int i = 0; i < enemies.size(); i++) {
-                    Enemy currentEnemy = enemies.get(i);
-                    for (Bullet b : spaceshipBullets) {
-                        // turns the local bounds of enemiesPane to the bounds of the pane,
-                        // turns the local bounds of the enemy to the bounds of the enemiesPane.
-                        if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getObjectImage().getBoundsInParent())).intersects(b.getObjectImage().getBoundsInParent())) {
-                            // kill the space invader
-                            currentEnemy.killAnimation(enemiesPane);
-                            enemies.remove(enemies.get(i));
-                            Bullet.removeBullet(b);
-                            spaceshipBullets.remove(b);
-                            break;
-                        }
-                    }
-
+        for (int i = 0; i < enemies.size(); i++) {
+            Enemy currentEnemy = enemies.get(i);
+            for (Bullet b : spaceshipBullets) {
+                // turns the local bounds of enemiesPane to the bounds of the pane,
+                // turns the local bounds of the enemy to the bounds of the enemiesPane.
+                if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getObjectImage().getBoundsInParent())).intersects(b.getObjectImage().getBoundsInParent())) {
+                    // kill the space invader
+                    currentEnemy.killAnimation(enemiesPane);
+                    enemies.remove(enemies.get(i));
+                    Bullet.removeBullet(b);
+                    spaceshipBullets.remove(b);
+                    break;
                 }
             }
-        };
-        animation.start();
+
+        }
+
     }
 
     public static ArrayList<Enemy> getEnemies() {

@@ -167,6 +167,8 @@ public class SpaceshipController {
         if (EnemiesController.getEnemies().isEmpty() && !portalSpawned) {
             lblCongratulations.setVisible(true);
             winAudio.play();
+            Bullet.removeBullet(enemyBullets);
+            EnemiesController.enemyAnimation.stop();
             FadeTransition portalFade = new FadeTransition(Duration.seconds(0.5), portal);
             portalFade.setFromValue(0);
             portalFade.setByValue(1.0);
@@ -341,7 +343,6 @@ public class SpaceshipController {
 
     public void addBullet(Bullet newBullet) {
         userShip.getBullets().add(newBullet);
-        EnemiesController.spaceshipBullets.add(newBullet);
     }
 
     public void move() {
@@ -369,6 +370,8 @@ public class SpaceshipController {
         currentLevel++;
         portalSpawned = false;
         portalEntered = false;
+        User.setLives(3);
+        EnemiesController.enemyAnimation.start();
         if (currentLevel == 2) {
             EnemiesController.spawn(20);
             Enemy.setSpeed(1);
