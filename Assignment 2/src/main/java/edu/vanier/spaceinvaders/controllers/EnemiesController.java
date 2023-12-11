@@ -4,6 +4,7 @@
  */
 package edu.vanier.spaceinvaders.controllers;
 
+import edu.vanier.spaceinvaders.main.MainApp;
 import edu.vanier.spaceinvaders.models.Bullet;
 import edu.vanier.spaceinvaders.models.Enemy;
 import edu.vanier.spaceinvaders.models.User;
@@ -115,8 +116,8 @@ public class EnemiesController {
                     Bullet.removeBullet(b);
                     spaceshipBullets.remove(b);
                     // update the score
-                    LevelOneController.score += 10;
-                    UserShipController.setScoreLabel();
+                    UserLevelController.score += 10;
+                    MainApp.controller.setScoreLabel();
                     break;
                 }
             }

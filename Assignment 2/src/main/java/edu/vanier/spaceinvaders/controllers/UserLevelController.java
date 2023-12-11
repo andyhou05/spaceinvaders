@@ -7,139 +7,191 @@ package edu.vanier.spaceinvaders.controllers;
 import edu.vanier.spaceinvaders.models.Bullet;
 import edu.vanier.spaceinvaders.models.Enemy;
 import edu.vanier.spaceinvaders.models.User;
+import edu.vanier.spaceinvaders.models.GameObject;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
-import javafx.animation.ParallelTransition;
 import javafx.animation.PauseTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import static javafx.scene.input.KeyCode.A;
 import static javafx.scene.input.KeyCode.D;
+import static javafx.scene.input.KeyCode.E;
+import static javafx.scene.input.KeyCode.S;
 import static javafx.scene.input.KeyCode.SPACE;
+import static javafx.scene.input.KeyCode.W;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-import static edu.vanier.spaceinvaders.models.Bullet.singleShotBullet;
 
 /**
  *
  * @author andyhou
  */
-public class UserShipController {
+public class UserLevelController {
 
+    @FXML
+    ImageView userShipImage;
+
+    @FXML
+    Pane pane;
+
+    @FXML
+    ImageView backgroundImage;
+
+    @FXML
+    Label lblGameOver;
+
+    @FXML
+    Label lblCongratulations;
+
+    @FXML
+    Circle portal;
+
+    @FXML
+    Label lblScore;
+
+    @FXML
+    Label lblLevel;
+
+    @FXML
+    ImageView life1;
+
+    @FXML
+    ImageView life2;
+
+    @FXML
+    ImageView life3;
+
+    @FXML
+    ImageView singleShotIconImageView;
+
+    @FXML
+    ImageView speedShotIconImageView;
+
+    @FXML
+    ImageView spreadShotIconImageView;
+
+    User userShip;
+    int userSpeed = User.getSpeed();
     ArrayList<Bullet> enemyBullets = Enemy.getBullets();
-    static boolean speedShotUnlocked;
-    static boolean spreadShotUnlocked;
-    static Pane pane;
-    static User userShip;
-    static Label lblGameOver;
-    Image userShipSingleBulletImage;
-    Image userShipSpeedBulletImage;
-    Image userShipSpreadBulletImage;
-    int speed = User.getSpeed();
-    AudioClip spaceshipHitAudio = new AudioClip(getClass().getResource("/sounds/sfx_shieldDown.wav").toExternalForm());
-    static AudioClip gameOverAudio = new AudioClip(UserShipController.class.getResource("/sounds/gameOver.wav").toExternalForm());
-    static Label lblCongratulations;
-    static AudioClip winAudio = new AudioClip(UserShipController.class.getResource("/sounds/win.wav").toExternalForm());
-    static Circle portal;
+    static int currentLevel = 0;
+    static int score;
+
+    static boolean speedShotUnlocked = false;
+    static boolean spreadShotUnlocked = false;
     static boolean portalSpawned = false;
     static boolean portalEntered = false;
-    static int currentLevel;
-    
-    static Image singleShotImage;// = new Image("/images/singleShotImage.png");
-    static Image speedShotImage = new Image("/images/speedShotImage.png");
-    static Image spreadShotImage = new Image("/images/spreadShotImage.png");
-    static Image lockedImage;// = new Image("/images/locked.png");
-    
+    static boolean allLevelsComplete = false;
 
-    static Label lblScore;
-    static Label lblLevel;
-    static List<ImageView> lifeImages;
-    static List<ImageView> shotImages;
+    Image userShipSingleBulletImage = new Image("/images/bullets/laserBlue05.png");
+    Image userShipSpeedBulletImage = new Image("/images/bullets/laserBlue01.png");
+    Image userShipSpreadBulletImage = new Image("images/bullets/laserBlue10.png");
+
+    static AudioClip spaceshipHitAudio = new AudioClip(UserLevelController.class.getResource("/sounds/sfx_shieldDown.wav").toExternalForm());
+    static AudioClip gameOverAudio = new AudioClip(UserLevelController.class.getResource("/sounds/gameOver.wav").toExternalForm());
+    static AudioClip winAudio = new AudioClip(UserLevelController.class.getResource("/sounds/win.wav").toExternalForm());
+
+    static Image speedShotIconImage = new Image("/images/speedShotImage.png");
+    static Image spreadShotIconImage = new Image("/images/spreadShotImage.png");
+    static Image lockedIconImage = new Image("/images/locked.png");
+    static Image lifeIconImage = new Image("/images/heart.png");
 
     AnimationTimer animation = new AnimationTimer() {
         @Override
         public void handle(long n) {
-            checkWallCollision(); // this also updates the speed of userShip if wall is encountered, ex: left wall encountered -> pressing "A" won't do anything.
+            checkWallCollision(); // this also updates the userSpeed of userShip if wall is encountered, ex: left wall encountered -> pressing "A" won't do anything.
             moveSpaceship();
             // move the bullets
             Bullet.moveBullets(userShip.getBullets(), false);
             // Check for collisions.
             checkBulletEnemyCollisions();
-            // Check if the game is over
-            checkLevelComplete();
-            // Check if the userShip is in the portal at the end of the level.
-            checkGameOverPortal();
+            // Check for level completion unless all levels have been completed
+            if (!allLevelsComplete) {
+                // Check if the game is over
+                checkLevelComplete();
+                // Check if the userShip is in the portal at the end of the level.
+                checkGameOverPortal();
+            } else {
+                lblCongratulations.setText("Space Invaders GONE");
+                lblCongratulations.setVisible(true);
+                EnemiesController.enemyAnimation.stop();
+            }
         }
     };
 
-    public UserShipController(User userShip, Image spaceshipBulletImage, Image userShipSpeedBulletImage, Image userShipSpreadBulletImage, Pane pane, Label lblGameOver, Label lblCongratulations, Circle portal, Label lblScore, Label lblLevel, List<ImageView> lifeImages, List<ImageView> shotImages) {
-        this.userShip = userShip;
-        this.userShipSingleBulletImage = spaceshipBulletImage;
-        this.userShipSpeedBulletImage = userShipSpeedBulletImage;
-        this.userShipSpreadBulletImage = userShipSpreadBulletImage;
-        UserShipController.pane = pane;
-        UserShipController.lblGameOver = lblGameOver;
-        UserShipController.lblCongratulations = lblCongratulations;
-        UserShipController.portal = portal;
-        UserShipController.lblLevel = lblLevel;
-        UserShipController.lblScore = lblScore;
-        UserShipController.lifeImages = lifeImages;
-        UserShipController.shotImages = shotImages;
-        currentLevel = 1;
-        checkAvailableShots();
-        setLevelLabel();
-        setScoreLabel();
-        EnemiesController.spawn(15);
+    @FXML
+    public void initialize() {
+        userShip = new User(userShipImage, new Image("/images/spaceships/playerShip2_blue.png"));
 
-        //updateShotImages();
+        backgroundImage.setImage(new Image("/images/background/starfield_alpha.png"));
+        backgroundImage.setPreserveRatio(false);
+        backgroundImage.setFitWidth(pane.getPrefWidth());
+        backgroundImage.setFitHeight(pane.getPrefHeight());
+
+        portal.setFill(new ImagePattern(new Image("/images/portal.png")));
+
+        singleShotIconImageView.setImage(new Image("/images/singleShotImage.png"));
+
+        life1.setImage(lifeIconImage);
+        life2.setImage(lifeIconImage);
+        life3.setImage(lifeIconImage);
+
+        GameObject.setPane(pane);
+
+    }
+
+    public void startGame() throws InterruptedException, FileNotFoundException {
+        EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"), 0.8);
+        enemies_Level_One.move();
+
+        startNextLevel();
+
     }
 
     private void checkWallCollision() {
-        // Border detection, if we reach a border, set the left/right speed to 0.
+        // Border detection, if we reach a border, set the left/right userSpeed to 0.
         double leftWall = 0;
         double rightWall = pane.getPrefWidth() - userShip.getObjectImage().getFitWidth();
         double topWall = 0;
         double bottomWall = pane.getPrefHeight() - userShip.getObjectImage().getFitHeight();
-        int currentLeft = -speed;
-        int currentRight = speed;
-        int currentTop = -speed;
-        int currentBottom = speed;
+        int currentLeft = -userSpeed;
+        int currentRight = userSpeed;
+        int currentTop = -userSpeed;
+        int currentBottom = userSpeed;
 
         // userShip hits the left wall
         if (userShip.getObjectImage().getLayoutX() <= leftWall) {
             userShip.getObjectImage().setLayoutX(leftWall);
             currentLeft = 0;
-            currentRight = speed;
+            currentRight = userSpeed;
         } // userShip hits the right wall
         else if (userShip.getObjectImage().getLayoutX() >= rightWall) {
             userShip.getObjectImage().setLayoutX(rightWall);
             currentRight = 0;
-            currentLeft = -speed;
+            currentLeft = -userSpeed;
         }
         // userShip hits the top wall
         if (userShip.getObjectImage().getLayoutY() <= topWall) {
             userShip.getObjectImage().setLayoutY(topWall);
             currentTop = 0;
-            currentBottom = speed;
+            currentBottom = userSpeed;
         } // userShip hits the bottom wall
         else if (userShip.getObjectImage().getLayoutY() >= bottomWall) {
             userShip.getObjectImage().setLayoutY(bottomWall);
             currentBottom = 0;
-            currentTop = -speed;
+            currentTop = -userSpeed;
 
         }
         setSpaceshipMechanics(currentRight, currentLeft, currentTop, currentBottom);
@@ -169,7 +221,7 @@ public class UserShipController {
                         delaySingleShoot();
 
                     } else if (userShip.isCanSpeedShoot() && userShip.isSpeedShot()) {
-                        speedShot(userShip);
+                        speedShot();
                         delaySpeedShoot();
                     } else if (userShip.isCanSpreadShoot() && userShip.isSpreadShot()) {
                         spreadShot();
@@ -260,15 +312,15 @@ public class UserShipController {
         User.getUserShipSingleShootAudio().play();
     }
 
-    public void speedShot(User shooter) {
+    public void speedShot() {
         SequentialTransition speedShotAnimation = new SequentialTransition();
-        double height = shooter.getObjectImage().getFitHeight();
-        addBullet(Bullet.speedShotBullet(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipSpeedBulletImage));
+        double height = userShip.getObjectImage().getFitHeight();
+        addBullet(Bullet.speedShotBullet(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - height, userShipSpeedBulletImage));
         userShip.getUserShipSpeedShootAudio().play();
         for (int i = 0; i < 2; i++) {
             PauseTransition bulletPause = new PauseTransition(Duration.seconds(0.10));
             bulletPause.setOnFinished((event) -> {
-                addBullet(Bullet.speedShotBullet(shooter, shooter.getObjectImage().getLayoutX(), shooter.getObjectImage().getLayoutY() - height, userShipSpeedBulletImage));
+                addBullet(Bullet.speedShotBullet(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - height, userShipSpeedBulletImage));
                 User.getUserShipSpeedShootAudio().play();
             });
             bulletPause.setCycleCount(1);
@@ -292,7 +344,7 @@ public class UserShipController {
         } else {
             userShip.setShot(1);
         }
-        updateShotImages();
+        updateShotIconImages();
     }
 
     public void delaySingleShoot() {
@@ -349,14 +401,14 @@ public class UserShipController {
         userShip.setLives(userShip.getLives() - 1);
         userShip.setInvincible(true);
         spaceshipHitAnimation();
-        setLifeImage();
+        updateLifeImage();
         checkLivesRemaining();
     }
 
-    public void setLifeImage() {
-        lifeImages.get(2).setVisible(User.getLives() >= 3);
-        lifeImages.get(1).setVisible(User.getLives() >= 2);
-        lifeImages.get(0).setVisible(User.getLives() >= 1);
+    public void updateLifeImage() {
+        life3.setVisible(User.getLives() == 3);
+        life2.setVisible(User.getLives() >= 2);
+        life1.setVisible(User.getLives() >= 1);
 
     }
 
@@ -395,10 +447,6 @@ public class UserShipController {
         userShip.getBullets().add(newBullet);
     }
 
-    public void move() {
-        animation.start();
-    }
-
     public ArrayList<Bullet> getEnemyBullets() {
         return enemyBullets;
     }
@@ -406,21 +454,21 @@ public class UserShipController {
     private void setImmobilize(boolean immobilize) {
         if (immobilize) {
             setSpaceshipMechanics(0, 0, 0, 0);
-            speed = 0;
+            userSpeed = 0;
             userShip.setxVelocity(0);
             userShip.setyVelocity(0);
             userShip.setCanShoot(false);
         } else {
-            speed = User.getSpeed();
+            userSpeed = User.getSpeed();
             userShip.setCanShoot(true);
         }
     }
 
-    public static void setScoreLabel() {
-        lblScore.setText("Score: " + LevelOneController.score);
+    public void setScoreLabel() {
+        lblScore.setText("Score: " + UserLevelController.score);
     }
 
-    public static void setLevelLabel() {
+    public void setLevelLabel() {
         lblLevel.setText("Level " + currentLevel);
     }
 
@@ -437,43 +485,56 @@ public class UserShipController {
         portalSpawned = false;
         portalEntered = false;
         User.setLives(3);
-        setLifeImage();
+        updateLifeImage();
         setLevelLabel();
         checkAvailableShots();
         EnemiesController.enemyAnimation.start();
-        if (currentLevel == 2) {
-            EnemiesController.spawn(20);
-            Enemy.setSpeed(1);
-        } else if (currentLevel == 3) {
-            EnemiesController.spawn(25);
+        if (currentLevel == 1) {
+            EnemiesController.spawn(1);
+            animation.start();
+        } else if (currentLevel == 2) {
+            EnemiesController.spawn(2);
             Enemy.setSpeed(1.2);
+        } else if (currentLevel == 3) {
+            EnemiesController.spawn(3);
+            Enemy.setSpeed(1.6);
+        } else {
+            allLevelsComplete = true;
         }
         setImmobilize(false);
-        updateShotImages();
+        updateShotIconImages();
     }
 
-    public void updateShotImages() {
-        
+    public void updateShotIconImages() {
+
         if (speedShotUnlocked) {
-            shotImages.get(1).setImage(speedShotImage);
+            speedShotIconImageView.setImage(speedShotIconImage);
+        } else {
+            speedShotIconImageView.setImage(lockedIconImage);
         }
         if (spreadShotUnlocked) {
-            shotImages.get(2).setImage(spreadShotImage);
+            spreadShotIconImageView.setImage(spreadShotIconImage);
+        } else {
+            spreadShotIconImageView.setImage(lockedIconImage);
         }
         if (userShip.isSingleShot()) {
-            shotImages.get(0).setOpacity(1.0);
-            shotImages.get(1).setOpacity(0.6);
-            shotImages.get(2).setOpacity(0.6);
+            singleShotIconImageView.setOpacity(1.0);
+            speedShotIconImageView.setOpacity(0.6);
+            spreadShotIconImageView.setOpacity(0.6);
         } else if (userShip.isSpeedShot()) {
-            shotImages.get(0).setOpacity(0.6);
-            shotImages.get(1).setOpacity(1.0);
-            shotImages.get(2).setOpacity(0.6);
+            singleShotIconImageView.setOpacity(0.6);
+            speedShotIconImageView.setOpacity(1.0);
+            spreadShotIconImageView.setOpacity(0.6);
         } else if (userShip.isSpreadShot()) {
-            shotImages.get(0).setOpacity(0.6);
-            shotImages.get(1).setOpacity(0.6);
-            shotImages.get(2).setOpacity(1.0);
+            singleShotIconImageView.setOpacity(0.6);
+            speedShotIconImageView.setOpacity(0.6);
+            spreadShotIconImageView.setOpacity(1.0);
         }
 
+    }
+
+    public Pane getPane() {
+        return pane;
     }
 
 }
