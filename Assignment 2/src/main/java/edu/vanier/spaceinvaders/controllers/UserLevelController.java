@@ -20,6 +20,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -51,9 +52,6 @@ public class UserLevelController {
     ImageView backgroundImage;
 
     @FXML
-    Label lblGameOver;
-
-    @FXML
     Label lblCongratulations;
 
     @FXML
@@ -83,10 +81,16 @@ public class UserLevelController {
     @FXML
     ImageView spreadShotIconImageView;
 
+    @FXML
+    Pane paneGameOver;
+
+    @FXML
+    Button btnRestartLevel;
+
     User userShip;
     int userSpeed = User.getSpeed();
     ArrayList<Bullet> enemyBullets = Enemy.getBullets();
-    static int currentLevel = 0;
+    static int currentLevel = 1;
     static int score;
 
     static boolean speedShotUnlocked = false;
@@ -124,13 +128,27 @@ public class UserLevelController {
                 // Check if the userShip is in the portal at the end of the level.
                 checkGameOverPortal();
             } else {
-                lblCongratulations.setText("Space Invaders GONE");
+                lblCongratulations.setText("Total Score: " + score);
                 lblCongratulations.setVisible(true);
                 EnemiesController.enemyAnimation.stop();
             }
         }
     };
 
+    EventHandler<ActionEvent> btnRestrtLevelEvent = new EventHandler<>() {
+        @Override
+        public void handle(ActionEvent event) {
+            score = 0;
+            updateScoreLabel();
+            userShipImage.setLayoutX(520);
+            userShipImage.setLayoutY(640);
+            userShipImage.setVisible(true);
+            animation.start();
+            EnemiesController.clearEnemies();
+            startLevel();
+            paneGameOver.setVisible(false);
+        }
+    };
     @FXML
     public void initialize() {
         userShip = new User(userShipImage, new Image("/images/spaceships/playerShip2_blue.png"));
@@ -149,6 +167,7 @@ public class UserLevelController {
         life3.setImage(lifeIconImage);
 
         GameObject.setPane(pane);
+        btnRestartLevel.setOnAction(btnRestrtLevelEvent);
 
     }
 
@@ -156,7 +175,7 @@ public class UserLevelController {
         EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"), 0.8);
         enemies_Level_One.move();
 
-        startNextLevel();
+        startLevel();
 
     }
 
@@ -256,6 +275,7 @@ public class UserLevelController {
             portalFade.setDelay(Duration.seconds(0.5));
             portalFade.play();
             portalSpawned = true;
+            currentLevel++;
         }
     }
 
@@ -295,7 +315,7 @@ public class UserLevelController {
             transition.setCycleCount(1);
             transition.play();
             transition.setOnFinished((event) -> {
-                startNextLevel();
+                startLevel();
             });
         }
     }
@@ -416,9 +436,10 @@ public class UserLevelController {
         if (userShip.getLives() == 0) {
             userShip.killAnimation(pane);
             animation.stop();
+            setImmobilize(true);
             EnemiesController.enemyAnimation.stop();
             gameOverAudio.play();
-            lblGameOver.setVisible(true);
+            paneGameOver.setVisible(true);
         }
     }
 
@@ -464,12 +485,15 @@ public class UserLevelController {
         }
     }
 
-    public void setScoreLabel() {
+    public void updateScoreLabel() {
         lblScore.setText("Score: " + UserLevelController.score);
     }
 
-    public void setLevelLabel() {
+    public void updateLevelLabel() {
         lblLevel.setText("Level " + currentLevel);
+        if (currentLevel > 3) {
+            lblLevel.setText("COMPLETED");
+        }
     }
 
     public static void checkAvailableShots() {
@@ -477,8 +501,7 @@ public class UserLevelController {
         spreadShotUnlocked = (currentLevel > 2);
     }
 
-    private void startNextLevel() {
-        currentLevel++;
+    private void startLevel() {
         // bring the portal back to original position
         portal.setLayoutX(540);
         portal.setLayoutY(470);
@@ -486,21 +509,21 @@ public class UserLevelController {
         portalEntered = false;
         User.setLives(3);
         updateLifeImage();
-        setLevelLabel();
+        updateLevelLabel();
         checkAvailableShots();
-        EnemiesController.enemyAnimation.start();
         if (currentLevel == 1) {
-            EnemiesController.spawn(1);
+            EnemiesController.spawn(15);
             animation.start();
         } else if (currentLevel == 2) {
-            EnemiesController.spawn(2);
+            EnemiesController.spawn(20);
             Enemy.setSpeed(1.2);
         } else if (currentLevel == 3) {
-            EnemiesController.spawn(3);
+            EnemiesController.spawn(25);
             Enemy.setSpeed(1.6);
         } else {
             allLevelsComplete = true;
         }
+        EnemiesController.enemyAnimation.start();
         setImmobilize(false);
         updateShotIconImages();
     }

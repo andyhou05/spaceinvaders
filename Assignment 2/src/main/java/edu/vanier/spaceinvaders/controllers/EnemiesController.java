@@ -117,12 +117,16 @@ public class EnemiesController {
                     spaceshipBullets.remove(b);
                     // update the score
                     UserLevelController.score += 10;
-                    MainApp.controller.setScoreLabel();
+                    MainApp.controller.updateScoreLabel();
                     break;
                 }
             }
-
         }
+    }
+
+    public static void clearEnemies() {
+        enemiesPane.getChildren().removeAll(enemiesPane.getChildren());
+        enemies.removeAll(enemies);
 
     }
 

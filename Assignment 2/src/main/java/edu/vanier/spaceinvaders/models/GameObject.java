@@ -37,7 +37,7 @@ public class GameObject {
         explosion.setLayoutX(spaceshipPane.getLayoutX() + this.getObjectImage().getLayoutX());
         explosion.setLayoutY(spaceshipPane.getLayoutY() + this.getObjectImage().getLayoutY());
         pane.getChildren().add(explosion);
-        spaceshipPane.getChildren().remove(this.getObjectImage());
+        this.getObjectImage().setVisible(false);
         PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
         pause.setOnFinished((event) -> {
             pane.getChildren().remove(explosion);
