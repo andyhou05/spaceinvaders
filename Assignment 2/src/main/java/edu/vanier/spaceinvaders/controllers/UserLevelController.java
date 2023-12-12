@@ -91,7 +91,7 @@ public class UserLevelController {
     int userSpeed = User.getSpeed();
     ArrayList<Bullet> enemyBullets = Enemy.getBullets();
     static int currentLevel = 1;
-    static int score;
+    static int score = 0;
 
     static boolean speedShotUnlocked = false;
     static boolean spreadShotUnlocked = false;
@@ -138,8 +138,7 @@ public class UserLevelController {
     EventHandler<ActionEvent> btnRestrtLevelEvent = new EventHandler<>() {
         @Override
         public void handle(ActionEvent event) {
-            score = 0;
-            updateScoreLabel();
+            updateScoreLabel(-score);
             userShipImage.setLayoutX(520);
             userShipImage.setLayoutY(640);
             userShipImage.setVisible(true);
@@ -149,6 +148,7 @@ public class UserLevelController {
             paneGameOver.setVisible(false);
         }
     };
+
     @FXML
     public void initialize() {
         userShip = new User(userShipImage, new Image("/images/spaceships/playerShip2_blue.png"));
@@ -419,6 +419,7 @@ public class UserLevelController {
 
     public void spaceshipHit() {
         userShip.setLives(userShip.getLives() - 1);
+        updateScoreLabel(-20);
         userShip.setInvincible(true);
         spaceshipHitAnimation();
         updateLifeImage();
@@ -485,7 +486,11 @@ public class UserLevelController {
         }
     }
 
-    public void updateScoreLabel() {
+    public void updateScoreLabel(int scoreIncrement) {
+        score += scoreIncrement;
+        if (score < 0) {
+            score = 0;
+        }
         lblScore.setText("Score: " + UserLevelController.score);
     }
 

@@ -116,8 +116,7 @@ public class EnemiesController {
                     Bullet.removeBullet(b);
                     spaceshipBullets.remove(b);
                     // update the score
-                    UserLevelController.score += 10;
-                    MainApp.controller.updateScoreLabel();
+                    MainApp.controller.updateScoreLabel(10);
                     break;
                 }
             }
