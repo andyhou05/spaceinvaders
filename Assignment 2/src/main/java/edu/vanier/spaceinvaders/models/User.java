@@ -32,6 +32,7 @@ public class User extends GameObject {
     boolean spreadShot = false;
 
     public User(ImageView userShipImage, Image image) {
+        userShipImage.setPreserveRatio(false); 
         setObjectImage(userShipImage);
         getObjectImage().setImage(image);
     }

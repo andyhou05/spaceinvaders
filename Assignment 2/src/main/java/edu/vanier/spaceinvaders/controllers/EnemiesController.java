@@ -37,13 +37,12 @@ public class EnemiesController {
         }
     };
 
-    public EnemiesController(Pane pane, Image enemyBulletImage, double enemySpeed) {
+    public EnemiesController(Pane pane, Image enemyBulletImage) {
         enemiesPane.setPrefWidth(800);
         enemiesPane.setPrefHeight(400);
         spaceshipBullets = User.getBullets();
         this.pane = pane;
         this.enemyBulletImage = enemyBulletImage;
-        Enemy.setSpeed(enemySpeed);
     }
 
     public static void spawn(int enemyNumber) {

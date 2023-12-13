@@ -17,6 +17,8 @@ import javafx.animation.KeyValue;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -111,11 +113,47 @@ public class UserLevelController {
     static Image spreadShotIconImage = new Image("/images/spreadShotImage.png");
     static Image lockedIconImage = new Image("/images/locked.png");
     static Image lifeIconImage = new Image("/images/heart.png");
+    
+    ChangeListener<? super Number> horizontalBorderListener = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            double leftWall = 0;
+            double rightWall = pane.getPrefWidth() - userShip.getObjectImage().getFitWidth();
+            // userShip hits the left wall
+            if (userShip.getObjectImage().getLayoutX() <= leftWall) {
+                userShip.getObjectImage().setLayoutX(leftWall);
+                setSpaceshipMechanics(userSpeed, 0, -userSpeed, userSpeed);
+            } // userShip hits the right wall
+            else if (userShip.getObjectImage().getLayoutX() >= rightWall) {
+                userShip.getObjectImage().setLayoutX(rightWall);
+                setSpaceshipMechanics(0, -userSpeed, -userSpeed, userSpeed);
+            } else {
+                setSpaceshipMechanics(userSpeed, -userSpeed, -userSpeed, userSpeed);
+            }
+        }
+    };
+    ChangeListener<? super Number> verticalBorderListener = new ChangeListener<>() {
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            double topWall = 0;
+            double bottomWall = pane.getPrefHeight() - userShip.getObjectImage().getFitHeight();
+            // userShip hits the top wall
+            if (userShip.getObjectImage().getLayoutY() <= topWall) {
+                userShip.getObjectImage().setLayoutY(topWall);
+                setSpaceshipMechanics(userSpeed, -userSpeed, 0, userSpeed);
+            } // userShip hits the bottom wall
+            else if (userShip.getObjectImage().getLayoutY() >= bottomWall) {
+                userShip.getObjectImage().setLayoutY(bottomWall);
+                setSpaceshipMechanics(userSpeed, -userSpeed, -userSpeed, 0);
+            } else {
+                setSpaceshipMechanics(userSpeed, -userSpeed, -userSpeed, userSpeed);
+            }
+        }
+    };
 
     AnimationTimer animation = new AnimationTimer() {
         @Override
         public void handle(long n) {
-            checkWallCollision(); // this also updates the userSpeed of userShip if wall is encountered, ex: left wall encountered -> pressing "A" won't do anything.
             moveSpaceship();
             // move the bullets
             Bullet.moveBullets(userShip.getBullets(), false);
@@ -135,13 +173,15 @@ public class UserLevelController {
         }
     };
 
-    EventHandler<ActionEvent> btnRestrtLevelEvent = new EventHandler<>() {
+    EventHandler<ActionEvent> btnRestartLevelEvent = new EventHandler<>() {
         @Override
         public void handle(ActionEvent event) {
             updateScoreLabel(-score);
             userShipImage.setLayoutX(520);
             userShipImage.setLayoutY(640);
             userShipImage.setVisible(true);
+            Bullet.removeBullet(User.getBullets());
+            Bullet.removeBullet(enemyBullets);
             animation.start();
             EnemiesController.clearEnemies();
             startLevel();
@@ -151,7 +191,10 @@ public class UserLevelController {
 
     @FXML
     public void initialize() {
-        userShip = new User(userShipImage, new Image("/images/spaceships/playerShip2_blue.png"));
+        userShip = new User(userShipImage, new Image(randomSpaceshipChooser()));
+
+        userShipImage.layoutXProperty().addListener(horizontalBorderListener);
+        userShipImage.layoutYProperty().addListener(verticalBorderListener);
 
         backgroundImage.setImage(new Image("/images/background/starfield_alpha.png"));
         backgroundImage.setPreserveRatio(false);
@@ -167,53 +210,31 @@ public class UserLevelController {
         life3.setImage(lifeIconImage);
 
         GameObject.setPane(pane);
-        btnRestartLevel.setOnAction(btnRestrtLevelEvent);
+        btnRestartLevel.setOnAction(btnRestartLevelEvent);
 
+    }
+
+    private String randomSpaceshipChooser() {
+        int number;
+        double random = Math.random();
+        if (random <= 0.3333333333) {
+            number = 1;
+        } else if (random <= 0.6666666666) {
+            number = 2;
+        } else {
+            number = 3;
+        }
+
+        return "/images/spaceships/playerShip" + Integer.toString(number)
+                + "_blue.png";
     }
 
     public void startGame() throws InterruptedException, FileNotFoundException {
-        EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"), 0.8);
+        EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"));
         enemies_Level_One.move();
-
+        setSpaceshipMechanics(userSpeed, -userSpeed, -userSpeed, userSpeed);
         startLevel();
 
-    }
-
-    private void checkWallCollision() {
-        // Border detection, if we reach a border, set the left/right userSpeed to 0.
-        double leftWall = 0;
-        double rightWall = pane.getPrefWidth() - userShip.getObjectImage().getFitWidth();
-        double topWall = 0;
-        double bottomWall = pane.getPrefHeight() - userShip.getObjectImage().getFitHeight();
-        int currentLeft = -userSpeed;
-        int currentRight = userSpeed;
-        int currentTop = -userSpeed;
-        int currentBottom = userSpeed;
-
-        // userShip hits the left wall
-        if (userShip.getObjectImage().getLayoutX() <= leftWall) {
-            userShip.getObjectImage().setLayoutX(leftWall);
-            currentLeft = 0;
-            currentRight = userSpeed;
-        } // userShip hits the right wall
-        else if (userShip.getObjectImage().getLayoutX() >= rightWall) {
-            userShip.getObjectImage().setLayoutX(rightWall);
-            currentRight = 0;
-            currentLeft = -userSpeed;
-        }
-        // userShip hits the top wall
-        if (userShip.getObjectImage().getLayoutY() <= topWall) {
-            userShip.getObjectImage().setLayoutY(topWall);
-            currentTop = 0;
-            currentBottom = userSpeed;
-        } // userShip hits the bottom wall
-        else if (userShip.getObjectImage().getLayoutY() >= bottomWall) {
-            userShip.getObjectImage().setLayoutY(bottomWall);
-            currentBottom = 0;
-            currentTop = -userSpeed;
-
-        }
-        setSpaceshipMechanics(currentRight, currentLeft, currentTop, currentBottom);
     }
 
     public void setSpaceshipMechanics(int right, int left, int top, int bottom) {
@@ -518,6 +539,7 @@ public class UserLevelController {
         checkAvailableShots();
         if (currentLevel == 1) {
             EnemiesController.spawn(15);
+            Enemy.setSpeed(0.8);
             animation.start();
         } else if (currentLevel == 2) {
             EnemiesController.spawn(20);
@@ -530,6 +552,7 @@ public class UserLevelController {
         }
         EnemiesController.enemyAnimation.start();
         setImmobilize(false);
+        setSpaceshipMechanics(userSpeed, -userSpeed, -userSpeed, userSpeed);
         updateShotIconImages();
     }
 
