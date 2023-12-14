@@ -113,37 +113,39 @@ public class UserLevelController {
     static Image spreadShotIconImage = new Image("/images/spreadShotImage.png");
     static Image lockedIconImage = new Image("/images/locked.png");
     static Image lifeIconImage = new Image("/images/heart.png");
-    
+
+    // Listeners to make sure userShip doesn't go beyond the screen
     ChangeListener<? super Number> horizontalBorderListener = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             double leftWall = 0;
             double rightWall = pane.getPrefWidth() - userShip.getObjectImage().getFitWidth();
             // userShip hits the left wall
-            if (userShip.getObjectImage().getLayoutX() <= leftWall) {
-                userShip.getObjectImage().setLayoutX(leftWall);
+            if (userShipImage.getLayoutX() <= leftWall) {
+                userShipImage.setLayoutX(leftWall);
                 setSpaceshipMechanics(userSpeed, 0, -userSpeed, userSpeed);
             } // userShip hits the right wall
-            else if (userShip.getObjectImage().getLayoutX() >= rightWall) {
-                userShip.getObjectImage().setLayoutX(rightWall);
+            else if (userShipImage.getLayoutX() >= rightWall) {
+                userShipImage.setLayoutX(rightWall);
                 setSpaceshipMechanics(0, -userSpeed, -userSpeed, userSpeed);
             } else {
                 setSpaceshipMechanics(userSpeed, -userSpeed, -userSpeed, userSpeed);
             }
         }
     };
+    
     ChangeListener<? super Number> verticalBorderListener = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             double topWall = 0;
             double bottomWall = pane.getPrefHeight() - userShip.getObjectImage().getFitHeight();
             // userShip hits the top wall
-            if (userShip.getObjectImage().getLayoutY() <= topWall) {
-                userShip.getObjectImage().setLayoutY(topWall);
+            if (userShipImage.getLayoutY() <= topWall) {
+                userShipImage.setLayoutY(topWall);
                 setSpaceshipMechanics(userSpeed, -userSpeed, 0, userSpeed);
             } // userShip hits the bottom wall
-            else if (userShip.getObjectImage().getLayoutY() >= bottomWall) {
-                userShip.getObjectImage().setLayoutY(bottomWall);
+            else if (userShipImage.getLayoutY() >= bottomWall) {
+                userShipImage.setLayoutY(bottomWall);
                 setSpaceshipMechanics(userSpeed, -userSpeed, -userSpeed, 0);
             } else {
                 setSpaceshipMechanics(userSpeed, -userSpeed, -userSpeed, userSpeed);
@@ -151,9 +153,13 @@ public class UserLevelController {
         }
     };
 
-    AnimationTimer animation = new AnimationTimer() {
+    /**
+     * The animation of the user.
+     */
+    public AnimationTimer animation = new AnimationTimer() {
         @Override
         public void handle(long n) {
+            // move the spaceship
             moveSpaceship();
             // move the bullets
             Bullet.moveBullets(userShip.getBullets(), false);
@@ -161,11 +167,12 @@ public class UserLevelController {
             checkBulletEnemyCollisions();
             // Check for level completion unless all levels have been completed
             if (!allLevelsComplete) {
-                // Check if the game is over
+                // Check if the level is completed
                 checkLevelComplete();
                 // Check if the userShip is in the portal at the end of the level.
                 checkGameOverPortal();
             } else {
+                // Display final score when all levels completed.
                 lblCongratulations.setText("Total Score: " + score);
                 lblCongratulations.setVisible(true);
                 EnemiesController.enemyAnimation.stop();
@@ -176,45 +183,68 @@ public class UserLevelController {
     EventHandler<ActionEvent> btnRestartLevelEvent = new EventHandler<>() {
         @Override
         public void handle(ActionEvent event) {
-            updateScoreLabel(-score);
+            // Reset the score to 0.
+            updateScoreLabel(-score); 
+            
+            // Reset the initial position of the userShip.
             userShipImage.setLayoutX(520);
             userShipImage.setLayoutY(640);
             userShipImage.setVisible(true);
+            
+            // Remove any bullets still on the screen.
             Bullet.removeBullet(User.getBullets());
             Bullet.removeBullet(enemyBullets);
-            animation.start();
+            
+            // Restart the level.
             EnemiesController.clearEnemies();
+            animation.start();
             startLevel();
             paneGameOver.setVisible(false);
         }
     };
 
+    /**
+     * Initializes UI components from FXML file.
+     */
     @FXML
     public void initialize() {
-        userShip = new User(userShipImage, new Image(randomSpaceshipChooser()));
+        // Instantiate userShip
+        userShip = new User(userShipImage, new Image(randomShipSprite()));
 
+        // Add listeners to the userShip
         userShipImage.layoutXProperty().addListener(horizontalBorderListener);
         userShipImage.layoutYProperty().addListener(verticalBorderListener);
 
+        // Set the background.
         backgroundImage.setImage(new Image("/images/background/starfield_alpha.png"));
         backgroundImage.setPreserveRatio(false);
         backgroundImage.setFitWidth(pane.getPrefWidth());
         backgroundImage.setFitHeight(pane.getPrefHeight());
 
+        // Set the image of the portal.
         portal.setFill(new ImagePattern(new Image("/images/portal.png")));
 
+        // Set the icon image for the first rocket type.
         singleShotIconImageView.setImage(new Image("/images/singleShotImage.png"));
 
+        // Set the images for the lives left.
         life1.setImage(lifeIconImage);
         life2.setImage(lifeIconImage);
         life3.setImage(lifeIconImage);
 
+        // Set the main pane of the game.
         GameObject.setPane(pane);
+        
+        // EventHandler of restart button.
         btnRestartLevel.setOnAction(btnRestartLevelEvent);
 
     }
-
-    private String randomSpaceshipChooser() {
+    
+    /**
+     * Chooses a one of three userShip sprite resource paths.
+     * @return Resource path of a random spaceship.
+     */
+    private String randomShipSprite() {
         int number;
         double random = Math.random();
         if (random <= 0.3333333333) {
@@ -229,6 +259,11 @@ public class UserLevelController {
                 + "_blue.png";
     }
 
+    /**
+     * Starts the game.
+     * @throws InterruptedException
+     * @throws FileNotFoundException
+     */
     public void startGame() throws InterruptedException, FileNotFoundException {
         EnemiesController enemies_Level_One = new EnemiesController(pane, new Image("/images/bullets/laserRed05.png"));
         enemies_Level_One.move();
@@ -237,6 +272,13 @@ public class UserLevelController {
 
     }
 
+    /**
+     * Sets the velocity of the user based on the key pressed as well as the rocket type of the user.
+     * @param right
+     * @param left
+     * @param top
+     * @param bottom
+     */
     public void setSpaceshipMechanics(int right, int left, int top, int bottom) {
         userShip.getObjectImage().getScene().setOnKeyPressed((e) -> {
             switch (e.getCode()) {
@@ -277,18 +319,29 @@ public class UserLevelController {
         });
     }
 
+    /**
+     * Moves the userShip based on its current velocity, which is determined by the key pressed.
+     */
     private void moveSpaceship() {
         userShip.getObjectImage().setLayoutX(userShip.getObjectImage().getLayoutX() + userShip.getxVelocity());
         userShip.getObjectImage().setLayoutY(userShip.getObjectImage().getLayoutY() + userShip.getyVelocity());
     }
 
+    /**
+     * Handles everything to do when the level is complete: show portal, congratulations text, play win audio... 
+     */
     private void checkLevelComplete() {
         // if level is completed
         if (EnemiesController.getEnemies().isEmpty() && !portalSpawned) {
+            // Show congratulations and play audio.
             lblCongratulations.setVisible(true);
             winAudio.play();
+            
+            // Remove any remaining enemy bullets from the pane and stop enemy animation.
             Bullet.removeBullet(enemyBullets);
             EnemiesController.enemyAnimation.stop();
+            
+            // Animation to show the portal fade in.
             FadeTransition portalFade = new FadeTransition(Duration.seconds(0.5), portal);
             portalFade.setFromValue(0);
             portalFade.setByValue(1.0);
@@ -296,22 +349,34 @@ public class UserLevelController {
             portalFade.setDelay(Duration.seconds(0.5));
             portalFade.play();
             portalSpawned = true;
+            
+            // Next level.
             currentLevel++;
         }
     }
-
+    
+    /**
+     * Checks if the user enters the end level portal and plays its animation.
+     */
     private void checkGameOverPortal() {
+        // The user can only enter the portal when the portal fade animation is complete, ie it has 1.0 opacity.
         if (portal.opacityProperty().get() == 1.0
                 && userShip.getObjectImage().getBoundsInParent().intersects(portal.getBoundsInParent())
                 && !portalEntered) {
+            // We want to stop this check once the portal is entered.
             portalEntered = true;
+            
+            // User cannot move once portal is entered.
             setImmobilize(true);
             lblCongratulations.setVisible(false);
 
+            // Animtion to make the portal disappear after teleporting the user to the next level.
             Timeline portalDisappear = new Timeline(
                     new KeyFrame(Duration.seconds(0.4), new KeyValue(portal.opacityProperty(), 0))
             );
             portalDisappear.setCycleCount(1);
+            
+            // Animation to appear the user to the next level.
             Timeline appear = new Timeline(
                     new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().rotateProperty(), 360)),
                     new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().scaleXProperty(), 1)),
@@ -322,6 +387,8 @@ public class UserLevelController {
             );
             appear.setCycleCount(1);
             appear.setDelay(Duration.seconds(0.75));
+            
+            // Animation that spins and sucks in the user in the portal.
             Timeline teleport = new Timeline(
                     new KeyFrame(Duration.seconds(0.8), new KeyValue(userShip.getObjectImage().rotateProperty(), 720)),
                     new KeyFrame(Duration.seconds(0.4), new KeyValue(userShip.getObjectImage().scaleXProperty(), 0)),
@@ -332,27 +399,40 @@ public class UserLevelController {
             );
             teleport.setCycleCount(1);
 
+            // Play the animations in order.
             SequentialTransition transition = new SequentialTransition(teleport, appear, portalDisappear);
             transition.setCycleCount(1);
             transition.play();
+            
+            // At the end of the animation, start the next level.
             transition.setOnFinished((event) -> {
                 startLevel();
             });
         }
     }
 
+    /**
+     * Checks for collisions between enemy bullets and enemy spaceships.
+     */
     private void checkBulletEnemyCollisions() {
+        // Only check for collisions if the user is not invincible (user is invincible for short period of time after being hit)
         if (!userShip.isInvincible()) {
             checkBulletCollision();
             checkEnemyCollision();
         }
     }
 
+    /**
+     * Shoots a single fire rocket type.
+     */
     public void singleShot() {
         addBullet(Bullet.singleShotBullet(userShip, userShip.getObjectImage().getLayoutX(), userShip.getObjectImage().getLayoutY() - userShip.getObjectImage().getFitHeight(), userShipSingleBulletImage));
         User.getUserShipSingleShootAudio().play();
     }
 
+    /**
+     * Shoots a burst of 3 rockets.
+     */
     public void speedShot() {
         SequentialTransition speedShotAnimation = new SequentialTransition();
         double height = userShip.getObjectImage().getFitHeight();
@@ -370,6 +450,9 @@ public class UserLevelController {
         speedShotAnimation.play();
     }
 
+    /**
+     * Shoots a spread of 3 rockets.
+     */
     public void spreadShot() {
         addBullet(Bullet.spreadShotBullet(userShip, userShip.getObjectImage().getLayoutX() - userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipSpreadBulletImage));
         addBullet(Bullet.spreadShotBullet(userShip, userShip.getObjectImage().getLayoutX() + userShip.getObjectImage().getFitWidth() / 2, userShip.getObjectImage().getLayoutY() + 20 - userShip.getObjectImage().getFitHeight(), userShipSpreadBulletImage));
@@ -377,6 +460,9 @@ public class UserLevelController {
         userShip.getUserShipSpreadShootAudio().play();
     }
 
+    /**
+     * Switches between the rocket types.
+     */
     public void switchShoot() {
         if (userShip.isSingleShot() && speedShotUnlocked) {
             userShip.setShot(2);
@@ -388,6 +474,9 @@ public class UserLevelController {
         updateShotIconImages();
     }
 
+    /**
+     * Delays the next time another single shot can be fired by 0.2 seconds.
+     */
     public void delaySingleShoot() {
         userShip.setCanShoot(false);
         PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
@@ -397,6 +486,9 @@ public class UserLevelController {
         pause.play();
     }
 
+    /**
+     * Delays the next time another speed shot can be fired by 0.5 seconds.
+     */
     public void delaySpeedShoot() {
         userShip.setCanSpeedShoot(false);
         PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
@@ -406,6 +498,10 @@ public class UserLevelController {
         pause.play();
     }
 
+    /**
+     *      * Delays the next time another spread shot can be fired by 0.75 seconds.
+
+     */
     public void delaySpreadShoot() {
         userShip.setCanSpreadShoot(false);
         PauseTransition pause = new PauseTransition(Duration.seconds(0.75));
@@ -415,22 +511,33 @@ public class UserLevelController {
         pause.play();
     }
 
+    /**
+     * Checks for collision between the user and any enemy bullet.
+     */
     public void checkBulletCollision() {
         for (int i = 0; i < enemyBullets.size(); i++) {
-            if (userShip.getObjectImage().getBoundsInParent().intersects(enemyBullets.get(i).getObjectImage().getBoundsInParent())) {
+            if (userShipImage.getBoundsInParent().intersects(enemyBullets.get(i).getObjectImage().getBoundsInParent())) {
+                // Remove the bullet from the pane and the list of enemyBullets if user is hit.
                 Bullet.removeBullet(enemyBullets.get(i));
-                spaceshipHit();
                 enemyBullets.remove(enemyBullets.get(i));
+                
+                spaceshipHit();
             }
         }
     }
 
+    /**
+     * Checks for collision between the user and any enemy ship.
+     */
     public void checkEnemyCollision() {
         for (Enemy currentEnemy : EnemiesController.getEnemies()) {
+            // Turns the bounds of the enemiesPane to the bounds of the main pane.
+            // Turns the bounds of the enemy to the bounds of the enemiesPane.
             if (pane.localToScene(EnemiesController.enemiesPane.localToScene(currentEnemy.getObjectImage().getBoundsInParent()))
-                    .intersects(userShip.getObjectImage().getBoundsInParent())) {
+                    .intersects(userShipImage.getBoundsInParent())) {
                 spaceshipHit();
             }
+            // If enemy reaches the very bottom, the user loses.
             if (currentEnemy.getObjectImage().getLayoutY() + EnemiesController.enemiesPane.getLayoutY() >= pane.getPrefHeight()) {
                 User.setLives(0);
                 checkLivesRemaining();
@@ -438,15 +545,28 @@ public class UserLevelController {
         }
     }
 
+    /**
+     * Handles everything to do when the user is hit: remove a life, diminish score, make user invincible for short time...
+     */
     public void spaceshipHit() {
+        // Update user lives.
         userShip.setLives(userShip.getLives() - 1);
+        
+        // Diminish score.
         updateScoreLabel(-20);
+        
+        // User will be invincible until the hit animation is finished.
         userShip.setInvincible(true);
         spaceshipHitAnimation();
+        
+        // Updates the visual lives left and check if there are any left.
         updateLifeImage();
         checkLivesRemaining();
     }
 
+    /**
+     * Updates the visual images of the lives left.
+     */
     public void updateLifeImage() {
         life3.setVisible(User.getLives() == 3);
         life2.setVisible(User.getLives() >= 2);
@@ -454,19 +574,31 @@ public class UserLevelController {
 
     }
 
+    /**
+     * Checks if the user is dead and handles the death case: play death animation, game over audio...
+     */
     public void checkLivesRemaining() {
         if (userShip.getLives() == 0) {
+            // Plays the kill animation.
             userShip.killAnimation(pane);
+            
+            // Stops the animation of the user and enemies.
             animation.stop();
-            setImmobilize(true);
             EnemiesController.enemyAnimation.stop();
+            
+            // Game over audio and text.
             gameOverAudio.play();
             paneGameOver.setVisible(true);
         }
     }
 
+    /**
+     * Plays the hit animation.
+     */
     public void spaceshipHitAnimation() {
         spaceshipHitAudio.play();
+        
+        // The spaceship will flash for 0.1 seconds.
         Timeline spaceshipFlashing = new Timeline(new KeyFrame(Duration.seconds(0.1),
                 new KeyValue(userShip.getObjectImage().opacityProperty(), 0)
         ));
@@ -474,26 +606,34 @@ public class UserLevelController {
         spaceshipFlashing.setCycleCount(8);
         spaceshipFlashing.play();
 
-        Timeline spaceshipInvincible = new Timeline(new KeyFrame(Duration.seconds(1),
-                new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                userShip.setInvincible(false);
-            }
-        })
-        );
+        // The spaceship will be invincible for 1.1 seconds, or 1 second after the flashing is played.
+        PauseTransition spaceshipInvincible = new PauseTransition(Duration.seconds(1.1));
+        spaceshipInvincible.setOnFinished((event) -> {
+            userShip.setInvincible(false);
+        });
         spaceshipInvincible.setCycleCount(1);
         spaceshipInvincible.play();
     }
 
+    /**
+     * Adds a new bullet to the list of user bullets.
+     * @param newBullet
+     */
     public void addBullet(Bullet newBullet) {
         userShip.getBullets().add(newBullet);
     }
 
+    /**
+     * 
+     * @return List of enemy Bullets
+     */
     public ArrayList<Bullet> getEnemyBullets() {
         return enemyBullets;
     }
 
+    /**
+     * Method to make the user immobile or not, immobile meaning not being able to move or shoot.
+     */
     private void setImmobilize(boolean immobilize) {
         if (immobilize) {
             setSpaceshipMechanics(0, 0, 0, 0);
@@ -507,14 +647,21 @@ public class UserLevelController {
         }
     }
 
+    /**
+     * Updates the score label.
+     * @param scoreIncrement
+     */
     public void updateScoreLabel(int scoreIncrement) {
         score += scoreIncrement;
-        if (score < 0) {
+        if (score < 0) { // No negative score.
             score = 0;
         }
         lblScore.setText("Score: " + UserLevelController.score);
     }
 
+    /**
+     *Updates the level label.
+     */
     public void updateLevelLabel() {
         lblLevel.setText("Level " + currentLevel);
         if (currentLevel > 3) {
@@ -522,40 +669,61 @@ public class UserLevelController {
         }
     }
 
+    /**
+     * Checks if the new rocket shots are unlocked.
+     */
     public static void checkAvailableShots() {
         speedShotUnlocked = (currentLevel > 1);
         spreadShotUnlocked = (currentLevel > 2);
     }
-
+    
+    /**
+     * Starts the level.
+     */
     private void startLevel() {
-        // bring the portal back to original position
+        // Bring the portal back to original position.
         portal.setLayoutX(540);
         portal.setLayoutY(470);
         portalSpawned = false;
         portalEntered = false;
+        
+        // Reset lives to 3.
         User.setLives(3);
         updateLifeImage();
         updateLevelLabel();
         checkAvailableShots();
+        
+        // At level 1, there are 15 enemies and they move at 0.8 speed.
         if (currentLevel == 1) {
             EnemiesController.spawn(15);
             Enemy.setSpeed(0.8);
             animation.start();
-        } else if (currentLevel == 2) {
+        }
+        // At level 2, there are 20 enemies and they move at 1.2 speed.
+        else if (currentLevel == 2) {
             EnemiesController.spawn(20);
             Enemy.setSpeed(1.2);
-        } else if (currentLevel == 3) {
+        } 
+        // At level 3, there are 25 enemies and they move at 1.6 speed.
+        else if (currentLevel == 3) {
             EnemiesController.spawn(25);
             Enemy.setSpeed(1.6);
-        } else {
+        } 
+        // All levels are completed.
+        else {
             allLevelsComplete = true;
         }
+        
+        // Move the enemies and allow user to move.
         EnemiesController.enemyAnimation.start();
         setImmobilize(false);
         setSpaceshipMechanics(userSpeed, -userSpeed, -userSpeed, userSpeed);
         updateShotIconImages();
     }
 
+    /**
+     * Updates the shot icons to show which one is selected and which ones are available.
+     */
     public void updateShotIconImages() {
 
         if (speedShotUnlocked) {
@@ -568,6 +736,7 @@ public class UserLevelController {
         } else {
             spreadShotIconImageView.setImage(lockedIconImage);
         }
+        // Selected rocket type will have 1.0 opacity, others will have 0.6
         if (userShip.isSingleShot()) {
             singleShotIconImageView.setOpacity(1.0);
             speedShotIconImageView.setOpacity(0.6);
@@ -584,6 +753,10 @@ public class UserLevelController {
 
     }
 
+    /**
+     *
+     * @return Main pane of the game.
+     */
     public Pane getPane() {
         return pane;
     }

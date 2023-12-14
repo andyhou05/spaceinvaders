@@ -1,5 +1,6 @@
 package edu.vanier.spaceinvaders.main;
 
+import edu.vanier.spaceinvaders.controllers.EnemiesController;
 import edu.vanier.spaceinvaders.controllers.UserLevelController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -31,8 +32,16 @@ public class MainApp extends Application {
         Scene scene = new Scene(root);
         controller.startGame();
 
+        primaryStage.setResizable(false);
         primaryStage.setAlwaysOnTop(true);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+    
+    @Override
+    public void stop(){
+        // Stop any running animations.
+        controller.animation.stop();
+        EnemiesController.enemyAnimation.stop();
     }
 }

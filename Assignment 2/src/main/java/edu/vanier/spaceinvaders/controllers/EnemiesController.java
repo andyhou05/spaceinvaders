@@ -27,7 +27,7 @@ public class EnemiesController {
     static double enemyXdistance = 185;
     static double enemyYdistance = 100;
 
-    static AnimationTimer enemyAnimation = new AnimationTimer() {
+    public static AnimationTimer enemyAnimation = new AnimationTimer() {
         @Override
         public void handle(long now) {
             moveEnemies();
