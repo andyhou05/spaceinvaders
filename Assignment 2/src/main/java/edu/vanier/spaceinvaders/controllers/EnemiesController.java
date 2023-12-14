@@ -61,8 +61,8 @@ public class EnemiesController {
      */
     public EnemiesController(Pane mainPane, Image enemyBulletImage) {
         spaceshipBullets = UserShip.getBullets();
-        this.mainPane = mainPane;
-        this.enemyBulletImage = enemyBulletImage;
+        EnemiesController.mainPane = mainPane;
+        EnemiesController.enemyBulletImage = enemyBulletImage;
         // add enemiesPane to the main pane.
         mainPane.getChildren().add(enemiesPane);
     }
@@ -162,12 +162,12 @@ public class EnemiesController {
                         .intersects(b.getObjectImageView().getBoundsInParent())) {
                     // kill the space invader
                     currentEnemy.killAnimation(enemiesPane);
-                    
+
                     // Kill the enemy and remove user bullet from its list and the main pane.
                     enemies.remove(enemies.get(i));
                     Bullet.removeBullet(b);
                     spaceshipBullets.remove(b);
-                    
+
                     // Update the score
                     MainApp.controller.updateScoreLabel(10);
                     break;
@@ -186,7 +186,7 @@ public class EnemiesController {
     }
 
     /**
-     * 
+     *
      * @return list of enemies.
      */
     public static ArrayList<EnemyShip> getEnemies() {

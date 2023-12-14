@@ -76,9 +76,9 @@ public class EnemyShip extends Spaceship {
     }
 
     /**
-     * Sets the velocity of the EnemyShip class, all EnemyShip objects have the same
- velocity since they move in an enemiesPane, velocity accounts for speed
- and direction.
+     * Sets the velocity of the EnemyShip class, all EnemyShip objects have the
+     * same velocity since they move in an enemiesPane, velocity accounts for
+     * speed and direction.
      *
      * @param velocity
      */
@@ -95,8 +95,8 @@ public class EnemyShip extends Spaceship {
     }
 
     /**
-     * Sets the speed of the EnemyShip class, the speed is the absolute value of the
- velocity.
+     * Sets the speed of the EnemyShip class, the speed is the absolute value of
+     * the velocity.
      *
      * @param speed
      */
@@ -105,7 +105,7 @@ public class EnemyShip extends Spaceship {
     }
 
     /**
-     * 
+     *
      * @return list of EnemyShip bullets.
      */
     public static ArrayList<Bullet> getBullets() {
@@ -113,7 +113,7 @@ public class EnemyShip extends Spaceship {
     }
 
     /**
-     * 
+     *
      * @return Shooting sound for EnemyShip.
      */
     public AudioClip getEnemyShootAudio() {

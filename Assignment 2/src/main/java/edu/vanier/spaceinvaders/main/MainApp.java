@@ -39,9 +39,9 @@ public class MainApp extends Application {
         // Start the game.
         controller.startGame();
     }
-    
+
     @Override
-    public void stop(){
+    public void stop() {
         // Stop any running animations.
         controller.animation.stop();
         EnemiesController.enemyAnimation.stop();

@@ -19,8 +19,8 @@ public class Bullet extends GameObject {
     boolean bulletSpin; // SpreadShot rocket type shoots a spinning rocket.
 
     /**
-     * Creates a new Bullet with specified layoutX, layoutY, spaceshipWidth, spaceshipHeight,
- image and spin.
+     * Creates a new Bullet with specified layoutX, layoutY, spaceshipWidth,
+     * spaceshipHeight, image and spin.
      *
      * @param layoutX
      * @param layoutY
@@ -94,7 +94,7 @@ public class Bullet extends GameObject {
 
     /**
      * Removes a specified list of bullets from the main mainPane and clears the
- list.
+     * list.
      *
      * @param bullets
      */
@@ -109,7 +109,8 @@ public class Bullet extends GameObject {
      * Moves the bullet in correct direction.
      *
      * @param bullets List of bullets to move.
-     * @param isEnemy Determines if the list of bullets is from enemies or the user
+     * @param isEnemy Determines if the list of bullets is from enemies or the
+     * user
      */
     public static void moveBullets(List<Bullet> bullets, boolean isEnemy) {
         double direction;
@@ -123,7 +124,7 @@ public class Bullet extends GameObject {
         for (int i = 0; i < bullets.size(); i++) {
             Bullet currentBullet = bullets.get(i);
             currentBullet.getObjectImageView().setLayoutY(currentBullet.getObjectImageView().getLayoutY() + direction * bulletSpeed);
-            
+
             // Rotate the bullet if it hsa spin.
             if (currentBullet.bulletSpin) {
                 currentBullet.getObjectImageView().setRotate(currentBullet.getObjectImageView().getRotate() + 15);

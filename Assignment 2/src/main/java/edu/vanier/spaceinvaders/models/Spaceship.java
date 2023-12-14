@@ -13,9 +13,11 @@ import javafx.util.Duration;
 
 /**
  * Parent class of all Spaceships in the game.
- * @author USER
+ *
+ * @author Andy
  */
 public abstract class Spaceship extends GameObject {
+
     // All spaceships have same dimensions.
     final static double width = 60;
     final static double height = 45;
@@ -51,7 +53,7 @@ public abstract class Spaceship extends GameObject {
     }
 
     /**
-     * 
+     *
      * @return Width of Spaceship.
      */
     public static double getWidth() {
@@ -65,5 +67,5 @@ public abstract class Spaceship extends GameObject {
     public static double getHeight() {
         return height;
     }
-    
+
 }

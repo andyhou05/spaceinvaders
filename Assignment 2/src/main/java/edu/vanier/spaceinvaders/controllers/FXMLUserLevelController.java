@@ -39,8 +39,8 @@ import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 /**
- * Controller class for the FXML game UI as well as the UserShip controller which
- depends on the FXML layout.
+ * Controller class for the FXML game UI as well as the UserShip controller
+ * which depends on the FXML layout.
  *
  * @author andyhou
  */
@@ -554,6 +554,7 @@ public class FXMLUserLevelController {
             // If enemy reaches the very bottom, the user loses.
             if (currentEnemy.getObjectImageView().getLayoutY() + EnemiesController.enemiesPane.getLayoutY() >= mainPane.getPrefHeight()) {
                 UserShip.setLives(0);
+                updateLifeImage();
                 checkLivesRemaining();
             }
         }
@@ -647,13 +648,19 @@ public class FXMLUserLevelController {
     private void setImmobilize(boolean immobilize) {
         if (immobilize) {
             setSpaceshipMechanics(0, 0, 0, 0);
+            userShip.setCanSingleShoot(false);
+            userShip.setCanSpeedShoot(false);
+            userShip.setCanSpreadShoot(false);
             userSpeed = 0;
             userShip.setxVelocity(0);
             userShip.setyVelocity(0);
             userShip.setCanSingleShoot(false);
         } else {
             userSpeed = UserShip.getSPEED();
+            checkAvailableShots();
             userShip.setCanSingleShoot(true);
+            userShip.setCanSpeedShoot(speedShotUnlocked);
+            userShip.setCanSpreadShoot(spreadShotUnlocked);
         }
     }
 

@@ -4,15 +4,13 @@
  */
 package edu.vanier.spaceinvaders.models;
 
-import javafx.animation.PauseTransition;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
-import javafx.util.Duration;
 
 /**
  * Parent class of all components in the game.
+ *
  * @author andyhou
  */
 public class GameObject {
@@ -31,6 +29,7 @@ public class GameObject {
 
     /**
      * Set the ImageView of the object.
+     *
      * @param objectImageView
      */
     public void setObjectImageView(ImageView objectImageView) {
@@ -39,6 +38,7 @@ public class GameObject {
 
     /**
      * Set the mainPane of this class.
+     *
      * @param mainPane
      */
     public static void setMainPane(Pane mainPane) {
@@ -46,7 +46,7 @@ public class GameObject {
     }
 
     /**
-     * 
+     *
      * @return Explosion audio.
      */
     public AudioClip getExplosionAudio() {
