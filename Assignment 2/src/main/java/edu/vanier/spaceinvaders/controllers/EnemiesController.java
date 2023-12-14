@@ -6,27 +6,36 @@ package edu.vanier.spaceinvaders.controllers;
 
 import edu.vanier.spaceinvaders.main.MainApp;
 import edu.vanier.spaceinvaders.models.Bullet;
-import edu.vanier.spaceinvaders.models.Enemy;
-import edu.vanier.spaceinvaders.models.User;
+import edu.vanier.spaceinvaders.models.EnemyShip;
+import edu.vanier.spaceinvaders.models.UserShip;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
 /**
+ * Controller class for the Enemies.
  *
  * @author andyhou
  */
 public class EnemiesController {
 
     static ArrayList<Bullet> spaceshipBullets;
-    static Pane pane;
+    static Pane mainPane;
+
+    // enemiesPane is a pane inside mainPane that contains all the enemies
+    // enemiesPane will move all together instead of moving every EnemyShip object one by one.
     static Pane enemiesPane = new Pane();
-    static ArrayList<Enemy> enemies = new ArrayList<>();
+    static ArrayList<EnemyShip> enemies = new ArrayList<>();
     static Image enemyBulletImage;
+
+    // Distances between enemies.
     static double enemyXdistance = 185;
     static double enemyYdistance = 100;
 
+    /**
+     * EnemyShip animation.
+     */
     public static AnimationTimer enemyAnimation = new AnimationTimer() {
         @Override
         public void handle(long now) {
@@ -37,84 +46,129 @@ public class EnemiesController {
         }
     };
 
-    public EnemiesController(Pane pane, Image enemyBulletImage) {
-        enemiesPane.setPrefWidth(800);
-        enemiesPane.setPrefHeight(400);
-        spaceshipBullets = User.getBullets();
-        this.pane = pane;
-        this.enemyBulletImage = enemyBulletImage;
+    /**
+     * Default constructor.
+     */
+    public EnemiesController() {
     }
 
+    /**
+     * Creates a new EnemiesController object with its main mainPane and bullet
+     * image.
+     *
+     * @param mainPane Main mainPane of the game
+     * @param enemyBulletImage Bullet image of the enemies
+     */
+    public EnemiesController(Pane mainPane, Image enemyBulletImage) {
+        spaceshipBullets = UserShip.getBullets();
+        this.mainPane = mainPane;
+        this.enemyBulletImage = enemyBulletImage;
+        // add enemiesPane to the main pane.
+        mainPane.getChildren().add(enemiesPane);
+    }
+
+    /**
+     * Spawns a specified amount of enemies into enemiesPane.
+     *
+     * @param enemyNumber Number of enemies to be spawned.
+     */
     public static void spawn(int enemyNumber) {
-        Pane newEnemiesPane = new Pane();
-        newEnemiesPane.setPrefWidth(800);
-        newEnemiesPane.setPrefHeight(400);
         double currentLayoutX;
         double currentLayoutY = 0;
+        // Will add enemies into a row one by one
+        // Once an enemy reaches the max layoutX, go to the next row
         for (int i = 0; enemies.size() < enemyNumber; i++) {
             currentLayoutX = enemyXdistance * i;
-            if (currentLayoutX + enemyXdistance > pane.getPrefWidth()) {
+            if (currentLayoutX + enemyXdistance > mainPane.getPrefWidth()) {
                 currentLayoutY += enemyYdistance;
                 currentLayoutX = 0;
                 i = 0;
             }
-            Enemy currentEnemy = new Enemy(currentLayoutX, currentLayoutY);
-            newEnemiesPane.getChildren().add(currentEnemy.getObjectImage());
+            EnemyShip currentEnemy = new EnemyShip(currentLayoutX, currentLayoutY);
+
+            // Add the enemy to the enemiesPane and the list of enemies.
+            enemiesPane.getChildren().add(currentEnemy.getObjectImageView());
             enemies.add(currentEnemy);
         }
-        newEnemiesPane.setLayoutX(0);
-        newEnemiesPane.setLayoutY(0);
-        pane.getChildren().add(newEnemiesPane);
-        enemiesPane = newEnemiesPane;
+        // Put the enemiesPane at the top left of the main Pane.
+        enemiesPane.setLayoutX(0);
+        enemiesPane.setLayoutY(0);
     }
 
+    /**
+     * Move the enemiesPane.
+     */
     private static void moveEnemies() {
+        // y displacement, only move in the y direction once end of pane is met on x-axis.
         double y = enemyYdistance;
+        // Checks to see if the enemiesPane needs to move right or left.
+        // -- Enemies will move right when the enemiesPane layout is an even multiple of "y"
+        // -- Enemies will move left when the enemiesPane layout is an odd multiple of "y"
         if ((enemiesPane.getLayoutY() / y) % 2 == 0) {
-            Enemy.setVelocity(Enemy.getSpeed());
+            EnemyShip.setVelocity(EnemyShip.getSpeed());
         } else {
-            Enemy.setVelocity(-Enemy.getSpeed());
+            EnemyShip.setVelocity(-EnemyShip.getSpeed());
         }
 
-        enemiesPane.setLayoutX(enemiesPane.getLayoutX() + Enemy.getVelocity());
-        if (enemiesPane.getLayoutX() + enemiesPane.getWidth() >= pane.getWidth() || enemiesPane.getLayoutX() <= 0) {
+        enemiesPane.setLayoutX(enemiesPane.getLayoutX() + EnemyShip.getVelocity());
+        if (enemiesPane.getLayoutX() + enemiesPane.getWidth() >= mainPane.getWidth() || enemiesPane.getLayoutX() <= 0) {
             enemiesPane.setLayoutY(enemiesPane.getLayoutY() + y);
         }
     }
 
+    /**
+     * Allows enemies to shoot at random times.
+     */
     private static void enemiesShoot() {
         // Make enemies able to singleShotBullet.
-        for (Enemy currentEnemy : enemies) {
+        for (EnemyShip currentEnemy : enemies) {
+            // Every frame of the enemyAnimation, each enemy will be assigned a random number 
+            // which will be used to check if they will shoot or not
             if (Math.random() < 0.0005) {
                 Bullet currentBullet = Bullet.singleShotBullet(currentEnemy,
-                        currentEnemy.getObjectImage().getLayoutX() + enemiesPane.getLayoutX(),
-                        currentEnemy.getObjectImage().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getObjectImage().getFitHeight(),
+                        currentEnemy.getObjectImageView().getLayoutX() + enemiesPane.getLayoutX(),
+                        currentEnemy.getObjectImageView().getLayoutY() + enemiesPane.getLayoutY() + currentEnemy.getObjectImageView().getFitHeight(),
                         enemyBulletImage
                 );
-                Enemy.getBullets().add(currentBullet);
+
+                // Add bullet to pane and list of bullets.
+                EnemyShip.getBullets().add(currentBullet);
                 currentEnemy.getEnemyShootAudio().play();
             }
         }
-        Bullet.moveBullets(Enemy.getBullets(), true);
+        // Move all the enemy bullets in the main pane.
+        Bullet.moveBullets(EnemyShip.getBullets(), true);
     }
 
+    /**
+     * Starts the animation.
+     *
+     * @throws InterruptedException
+     */
     public void move() throws InterruptedException {
         enemyAnimation.start();
     }
 
+    /**
+     * Checks for collision between the enemies and the user bullets.
+     */
     public static void checkBulletCollision() {
         for (int i = 0; i < enemies.size(); i++) {
-            Enemy currentEnemy = enemies.get(i);
+            EnemyShip currentEnemy = enemies.get(i);
             for (Bullet b : spaceshipBullets) {
-                // turns the local bounds of enemiesPane to the bounds of the pane,
-                // turns the local bounds of the enemy to the bounds of the enemiesPane.
-                if (pane.localToScene(enemiesPane.localToScene(currentEnemy.getObjectImage().getBoundsInParent())).intersects(b.getObjectImage().getBoundsInParent())) {
+                // Turns the local bounds of enemiesPane to the bounds of the mainPane,
+                // Turns the local bounds of the enemy to the bounds of the enemiesPane.
+                if (mainPane.localToScene(enemiesPane.localToScene(currentEnemy.getObjectImageView().getBoundsInParent()))
+                        .intersects(b.getObjectImageView().getBoundsInParent())) {
                     // kill the space invader
                     currentEnemy.killAnimation(enemiesPane);
+                    
+                    // Kill the enemy and remove user bullet from its list and the main pane.
                     enemies.remove(enemies.get(i));
                     Bullet.removeBullet(b);
                     spaceshipBullets.remove(b);
-                    // update the score
+                    
+                    // Update the score
                     MainApp.controller.updateScoreLabel(10);
                     break;
                 }
@@ -122,13 +176,20 @@ public class EnemiesController {
         }
     }
 
+    /**
+     * Removes all enemies from the pane and enemies list.
+     */
     public static void clearEnemies() {
         enemiesPane.getChildren().removeAll(enemiesPane.getChildren());
         enemies.removeAll(enemies);
 
     }
 
-    public static ArrayList<Enemy> getEnemies() {
+    /**
+     * 
+     * @return list of enemies.
+     */
+    public static ArrayList<EnemyShip> getEnemies() {
         return enemies;
     }
 }

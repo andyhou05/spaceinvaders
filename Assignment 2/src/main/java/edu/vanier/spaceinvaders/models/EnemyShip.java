@@ -10,22 +10,29 @@ import javafx.scene.image.ImageView;
 import javafx.scene.media.AudioClip;
 
 /**
+ * Class containing all information about EnemyShip.
  *
  * @author andyhou
  */
-public class Enemy extends GameObject {
-    
+public class EnemyShip extends Spaceship {
+
     static double speed;
     static double velocity;
     AudioClip enemyShootAudio = new AudioClip(getClass().getResource("/sounds/sfx_laser2.wav").toExternalForm());
     static ArrayList<Bullet> bullets = new ArrayList<>();
 
-    public Enemy(double layoutX, double layoutY) {
-        ImageView enemyImage = getObjectImage();
+    /**
+     * Creates an Enemy with specified layoutX and layoutY.
+     *
+     * @param layoutX
+     * @param layoutY
+     */
+    public EnemyShip(double layoutX, double layoutY) {
+        ImageView enemyImage = getObjectImageView();
         String enemyColor;
         StringBuilder filePathBuilder = new StringBuilder("/images/enemies/enemy");
 
-        // Generate random enemyStack color.
+        // Generate random enemy color.
         double random2 = Math.random();
         if (random2 <= (0.3333333333)) {
             enemyColor = "Red";
@@ -50,34 +57,65 @@ public class Enemy extends GameObject {
             filePathBuilder.append('5');
         }
         filePathBuilder.append(".png");
+
+        // Sets the created resource path as the image of the enemy.
         enemyImage.setImage(new Image(filePathBuilder.toString()));
         enemyImage.setPreserveRatio(false);
-        enemyImage.setFitWidth(60);
-        enemyImage.setFitHeight(45);
+        enemyImage.setFitWidth(Spaceship.getWidth());
+        enemyImage.setFitHeight(Spaceship.getHeight());
         enemyImage.setLayoutX(layoutX);
         enemyImage.setLayoutY(layoutY);
     }
 
+    /**
+     *
+     * @return Velocity of the EnemyShip class.
+     */
     public static double getVelocity() {
         return velocity;
     }
 
+    /**
+     * Sets the velocity of the EnemyShip class, all EnemyShip objects have the same
+ velocity since they move in an enemiesPane, velocity accounts for speed
+ and direction.
+     *
+     * @param velocity
+     */
     public static void setVelocity(double velocity) {
-        Enemy.velocity = velocity;
+        EnemyShip.velocity = velocity;
     }
 
+    /**
+     *
+     * @return Speed of the EnemyShip class.
+     */
     public static double getSpeed() {
         return speed;
     }
 
+    /**
+     * Sets the speed of the EnemyShip class, the speed is the absolute value of the
+ velocity.
+     *
+     * @param speed
+     */
     public static void setSpeed(double speed) {
-        Enemy.speed = speed;
+        EnemyShip.speed = speed;
     }
 
+    /**
+     * 
+     * @return list of EnemyShip bullets.
+     */
     public static ArrayList<Bullet> getBullets() {
         return bullets;
     }
 
+    /**
+     * 
+     * @return Shooting sound for EnemyShip.
+     */
     public AudioClip getEnemyShootAudio() {
         return enemyShootAudio;
     }
