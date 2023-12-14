@@ -61,8 +61,8 @@ public class UserShip extends Spaceship {
     }
 
     /**
-     * Sets the xVelocity of the UserShip, velocity is the accounts for both SPEED
- and magnitude.
+     * Sets the xVelocity of the UserShip, velocity is the accounts for both
+     * SPEED and magnitude.
      *
      * @param xVelocity
      */
@@ -96,8 +96,8 @@ public class UserShip extends Spaceship {
     }
 
     /**
-     * Sets the yVelocity of the UserShip, velocity is the accounts for both SPEED
- and magnitude.
+     * Sets the yVelocity of the UserShip, velocity is the accounts for both
+     * SPEED and magnitude.
      *
      * @param yVelocity
      */
@@ -197,7 +197,7 @@ public class UserShip extends Spaceship {
      * Sets canSpradShoot parameter, tells us if the user can SpreadShoot or if
      * is on cooldown.
      *
-     * @param canSpeedShoot
+     * @param canSpreadShoot
      */
     public void setCanSpreadShoot(boolean canSpreadShoot) {
         this.canSpreadShoot = canSpreadShoot;
